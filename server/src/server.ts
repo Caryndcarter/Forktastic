@@ -14,7 +14,9 @@ import db from './config/connection_mongo.js';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas_graphQL/index.js';
-import { authenticateToken } from './middleware/auth.js';
+
+//Authentication Middleware
+import { authenticateToken as graphQLAuthMiddleware } from './middleware/auth_graphQL.js'; 
 
 dotenv.config();
 
@@ -40,9 +42,7 @@ app.use(express.json());
 // Static files for the client
 app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-// REST API routes
-app.use(routes);
-
+app.use(routes); 
 
 //create Apollo Server
 const startApolloServer = async () => {
@@ -50,7 +50,7 @@ const startApolloServer = async () => {
 
   app.use('/graphql', expressMiddleware(server as any,
     {
-      context: authenticateToken as any
+      context: graphQLAuthMiddleware as any
     }
   ));
 
