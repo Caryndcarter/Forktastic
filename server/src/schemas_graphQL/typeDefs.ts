@@ -1,5 +1,10 @@
 const typeDefs = `
 
+   # Query Type
+  type Query {
+     hello: String
+  }
+
   # Mutation Type
   type Mutation {
     login(email: String!, password: String!): Auth

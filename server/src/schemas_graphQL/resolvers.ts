@@ -4,6 +4,10 @@ import { GraphQLError } from 'graphql';
 
 const resolvers = {
 
+    Query: {
+        hello: () => "Hello, world!",
+      },
+
   
     Mutation: {
       // create a user, sign a token, and send it back 
