@@ -6,9 +6,10 @@ import askService from "../api/askService";
 
 const RecipeMaker = () => {
   const navigate = useNavigate();
-  const [errorMessage,setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState("");
   const { setCurrentRecipeDetails } = useContext(currentRecipeContext);
-  const [prompt,setPrompt] = useState<string>('');
+  const [prompt, setPrompt] = useState<string>("");
+  const [AILoading, setAILoading] = useState<boolean>(false);
   const [recipe, setRecipe] = useState<RecipeDetails>({
     title: "",
     summary: "",
@@ -28,7 +29,11 @@ const RecipeMaker = () => {
     }));
   };
 
-  const handleListChange = (field: keyof RecipeDetails, index: number, value: string) => {
+  const handleListChange = (
+    field: keyof RecipeDetails,
+    index: number,
+    value: string
+  ) => {
     const updatedList = [...(recipe[field] as string[])];
     updatedList[index] = value;
     setRecipe((prev) => ({
@@ -55,8 +60,8 @@ const RecipeMaker = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if(recipe.image){ 
-      if(recipe.image.length > 250){
+    if (recipe.image) {
+      if (recipe.image.length > 250) {
         setErrorMessage("Error: URL is too long");
         return;
       }
@@ -67,49 +72,64 @@ const RecipeMaker = () => {
 
   const handleAiCall = async (e: any) => {
     e.preventDefault();
-    const recipe = await askService.askForRecipe(prompt);
-    setPrompt(JSON.stringify(recipe.formattedResponse));
-  }
+    setAILoading(true);
+    const response = await askService.askForRecipe(prompt);
+    const recipe = response.formattedResponse;
+    setRecipe((prev) => ({
+      ...prev,
+      title: recipe.title,
+      summary: recipe.Summary,
+      readyInMinutes: recipe.ReadyInMinutes,
+      servings: recipe.Servings,
+      ingredients: recipe.Ingredients.split(";"),
+      instructions: recipe.Instructions,
+      diets: recipe.Diets.split(";"),
+      steps: recipe.Steps.split(";"),
+    }));
+    setAILoading(false);
+  };
 
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24 px-6">
       <h1 className="text-3xl font-bold text-center mb-8">Create a Recipe</h1>
 
-      <form className="flex flex-col items-center justify-center" onSubmit={handleAiCall}>
-  <button
-    className="flex items-center justify-center px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
-    type="submit"
-  >
-    <svg
-      className="w-5 h-5 mr-2"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M13 10V3L4 14h7v7l9-11h-7z"
-      />
-    </svg>
-    Generate AI Recipe
-  </button>
-  <div>
-    <label className="block font-bold mb-1">prompt</label>
-    <textarea
-      // type="text"
-      value={prompt}
-      onChange={(e) => {
-        setPrompt(e.target.value);
-      }}
-      className="w-96 p-2 border rounded"
-    />
-  </div>
-</form>
-
-
+      <form
+        className="flex flex-col items-center justify-center"
+        onSubmit={handleAiCall}
+      >
+        <button
+          className="flex items-center justify-center px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
+          type="submit"
+        >
+          <svg
+            className="w-5 h-5 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
+          Generate AI Recipe
+        </button>
+        <div>
+          <label className="block font-bold mb-1">prompt</label>
+          <textarea
+            // type="text"
+            value={prompt}
+            onChange={(e) => {
+              setPrompt(e.target.value);
+            }}
+            className="w-96 p-2 border rounded"
+          />
+        </div>
+        {AILoading ? <h1>LOADING...</h1> : <></>}
+      </form>
 
       <form
         onSubmit={handleSubmit}
@@ -161,7 +181,9 @@ const RecipeMaker = () => {
               <input
                 type="text"
                 value={ingredient}
-                onChange={(e) => handleListChange("ingredients", index, e.target.value)}
+                onChange={(e) =>
+                  handleListChange("ingredients", index, e.target.value)
+                }
                 className="flex-1 p-2 border rounded"
               />
               <button
@@ -199,7 +221,9 @@ const RecipeMaker = () => {
               <select
                 id="diet"
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
-                onChange={(e) => handleListChange("diets", index, e.target.value)}
+                onChange={(e) =>
+                  handleListChange("diets", index, e.target.value)
+                }
               >
                 <option disabled selected>
                   {diet}
@@ -243,7 +267,9 @@ const RecipeMaker = () => {
               <input
                 type="text"
                 value={step}
-                onChange={(e) => handleListChange("steps", index, e.target.value)}
+                onChange={(e) =>
+                  handleListChange("steps", index, e.target.value)
+                }
                 className="flex-1 p-2 border rounded"
               />
               <button
@@ -269,19 +295,18 @@ const RecipeMaker = () => {
           <input
             type="text"
             value={recipe.image ?? ""} // Handle null value
-            onClick={(event:any)=> {
+            onClick={(event: any) => {
               event.target.select();
             }}
             onChange={(e) => {
               const imageURL = e.target.value;
-              setRecipe({ ...recipe, image: imageURL })
-              if(imageURL.length > 250){
+              setRecipe({ ...recipe, image: imageURL });
+              if (imageURL.length > 250) {
                 setErrorMessage("Error: URL is too long");
               } else {
                 setErrorMessage("");
               }
-              }
-            }
+            }}
             className="p-2 border rounded w-full"
           />
         </div>
