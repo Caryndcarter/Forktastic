@@ -7,9 +7,6 @@ export interface UserDocument extends Document {
     userName: string;
     userEmail: string;
     userPassword: string;
-    intolerance: string; 
-    diet: string; 
-    favIngredients: string; 
     isCorrectPassword(password: string): Promise<boolean>;
   }
   
@@ -30,18 +27,7 @@ export interface UserDocument extends Document {
         type: String,
         required: true,
       },
-      intolerance: {
-        type: String, 
-        required: false, 
-      }, 
-      diet: {
-        type: String, 
-        required: false
-      }, 
-      favIngredients: {
-        type: String, 
-        required: false
-      }
+
     },
     // set this to use virtual below
     {
