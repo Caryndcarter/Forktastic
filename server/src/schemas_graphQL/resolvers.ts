@@ -11,10 +11,10 @@ const resolvers = {
   
     Mutation: {
       // create a user, sign a token, and send it back 
-      addUser: async (_parent:any, { username, email, password } : { username: string; email: string; password: string }) => {
-        console.log('Inputs:', { username, email, password });
+      addUser: async (_parent:any, { userName, userEmail, userPassword } : { userName: string; userEmail: string; userPassword: string }) => {
+        console.log('Inputs:', { userName, userEmail, userPassword });
         
-        const user = await User.create({ username, email, password });
+        const user = await User.create({ userName, userEmail, userPassword });
       
         if (!user) {
           throw new GraphQLError('Something is Wrong! Creating user failed');
@@ -25,18 +25,18 @@ const resolvers = {
       },
   
       // login a user, sign a token, and send it back 
-      login: async (_parent: any, { username, email, password }: { username?: string; email?: string; password: string }) => {
+      login: async (_parent: any, { userName, userEmail, userPassword }: { userName?: string; userEmail?: string; userPassword: string }) => {
         const user = await User.findOne({
-          $or: [{ username }, { email }],
+          $or: [{ userName }, { userEmail }],
         });
   
         if (!user) {
           throw new GraphQLError("Can't find this user");
         }
   
-        const correctPw = await user.isCorrectPassword(password);
+        const correctPw = await user.isCorrectPassword(userPassword);
         if (!correctPw) {
-          throw new GraphQLError('Wrong password');
+          throw new GraphQLError('Wrong Password');
         }
   
         const token = signToken(user.userName, user.userPassword, user._id);
