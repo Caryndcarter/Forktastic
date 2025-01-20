@@ -7,6 +7,7 @@ import askService from "../api/askService";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Sparkles, Loader2 } from "lucide-react";
 
 const RecipeMaker = () => {
   const navigate = useNavigate();
@@ -98,41 +99,36 @@ const RecipeMaker = () => {
       <h1 className="text-3xl font-bold text-center mb-8">Create a Recipe</h1>
 
       <form
-        className="flex flex-col items-center justify-center"
         onSubmit={handleAiCall}
+        className="w-full max-w-3xl mx-auto p-6 rounded-lg space-y-4"
       >
-        <button
-          className="flex items-center justify-center px-4 py-2 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-opacity-75 transition duration-300 ease-in-out"
-          type="submit"
-        >
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M13 10V3L4 14h7v7l9-11h-7z"
+        <div className="space-y-2">
+          <Label htmlFor="prompt" className="font-bold">
+            Prompt
+          </Label>
+          <div className="relative">
+            <Textarea
+              id="prompt"
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              className="w-full min-h-[150px] pr-24 pl-10"
+              placeholder="Enter your prompt here..."
             />
-          </svg>
-          Generate AI Recipe
-        </button>
-        <div>
-          <label className="block font-bold mb-1">prompt</label>
-          <textarea
-            // type="text"
-            value={prompt}
-            onChange={(e) => {
-              setPrompt(e.target.value);
-            }}
-            className="w-96 p-2 border rounded"
-          />
+            {AILoading && (
+              <div className="absolute left-3 bottom-3">
+                <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+              </div>
+            )}
+            <Button
+              type="submit"
+              className="absolute right-3 bottom-3"
+              disabled={AILoading || !prompt.trim()}
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              Generate
+            </Button>
+          </div>
         </div>
-        {AILoading ? <h1>LOADING...</h1> : <></>}
       </form>
 
       <form
