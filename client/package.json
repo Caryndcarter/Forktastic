@@ -20,7 +20,7 @@
     "react-router-dom": "^6.23.1", 
     "graphql": "^16.9.0",
     "jwt-decode": "^4.0.0",
-    "@apollo/client": "^3.10.6"
+    "@apollo/client": "^3.10.6",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7"
   },
