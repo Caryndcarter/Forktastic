@@ -1,6 +1,13 @@
 import { useState } from "react";
-import { authService } from "../api/authentication";
-import UserLogin from "../interfaces/UserLogin";
+//import UserLogin from "../interfaces/UserLogin";
+//import { authService } from "../api/authentication";
+
+//new imports
+import type { ChangeEvent, FormEvent } from 'react';
+import { useMutation } from "@apollo/client";
+import { ADD_USER } from "../utils_graphQL/mutations";
+import Auth from '../utils_graphQL/auth';
+
 
 interface loginFormProps{
     setSignIn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,14 +25,17 @@ export default function SignUpForm({ setSignIn }: loginFormProps){
 
     const [errorMessage,setErrorMessage] = useState('');
 
-    const handleChange = (e: any) => {
+    //using mutation hook
+    const [addUser] = useMutation(ADD_USER);
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setFormValues({
             ...formValues,
             [e.target.id]: e.target.value
         });
     };
 
-    const handleSignUp = async (e: any) => {
+    const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if(!checkUsername){ return; }
@@ -39,15 +49,33 @@ export default function SignUpForm({ setSignIn }: loginFormProps){
             return;
         }
 
-        const response = await authService.signUp(formValues as UserLogin);
-        if(response.error){
-            setErrorMessage('This email is associated with a different user.');
-            return;
-        }
-    }
+        try {
+            const { data } = await addUser({
+              variables: {
+                userName: formValues.userName,
+                userEmail: formValues.userEmail,
+                userPassword: formValues.userPassword,
+              },
+            });
 
-    const checkEmail = (e: any) => {
-        const inputEmail = e.target.value;
+            if (!data) {
+                throw new Error('Something went wrong!');
+              }
+
+            const { token } = data.addUser;
+            Auth.login(token);
+
+            // if (data) {
+                // localStorage.setItem("id_token", data.addUser.token);
+                // window.location.assign("/");
+            //   }
+            } catch (error) {
+              setErrorMessage("Failed to create an account. Please try again.");
+            }
+          };
+
+    const checkEmail = () => {
+        const inputEmail = formValues.userEmail;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(inputEmail === '') {
             setErrorMessage('Please enter an email.');
@@ -63,8 +91,8 @@ export default function SignUpForm({ setSignIn }: loginFormProps){
         return true;
     }
 
-    const checkUsername = (e:any) => {
-        const inputUserName = e.target.value;
+    const checkUsername = () => {
+        const inputUserName = formValues.userName;
         if(inputUserName === ''){
             setErrorMessage('Please enter a username.');
             return false;
@@ -85,8 +113,8 @@ export default function SignUpForm({ setSignIn }: loginFormProps){
         
     }
   
-    const checkPassword = (e:any) => {
-        const inputPassword = e.target.value;
+    const checkPassword = () => {
+        const inputPassword = formValues.userPassword;
         if(inputPassword === ''){
             setErrorMessage('Please enter a password.');
         } else {
