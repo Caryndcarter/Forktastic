@@ -42,7 +42,6 @@ app.use(express.json());
 // Static files for the client
 app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-app.use(routes); 
 
 //create Apollo Server
 const startApolloServer = async () => {
@@ -53,22 +52,20 @@ const startApolloServer = async () => {
       context: graphQLAuthMiddleware as any
     }
   ));
-
-  // MongoDB Connection Error Handling
-  db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-};
-
-
-// Default fallback route for client
-app.get('*', (_req, res) => {
-      res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
-    });
-  
+}; 
 
 // Start servers
 const startServers = async () => {
   // Start GraphQL Server
   await startApolloServer();
+
+    // Use your custom routes
+  app.use(routes); 
+
+  // Default fallback route for client
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
+  });
 
   // Start Express Server with PostgreSQL
   sequelize
@@ -83,6 +80,9 @@ const startServers = async () => {
       console.error('Unable to connect to the database:', error);
     });
 };
+
+// MongoDB Connection Error Handling
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 startServers();
 
