@@ -48,8 +48,8 @@ export interface UserDocument extends Document {
   });
   
   // custom method to compare and validate password for logging in
-  userSchema.methods.isCorrectPassword = async function (password: string) {
-    return await bcrypt.compare(password, this.password);
+  userSchema.methods.isCorrectPassword = async function (userPassword: string) {
+    return await bcrypt.compare(userPassword, this.userPassword);
   };
   
   
