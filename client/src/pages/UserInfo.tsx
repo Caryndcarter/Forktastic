@@ -2,7 +2,7 @@
 import { useState, useLayoutEffect, } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../api/authentication';
-import SignUpForm from '../components/SignUpForm';
+import SignUpFormGraph from '../components/SignUpFormGraph';
 import LoginForm from '../components/LoginForm';
 import AccountShowCase from '../components/AccountShowCase';
 
@@ -66,7 +66,7 @@ const UserInfo = () => {
             ? <AccountShowCase setLoginCheck={setLoginCheck}></AccountShowCase>
             : signIn 
               ? <LoginForm setSignIn={setSignIn}></LoginForm>
-              : <SignUpForm setSignIn={setSignIn}></SignUpForm>
+              : <SignUpFormGraph setSignIn={setSignIn}></SignUpFormGraph>
         }
       </div>
     </div>

@@ -60,7 +60,8 @@ const startApolloServer = async () => {
       context: graphQLAuthMiddleware as any
     }
   ));
-}; */
+  */
+}; 
 
 // Start servers
 const startServers = async () => {
