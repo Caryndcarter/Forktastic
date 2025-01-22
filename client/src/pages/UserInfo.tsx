@@ -1,10 +1,11 @@
 
 import { useState, useLayoutEffect, } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authService } from '../api/authentication';
+//import { authService } from '../api/authentication';
 import SignUpFormGraph from '../components/SignUpFormGraph';
-import LoginForm from '../components/LoginForm';
+import LoginFormGraph from '../components/LoginFormGraph';
 import AccountShowCase from '../components/AccountShowCase';
+import Auth from '../utils_graphQL/auth'; 
 
 
 const UserInfo = () => {
@@ -12,13 +13,13 @@ const UserInfo = () => {
   const [signIn,setSignIn] = useState(true);
 
   useLayoutEffect(() => {
-    const checkLogin = async () => {
-      if (await authService.loggedIn()) {
+    const checkLogin =  () => {
+      if (Auth.loggedIn()) {
         setLoginCheck(true);
       }
     };
   
-    checkLogin(); // Call the async function inside the synchronous effect.
+    checkLogin(); 
   }, []);
 
   
@@ -65,7 +66,7 @@ const UserInfo = () => {
           loginCheck
             ? <AccountShowCase setLoginCheck={setLoginCheck}></AccountShowCase>
             : signIn 
-              ? <LoginForm setSignIn={setSignIn}></LoginForm>
+              ? <LoginFormGraph setSignIn={setSignIn}></LoginFormGraph>
               : <SignUpFormGraph setSignIn={setSignIn}></SignUpFormGraph>
         }
       </div>
