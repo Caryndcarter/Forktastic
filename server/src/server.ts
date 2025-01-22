@@ -29,6 +29,11 @@ const PORT = process.env.PORT || 3001;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  introspection: true, 
+  formatError: (error) => {
+    console.error('GraphQL Error:', error); 
+    return error;
+  } 
 });
 
 const __filename = fileURLToPath(import.meta.url);

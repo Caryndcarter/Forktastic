@@ -12,10 +12,10 @@ if (!secretKey) {
 
 export const authenticateToken = ({ req }: any) => {
   // Allows token to be sent via req.body, req.query, or headers
-  //let token = req.body.token || req.query.token || req.headers.authorization;
-  let token = req.headers.authorization?.split(' ')[1]; // Check Authorization header for Bearer token
+  let token = req.body.token || req.query.token || req.headers.authorization;
+  //let token = req.headers.authorization?.split(' ')[1]; // Check Authorization header for Bearer token
 
-  // console.log('Auth Header:', req.headers.authorization);
+  console.log('Auth Header:', req.headers.authorization);
 
   if (!token) {
     throw new GraphQLError('Authorization token is missing', { extensions: { code: 'UNAUTHENTICATED' } });
