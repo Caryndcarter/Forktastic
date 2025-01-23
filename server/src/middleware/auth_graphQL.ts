@@ -15,30 +15,20 @@ export const authenticateToken = ({ req }: any) => {
   let token = req.body.token || req.query.token || req.headers.authorization;
   //let token = req.headers.authorization?.split(' ')[1]; // Check Authorization header for Bearer token
 
-  console.log('Auth Header:', req.headers.authorization);
-
-  if (!token) {
-    throw new GraphQLError('Authorization token is missing', { extensions: { code: 'UNAUTHENTICATED' } });
-  }
-
   // If the token is sent in the authorization header, extract the token from the header
   if (req.headers.authorization) {
     token = token.split(' ').pop().trim();
   }
 
-     // If no token is provided, return context with user as null
-     if (!token) {
-      console.log('No token provided');
+  if (!token) {
       return req;
-    }
+  }
 
   // Try to verify the token
   try {
     const { data }: any = jwt.verify(token, process.env.JWT_SECRET_KEY || '');
     // If the token is valid, attach the user data to the request object
 
-    // Log the decoded data
-    // console.log('Decoded User Data:', data);
 
     req.user = data;
   } catch (err) {
