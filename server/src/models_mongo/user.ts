@@ -12,7 +12,7 @@ export interface UserDocument extends Document {
   diet?: diet;
   cuisine?: cuisine;
   intolerances?: intolerance[];
-  isCorrectPassword(password: string): Promise<boolean>;
+  isCorrectPassword(userPassword: string): Promise<boolean>;
 }
 
 const userSchema = new Schema<UserDocument>(

@@ -12,7 +12,10 @@ if (!secretKey) {
 
 export const authenticateToken = ({ req }: any) => {
   // skips authentication process if loging in or signing up
-  if (req.body.query.includes("login") || req.body.query.includes("signUp")) {
+  if (
+    req.body.query.includes("loginUser") ||
+    req.body.query.includes("signUp")
+  ) {
     return req;
   }
 

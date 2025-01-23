@@ -35,16 +35,17 @@ const resolvers = {
 
     // login a user, sign a token, and send it back
     login: async (_: any, args: any): Promise<any> => {
-      const { email, password } = args;
-      const user = await User.findOne({ userEmail: email });
+      const { userEmail, userPassword } = args;
+      console.log(userEmail);
+      const user = await User.findOne({ userEmail: userEmail });
 
       if (!user) {
-        throw new GraphQLError("Wrong email or password.");
+        throw new GraphQLError("Wrong email");
       }
 
-      const correctPw = await user.isCorrectPassword(password);
+      const correctPw = await user.isCorrectPassword(userPassword);
       if (!correctPw) {
-        throw new GraphQLError("Wrong email or password.");
+        throw new GraphQLError("Wrong password");
       }
 
       const token = signToken(user.userName, user.userPassword, user._id);
