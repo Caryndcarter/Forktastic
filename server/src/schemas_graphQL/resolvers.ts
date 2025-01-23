@@ -1,4 +1,4 @@
-import User from '../models_mongo/user_mongo.js';
+import User from '../models_mongo/user-mongo.js';
 import { signToken } from '../middleware/auth_graphQL.js';
 import { GraphQLError } from 'graphql';
 

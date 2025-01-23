@@ -1,3 +1,3 @@
-import User from './user_mongo';
+import User from './user-mongo';
 
 export default { User };
