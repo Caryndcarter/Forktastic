@@ -1,25 +1,26 @@
 import { Outlet, useLocation} from 'react-router-dom';
 import './index.css';
-import { ApolloClient, ApolloProvider, InMemoryCache} from '@apollo/client';
-//createHttpLink --commenting out for now in above import
+import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink} from '@apollo/client';
+
 //import Navbar from './components/Navbar';
 import RecipeDetails from './interfaces/recipeDetails';
 import { createContext, useState } from 'react';
-//import { setContext } from '@apollo/client/link/context'; -- commenting out for now
+import { setContext } from '@apollo/client/link/context';
 
-/* Apollo Client setup -- commenting out for now
+
 const httpLink = createHttpLink({
   uri: '/graphql',
 });
-*/
 
+
+/* 
 const client = new ApolloClient({
   uri: '/graphql',
   cache: new InMemoryCache(),
 });
+*/
 
-
-/* Leaving out auth for now: Construct request middleware that will attach the JWT token to every request as an `authorization` header
+/* Leaving out auth for now: Construct request middleware that will attach the JWT token to every request as an `authorization` header*/
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('id_token');
   return {
@@ -29,14 +30,14 @@ const authLink = setContext((_, { headers }) => {
     },
   };
 });
-*/
 
-/* Commmenting this out for now: 
+
+/* Commmenting this out for now: */
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
-*/
+
 
 const defaultRecipe: RecipeDetails  = {
   id: 0, 

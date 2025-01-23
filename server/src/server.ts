@@ -16,7 +16,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { typeDefs, resolvers } from './schemas_graphQL/index.js';
 
 //Authentication Middleware - commenting out for now
-//import { authenticateToken as graphQLAuthMiddleware } from './middleware/auth_graphQL.js'; 
+import { authenticateToken as graphQLAuthMiddleware } from './middleware/auth_graphQL.js'; 
 
 dotenv.config();
 
@@ -52,15 +52,13 @@ app.use(express.static(path.join(__dirname, '../../client/dist')));
 const startApolloServer = async () => {
   await server.start();
 
-  app.use('/graphql', expressMiddleware(server));
+  //app.use('/graphql', expressMiddleware(server));
 
-  /*Commenting out for now
   app.use('/graphql', expressMiddleware(server as any,
     {
       context: graphQLAuthMiddleware as any
     }
   ));
-  */
 }; 
 
 // Start servers
