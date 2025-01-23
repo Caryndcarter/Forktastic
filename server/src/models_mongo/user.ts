@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { Schema, model, type Document } from "mongoose";
+import mongoose, { Schema, model, type Document } from "mongoose";
 import { diet, dietValues } from "../types/diet.js";
 import { cuisine, cuisineValues } from "../types/cuisine.js";
 import { intolerance, intoleranceValues } from "../types/intolerance.js";
@@ -8,9 +8,10 @@ export interface UserDocument extends Document {
   userName: string;
   userEmail: string;
   userPassword: string;
-  diet: diet;
-  cuisine: cuisine;
-  intolerances: intolerance[];
+  savedRecipes: mongoose.Types.ObjectId[];
+  diet?: diet;
+  cuisine?: cuisine;
+  intolerances?: intolerance[];
   isCorrectPassword(password: string): Promise<boolean>;
 }
 
@@ -19,7 +20,7 @@ const userSchema = new Schema<UserDocument>(
     userName: {
       type: String,
       required: true,
-      unique: true,
+      unique: false,
     },
     userEmail: {
       type: String,
@@ -31,20 +32,28 @@ const userSchema = new Schema<UserDocument>(
       type: String,
       required: true,
     },
+    savedRecipes: {
+      type: [{ type: Schema.Types.ObjectId, ref: "recipes" }],
+      required: true,
+      default: [],
+    },
     diet: {
       type: String,
       enum: dietValues,
       required: false,
+      default: null,
     },
     cuisine: {
       type: String,
       enum: cuisineValues,
       required: false,
+      default: null,
     },
     intolerances: {
       type: [String],
       enum: intoleranceValues,
       required: false,
+      default: [],
     },
   },
 

@@ -5,7 +5,6 @@ import { GraphQLError } from "graphql";
 const resolvers = {
   Query: {
     getUser: async (_: any, _args: any, context: any): Promise<any> => {
-      console.log(context);
       if (context.user) {
         return User.findOne({ _id: context.user._id });
       }
@@ -36,25 +35,17 @@ const resolvers = {
     },
 
     // login a user, sign a token, and send it back
-    login: async (
-      _parent: any,
-      {
-        userName,
-        userEmail,
-        userPassword,
-      }: { userName?: string; userEmail?: string; userPassword: string }
-    ) => {
-      const user = await User.findOne({
-        $or: [{ userName }, { userEmail }],
-      });
+    login: async (_: any, args: any): Promise<any> => {
+      const { email, password } = args;
+      const user = await User.findOne({ userEmail: email });
 
       if (!user) {
-        throw new GraphQLError("Can't find this user");
+        throw new GraphQLError("Wrong email or password.");
       }
 
-      const correctPw = await user.isCorrectPassword(userPassword);
+      const correctPw = await user.isCorrectPassword(password);
       if (!correctPw) {
-        throw new GraphQLError("Wrong Password");
+        throw new GraphQLError("Wrong email or password.");
       }
 
       const token = signToken(user.userName, user.userPassword, user._id);
