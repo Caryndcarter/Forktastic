@@ -2,6 +2,8 @@ import { authService } from "../api/authentication";
 import { useNavigate } from "react-router-dom";
 import { useLayoutEffect, useState } from "react";
 import { getAccountInformation, putAccountInformation } from "../api/usersAPI";
+import { useQuery } from "@apollo/client";
+import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
 
 interface accountShowCaseProps {
   setLoginCheck: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,6 +23,8 @@ export default function AccountShowCase({
     diet: "",
     intolerance: [],
   });
+
+  const { loading, error, data } = useQuery(GET_ACCOUNT_PREFERENCES);
 
   useLayoutEffect(() => {
     const getInfo = async () => {
