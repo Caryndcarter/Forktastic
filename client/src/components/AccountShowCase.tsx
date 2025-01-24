@@ -1,7 +1,7 @@
 import { authService } from "../api/authentication";
 import { useNavigate } from "react-router-dom";
 import { useLayoutEffect, useState } from "react";
-import { getAccountInformation, putAccountInformation } from "../api/usersAPI";
+import { putAccountInformation } from "../api/usersAPI";
 import { useQuery } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
 
@@ -24,19 +24,11 @@ export default function AccountShowCase({
     intolerance: [],
   });
 
-  const { loading, error, data } = useQuery(GET_ACCOUNT_PREFERENCES);
+  const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
 
   useLayoutEffect(() => {
-    const getInfo = async () => {
-      const response = await getAccountInformation();
-      const accountInfo: any = await response.json();
-      setFormValues({
-        diet: accountInfo.diet ? accountInfo.diet : "",
-        intolerance: accountInfo.intolerance ? accountInfo.intolerance : [],
-      });
-    };
-    getInfo();
-  }, []);
+    console.log(data);
+  }, [data]);
 
   const handleLogOut = () => {
     authService.logout();
