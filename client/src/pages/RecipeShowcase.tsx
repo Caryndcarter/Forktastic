@@ -4,14 +4,16 @@ import { currentRecipeContext } from "../App";
 import { addRecipe, retrieveRecipeByUserId, deleteRecipe } from "../api/recipesAPI";
 import { authService } from '../api/authentication';
 import { useState, useLayoutEffect} from 'react';
-
+import ReviewComponent from "../components/Review";
+import SavedReview from "../components/SavedReview";
+import { Button } from "@/components/ui/button";
 
 const RecipeShowcase = () =>  {
   const navigate = useNavigate();
   const { currentRecipeDetails } = useContext(currentRecipeContext);
   const [loginCheck,setLoginCheck] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-
+  const [review, setReview] = useState<{ rating: number; comment: string } | null>(null);
 
   useLayoutEffect(() => {
     const checkLogin = async () => {
@@ -73,7 +75,11 @@ const RecipeShowcase = () =>  {
     const cleanHtml = htmlString.replace(/<\/?[^>]+(>|$)/g, ""); // removes HTML tags if needed
     return <span dangerouslySetInnerHTML={{ __html: cleanHtml }} />;
   };
-  
+
+  const handleReviewSubmit = (rating: number, comment: string) => {
+    setReview({ rating, comment });
+  };
+
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24"> {/* Added pt-24 to prevent content from being hidden behind the navbar */}
   <nav className="bg-[#f5d3a4] shadow-md fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-4 max-w-7xl mx-auto z-10">
@@ -220,7 +226,19 @@ const RecipeShowcase = () =>  {
           </h4>
         )}
       </div>
-
+      <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">Recipe Review</h1>
+      {review ? (
+        <>
+          <SavedReview rating={review.rating} comment={review.comment} />
+          <Button onClick={() => setReview(null)} className="mt-4">
+            Edit Your Review
+          </Button>
+        </>
+      ) : (
+        <ReviewComponent onSubmit={handleReviewSubmit} initialReview={review} />
+      )}
+    </div>
   </div>
 </div>
   );
