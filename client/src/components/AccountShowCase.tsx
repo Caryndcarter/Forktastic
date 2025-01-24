@@ -41,7 +41,6 @@ export default function AccountShowCase({
         intolerances: data.getUser.intolerances,
       }));
     }
-    // console.log(formValues);
   }, [data]);
 
   const handleLogOut = () => {
