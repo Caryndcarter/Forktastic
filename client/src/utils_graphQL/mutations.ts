@@ -33,3 +33,19 @@ export const SIGN_UP = gql`
     }
   }
 `;
+
+export const UPDATE_ACCOUNT_PREFERENCES = gql`
+  mutation updatePreferences(
+    $diet: String
+    $cuisine: String
+    $intolerances: [String]
+  ) {
+    updatePreferences(
+      diet: $diet
+      cuisine: $cuisine
+      intolerances: $intolerances
+    ) {
+      diet
+    }
+  }
+`;

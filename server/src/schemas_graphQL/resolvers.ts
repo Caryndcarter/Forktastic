@@ -1,6 +1,7 @@
 import User from "../models_mongo/user.js";
 import { signToken, AuthenticationError } from "../middleware/auth_graphQL.js";
 import { GraphQLError } from "graphql";
+import { diet, intolerance, user_context } from "../types/index.js";
 
 const resolvers = {
   Query: {
@@ -34,7 +35,10 @@ const resolvers = {
     },
 
     // login a user, sign a token, and send it back
-    login: async (_: any, args: any): Promise<any> => {
+    login: async (
+      _: any,
+      args: { userEmail: string; userPassword: string }
+    ): Promise<any> => {
       const { userEmail, userPassword } = args;
       console.log(userEmail);
       const user = await User.findOne({ userEmail: userEmail });
@@ -50,6 +54,44 @@ const resolvers = {
 
       const token = signToken(user.userName, user.userPassword, user._id);
       return { token, user };
+    },
+
+    // update the preferences of a user
+    updatePreferences: async (
+      _: any,
+      args: {
+        diet?: diet;
+        intolerances?: intolerance[];
+      },
+      context: user_context
+    ): Promise<any> => {
+      if (!context.user) {
+        throw new AuthenticationError("could not authenticate user.");
+      }
+
+      const user = await User.findOne({ _id: context.user._id });
+
+      if (!user) {
+        throw new AuthenticationError("could not find user.");
+      }
+
+      const { diet, intolerances } = args;
+
+      if (diet) {
+        user.diet = diet;
+      }
+
+      if (intolerances) {
+        user.intolerances = intolerances;
+      }
+
+      await user.save();
+      console.log(`${user.userName}'s new preferences are saved`);
+      return {
+        id: user._id,
+        diet: user.diet || null,
+        intolerances: user.intolerances || [],
+      };
     },
   },
 };
