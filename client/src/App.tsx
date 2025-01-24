@@ -11,6 +11,7 @@ import {
 import RecipeDetails from "./interfaces/recipeDetails";
 import { createContext, useState } from "react";
 import { setContext } from "@apollo/client/link/context";
+import AuthService from "./utils_graphQL/auth.js";
 
 // Apollo Client setup
 const httpLink = createHttpLink({
@@ -19,11 +20,11 @@ const httpLink = createHttpLink({
 
 // Construct request middleware that will attach the JWT token to every request as an `authorization` header
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem("id_token");
+  const token = AuthService.getToken();
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : "",
+      authorization: token ? token : "",
     },
   };
 });

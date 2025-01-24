@@ -4,7 +4,6 @@ export const GET_ACCOUNT_PREFERENCES = gql`
   query getAccountPreferences {
     getUser {
       diet
-      cuisine
       intolerances
     }
   }

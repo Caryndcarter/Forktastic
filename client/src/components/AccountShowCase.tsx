@@ -1,9 +1,10 @@
 import { authService } from "../api/authentication";
 import { useNavigate } from "react-router-dom";
 import { useLayoutEffect, useState } from "react";
-import { putAccountInformation } from "../api/usersAPI";
 import { useQuery } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
+import { useMutation } from "@apollo/client";
+import { UPDATE_ACCOUNT_PREFERENCES } from "@/utils_graphQL/mutations";
 
 interface accountShowCaseProps {
   setLoginCheck: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,7 +12,7 @@ interface accountShowCaseProps {
 
 interface accountInfo {
   diet: string;
-  intolerance: string[];
+  intolerances: string[];
 }
 
 export default function AccountShowCase({
@@ -21,13 +22,26 @@ export default function AccountShowCase({
 
   const [formValues, setFormValues] = useState<accountInfo>({
     diet: "",
-    intolerance: [],
+    intolerances: [],
   });
 
   const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
+  const [updateAccount] = useMutation(UPDATE_ACCOUNT_PREFERENCES);
 
   useLayoutEffect(() => {
-    console.log(data);
+    if (data?.getUser.diet) {
+      setFormValues((prev) => ({
+        ...prev,
+        diet: data.getUser.diet,
+      }));
+    }
+    if (data?.getUser.intolerances) {
+      setFormValues((prev) => ({
+        ...prev,
+        intolerances: data.getUser.intolerances,
+      }));
+    }
+    // console.log(formValues);
   }, [data]);
 
   const handleLogOut = () => {
@@ -36,15 +50,21 @@ export default function AccountShowCase({
   };
 
   const handleChange = (e: any) => {
-    setFormValues({
-      ...formValues,
+    setFormValues((prev) => ({
+      ...prev,
       [e.target.id]: e.target.value,
-    });
+    }));
+    console.log(formValues);
   };
 
   const handleAccountUpdate = (e: any) => {
     e.preventDefault();
-    putAccountInformation(formValues);
+    updateAccount({
+      variables: {
+        diet: formValues.diet,
+        intolerances: formValues.intolerances,
+      },
+    });
     navigate("/");
   };
 
@@ -53,7 +73,7 @@ export default function AccountShowCase({
     const selectedIntolerance = event.target.value;
     event.target.value = "";
 
-    if (formValues.intolerance.includes(selectedIntolerance)) {
+    if (formValues.intolerances.includes(selectedIntolerance)) {
       console.log("This intolerence is already in the user settings");
       return;
     }
@@ -64,25 +84,25 @@ export default function AccountShowCase({
     }
 
     const updatedIntolerances = [
-      ...formValues.intolerance,
+      ...formValues.intolerances,
       selectedIntolerance,
     ];
 
-    setFormValues((previousValues: accountInfo) => ({
-      ...previousValues,
-      intolerance: updatedIntolerances,
+    setFormValues((prev: accountInfo) => ({
+      ...prev,
+      intolerances: updatedIntolerances,
     }));
   };
 
   const removeIntolerance = (intolerance: string) => {
     // Filter out the specified intolerance
-    const updatedIntolerances = formValues.intolerance.filter(
+    const updatedIntolerances = formValues.intolerances.filter(
       (item) => item !== intolerance
     );
 
     // Update the formValues state
-    setFormValues((previousValues: accountInfo) => ({
-      ...previousValues,
+    setFormValues((prev: accountInfo) => ({
+      ...prev,
       intolerance: updatedIntolerances,
     }));
   };
@@ -101,9 +121,10 @@ export default function AccountShowCase({
             id="diet"
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
             onChange={handleChange}
+            value={formValues.diet}
           >
-            <option disabled selected>
-              {formValues.diet ? formValues.diet : "select a diet"}
+            <option value="" disabled>
+              Select a diet
             </option>
             <option value="">None</option>
             <option value="Gluten Free">Gluten Free</option>
@@ -155,7 +176,7 @@ export default function AccountShowCase({
           </div>
 
           <ul>
-            {formValues.intolerance.map((item) => {
+            {formValues.intolerances.map((item) => {
               return (
                 <li
                   key={item}
