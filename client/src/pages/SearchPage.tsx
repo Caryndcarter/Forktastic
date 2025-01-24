@@ -1,55 +1,61 @@
-import { useState, useCallback, useLayoutEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Recipe from '../interfaces/recipe';
-import RecipeCard from '../components/RecipeCard';
-import FilterForm from '../components/FilterForm';
-import { getAccountInformation } from '../api/usersAPI';
-import apiService from '../api/apiService';
-
+import { useState, useCallback, useLayoutEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Recipe from "../interfaces/recipe";
+import RecipeCard from "../components/RecipeCard";
+import FilterForm from "../components/FilterForm";
+import apiService from "../api/apiService";
+import { useQuery } from "@apollo/client";
+import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
 
 export interface filterInfo {
-  diet?:string,
-  cuisine?:string,
-  intolerance:string[],
-  includeIngredients:string[],
+  diet?: string;
+  cuisine?: string;
+  intolerances: string[];
+  includeIngredients: string[];
 }
 
-
 const RecipeSearchPage: React.FC = () => {
-  const [query, setQuery] = useState<string>(''); // Track the search query
+  const [query, setQuery] = useState<string>(""); // Track the search query
   const [results, setResults] = useState<Recipe[]>([]); // Store the search results
   const [loading, setLoading] = useState<boolean>(false); // Track loading state
   const [filterVisible, setFilterVisible] = useState<boolean>(false); // Track filter form visibility
-  const [filterValue,setFilterValue] = useState<filterInfo>({
-    intolerance:[],
-    includeIngredients:[],
+  const [filterValue, setFilterValue] = useState<filterInfo>({
+    intolerances: [],
+    includeIngredients: [],
   });
 
   const navigate = useNavigate();
 
-  const getRandomRecipes = async() => {
+  const getRandomRecipes = async () => {
     const recipes = await apiService.forignRandomSearch();
     setResults(recipes);
-  }
+  };
 
   useLayoutEffect(() => {
     getRandomRecipes();
-    const getInfo = async () => {
-      const response = await getAccountInformation();
-      const accountInfo:any = await response.json();
-      setFilterValue({
-          diet: accountInfo.diet? accountInfo.diet : '',
-          intolerance: accountInfo.intolerance? accountInfo.intolerance : [],
-          includeIngredients:[],
-      });
+  }, []);
+
+  const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
+
+  useLayoutEffect(() => {
+    if (data?.getUser.diet) {
+      setFilterValue((prev) => ({
+        ...prev,
+        diet: data.getUser.diet,
+      }));
     }
-    getInfo();
-  },[]);
+    if (data?.getUser.intolerances) {
+      setFilterValue((prev) => ({
+        ...prev,
+        intolerances: data.getUser.intolerances,
+      }));
+    }
+  }, [data]);
 
   const handleChange = async (e: any) => {
     const queryText = e.target.value;
     setQuery(queryText);
-    if (queryText.trim() === '') {
+    if (queryText.trim() === "") {
       setResults([]);
       return;
     }
@@ -72,20 +78,21 @@ const RecipeSearchPage: React.FC = () => {
       query: queryText,
     };
 
-    if(filterValue.cuisine){
+    if (filterValue.cuisine) {
       searchParams.cuisine = filterValue.cuisine;
     }
 
-    if(filterValue.diet){
+    if (filterValue.diet) {
       searchParams.diet = filterValue.diet;
     }
 
-    if(filterValue.intolerance.length > 0){
-      searchParams.intolerance = filterValue.intolerance;
+    if (filterValue.intolerances.length > 0) {
+      searchParams.intolerance = filterValue.intolerances;
     }
 
     if (filterValue.includeIngredients.length > 0) {
-      searchParams.includeIngredients = filterValue.includeIngredients.join(',');
+      searchParams.includeIngredients =
+        filterValue.includeIngredients.join(",");
     }
 
     console.log(searchParams);
@@ -95,14 +102,20 @@ const RecipeSearchPage: React.FC = () => {
     setLoading(false);
   };
 
-  const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), [filterValue]);
+  const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), [
+    filterValue,
+  ]);
 
   return (
-    <div className={`min-h-screen bg-[#fef3d0] ${filterVisible ? 'filter-blur' : ''}`}>
+    <div
+      className={`min-h-screen bg-[#fef3d0] ${
+        filterVisible ? "filter-blur" : ""
+      }`}
+    >
       {/* Navbar */}
       <nav className="bg-[#f5d3a4] shadow-md fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-2 max-w-7xl mx-auto z-10">
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate("/")}
           className="text-[#a84e24] hover:text-[#b7572e] font-semibold"
         >
           Forktacular
@@ -113,13 +126,22 @@ const RecipeSearchPage: React.FC = () => {
         </div>
 
         <div className="flex space-x-4">
-          <button onClick={() => navigate('/recipe-book')} className="text-[#a84e24] hover:text-[#b7572e]">
+          <button
+            onClick={() => navigate("/recipe-book")}
+            className="text-[#a84e24] hover:text-[#b7572e]"
+          >
             Recipe Book
           </button>
-          <button onClick={() => navigate('/recipe-maker')} className="text-[#a84e24] hover:text-[#b7572e]">
+          <button
+            onClick={() => navigate("/recipe-maker")}
+            className="text-[#a84e24] hover:text-[#b7572e]"
+          >
             Recipe Maker
           </button>
-          <button onClick={() => navigate('/user-info')} className="text-[#a84e24] hover:text-[#b7572e]">
+          <button
+            onClick={() => navigate("/user-info")}
+            className="text-[#a84e24] hover:text-[#b7572e]"
+          >
             Account
           </button>
         </div>
@@ -168,11 +190,11 @@ const RecipeSearchPage: React.FC = () => {
             >
               ×
             </button>
-            <FilterForm 
+            <FilterForm
               filterValue={filterValue}
               setFilterValue={setFilterValue}
-              setFilterVisible={setFilterVisible}>
-            </FilterForm>
+              setFilterVisible={setFilterVisible}
+            ></FilterForm>
           </div>
         </div>
       )}
