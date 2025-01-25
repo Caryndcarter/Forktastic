@@ -10,6 +10,7 @@ export interface UserDocument extends Document {
   savedRecipes: mongoose.Types.ObjectId[];
   diet?: diet;
   intolerances?: intolerance[];
+  reviews?: string[]; 
   isCorrectPassword(userPassword: string): Promise<boolean>;
 }
 
@@ -31,7 +32,7 @@ const userSchema = new Schema<UserDocument>(
       required: true,
     },
     savedRecipes: {
-      type: [{ type: Schema.Types.ObjectId, ref: "recipes" }],
+      type: [{ type: Schema.Types.ObjectId, ref: "Recipe" }],
       required: true,
       default: [],
     },
@@ -44,6 +45,11 @@ const userSchema = new Schema<UserDocument>(
     intolerances: {
       type: [String],
       enum: intoleranceValues,
+      required: false,
+      default: [],
+    },
+    reviews: {
+      type: [{ type: Schema.Types.ObjectId, ref: "Review" }],
       required: false,
       default: [],
     },
