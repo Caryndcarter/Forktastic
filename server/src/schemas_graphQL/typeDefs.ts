@@ -8,6 +8,9 @@ const typeDefs = `
     login(userEmail: String!, userPassword: String!): Auth
     signUp(userName: String!, userEmail: String!, userPassword: String!): Auth
     updatePreferences(diet: String, cuisine: String, intolerances: [String]): User
+    addRecipe(recipeInput: RecipeInput!): Recipe
+    saveRecipe(recipeId: ID!): User
+    removeRecipe(recipeId: ID!): User
   }
 
   type User {
@@ -23,6 +26,37 @@ const typeDefs = `
   type Auth {
     token: String!
     user: User
+  }
+
+   type Recipe {
+    _id: ID!
+    title: String!
+    summary: String!
+    readyInMinutes: Int!
+    servings: Int!
+    ingredients: [String!]!
+    instructions: String!
+    steps: [String!]!
+    diet: [String]
+    image: String
+    sourceUrl: String
+    spoonacularId: Int
+    spoonacularSourceUrl: String
+  }
+
+   input RecipeInput {
+    title: String!
+    summary: String!
+    readyInMinutes: Int!
+    servings: Int!
+    ingredients: [String!]!
+    instructions: String!
+    steps: [String!]!
+    diet: [String]
+    image: String
+    sourceUrl: String
+    spoonacularId: Int
+    spoonacularSourceUrl: String
   }
 `;
 
