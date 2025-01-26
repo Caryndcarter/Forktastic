@@ -66,8 +66,7 @@ const RecipeShowcase = () =>  {
   // Function to save recipe
   const saveCurrentRecipe = async (
     currentRecipeDetails: RecipeDetails,
-    setIsSaved: React.Dispatch<React.SetStateAction<boolean>>, 
-    navigate: NavigateFunction) => {
+    setIsSaved: React.Dispatch<React.SetStateAction<boolean>> ) => {
     
     try {
       const { data  } = await addRecipe({
@@ -89,11 +88,11 @@ const RecipeShowcase = () =>  {
         },
       });
 
-     // if (data && data.addRecipe._id) {
-        //currentRecipeDetails.id = data.addRecipe._id; // Update the ID with the one from the backend
-      //}
+      if (data && data.addRecipe._id) {
+        currentRecipeDetails.id = data.addRecipe._id; // Update the ID with the one from the backend
+      }
 
-      console.log(data);
+      console.log(data.addRecipe._id);
 
       // Save the recipe ID to the user's savedRecipes array
       await saveRecipe({
@@ -103,7 +102,9 @@ const RecipeShowcase = () =>  {
       });
 
       setIsSaved(true);
-      navigate("/recipe-book");
+      console.log(isSaved);
+
+      //navigate("/recipe-book");
     } catch (err) {
       console.error("Error saving recipe:", err);
       alert("Failed to save the recipe.");
@@ -215,7 +216,7 @@ const RecipeShowcase = () =>  {
        onClick={() =>
         isSaved
           ? deleteCurrentRecipe(currentRecipeDetails, setIsSaved, navigate)
-          : saveCurrentRecipe(currentRecipeDetails, setIsSaved, navigate)
+          : saveCurrentRecipe(currentRecipeDetails, setIsSaved)
         } 
        className={`font-semibold py-2 px-4 rounded mb-6 transition-colors duration-300 ${
          isSaved

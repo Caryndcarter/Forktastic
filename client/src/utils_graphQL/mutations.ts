@@ -54,6 +54,7 @@ export const UPDATE_ACCOUNT_PREFERENCES = gql`
 export const ADD_RECIPE = gql`
   mutation addRecipe($recipeInput: recipeInput!) {
     addRecipe(recipeInput: $recipeInput) {
+      _id
       title
       summary
       readyInMinutes

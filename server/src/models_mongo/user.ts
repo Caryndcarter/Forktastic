@@ -7,7 +7,7 @@ export interface UserDocument extends Document {
   userName: string;
   userEmail: string;
   userPassword: string;
-  savedRecipes: mongoose.Types.ObjectId[];
+  savedRecipes?: mongoose.Types.ObjectId[];
   diet?: diet;
   intolerances?: intolerance[];
   reviews?: string[]; 
@@ -33,7 +33,7 @@ const userSchema = new Schema<UserDocument>(
     },
     savedRecipes: {
       type: [{ type: Schema.Types.ObjectId, ref: "Recipe" }],
-      required: true,
+      required: false,
       default: [],
     },
     diet: {

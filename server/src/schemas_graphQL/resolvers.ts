@@ -36,7 +36,7 @@ const resolvers = {
 
 
         // Check if the recipeId exists in the savedRecipes array
-        const isSaved = user.savedRecipes.includes(objectId);
+        const isSaved = user.savedRecipes?.includes(objectId);
         return isSaved;
       } catch (err) {
         console.error("Error in isRecipeSaved resolver:", err);
@@ -166,7 +166,7 @@ const resolvers = {
     
 
      // save a recipe to a user's `savedRecipes` field by adding it to the set (to prevent duplicates)
-     saveRecipe: async ( _parent: any,{ recipe }: { recipe: { recipeId: string;} }, context: any) => {
+     saveRecipe: async ( _parent: any,{ recipeId }: { recipeId: string }, context: any) => {
 
       if (!context.user) {
         console.log('No user in context:', context.user);
@@ -178,15 +178,15 @@ const resolvers = {
         // console.log('Attempting to update user with recipe:', recipe);
 
         // Check if the recipe exists in the Recipe collection
-        const existingRecipe = await Recipe.findById(recipe.recipeId);
+        //const existingRecipe = await Recipe.findById(recipe.recipeId);
 
-        if (!existingRecipe) {
-          throw new GraphQLError("Recipe not found");
-        }
+        //if (!existingRecipe) {
+          //throw new GraphQLError("Recipe not found");
+        //}
 
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { savedRecipes: recipe } },
+          { $addToSet: { savedRecipes: recipeId } },
           { new: true, runValidators: true }
         );
 
@@ -205,7 +205,7 @@ const resolvers = {
     },
 
     // remove a recipe from a user's `savedRecipes`
-    removeRecipe: async ( _parent: any, { recipeId }: { recipeId: number }, context: any) => {
+    removeRecipe: async ( _parent: any, { recipeId }: { recipeId: string }, context: any) => {
       
       if (!context.user) {
         throw new GraphQLError('You must be logged in!');
