@@ -3,6 +3,7 @@ import Recipe from "../models_mongo/recipe.js"
 import { signToken, AuthenticationError } from "../middleware/auth_graphQL.js";
 import { GraphQLError } from "graphql";
 import { diet, intolerance, user_context } from "../types/index.js";
+import mongoose from "mongoose";
 
 const resolvers = {
   Query: {
@@ -12,7 +13,34 @@ const resolvers = {
       }
       throw new AuthenticationError("could not authenticate user.");
     },
+
+    isRecipeSaved: async (_: any, { recipeId }: { recipeId: string }, context: any): Promise<boolean> => {
+      if (!context.user) {
+        throw new AuthenticationError("User not authenticated.");
+      }
+
+      try {
+
+         // Convert recipeId string to ObjectId
+         const objectId = new mongoose.Types.ObjectId(recipeId);
+
+        // Find the user by their ID
+        const user = await User.findOne({ _id: context.user._id });
+
+        if (!user) {
+          throw new GraphQLError("User not found.");
+        }
+
+        // Check if the recipeId exists in the savedRecipes array
+        const isSaved = user.savedRecipes.includes(objectId);
+        return isSaved;
+      } catch (err) {
+        console.error("Error in isRecipeSaved resolver:", err);
+        throw new GraphQLError("Failed to check if the recipe is saved.");
+      }
+    },
   },
+  
 
   Mutation: {
     // create a user, sign a token, and send it back

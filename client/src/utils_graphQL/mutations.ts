@@ -50,54 +50,72 @@ export const UPDATE_ACCOUNT_PREFERENCES = gql`
   }
 `;
 
+export const ADD_RECIPE = gql`
+  mutation addRecipe(
+    $title: String!
+    $summary: String!
+    $readyInMinutes: Int!
+    $servings: Int!
+    $ingredients: [String!]!
+    $instructions: String!
+    $steps: [String!]!
+    $diet: [String]
+    $image: String
+    $sourceUrl: String
+    $spoonacularId: Int
+    $spoonacularSourceUrl: String
+  ) {
+    addRecipe(
+      title: $title
+      summary: $summary
+      readyInMinutes: $readyInMinutes
+      servings: $servings
+      ingredients: $ingredients
+      instructions: $instructions
+      steps: $steps
+      diet: $diet
+      image: $image
+      sourceUrl: $sourceUrl
+      spoonacularId: $spoonacularId
+      spoonacularSourceUrl: $spoonacularSourceUrl
+    ) {
+      _id
+      title
+      summary
+      readyInMinutes
+      servings
+      ingredients
+      instructions
+      steps
+      diet
+      image
+      sourceUrl
+      spoonacularId
+      spoonacularSourceUrl
+      reviews
+    }
+  }
+`;
+
 
 export const SAVE_RECIPE = gql`
-  mutation saveRecipe($recipe: RecipeInput!) {
-    saveRecipe(recipe): $recipe) {
+  mutation saveRecipe($recipeId: ID!) {
+    saveRecipe(recipeId: $recipeId) {
       _id
       userName
       userEmail
-      savedRecipes {
-        title
-        summary
-        readyInMinutes
-        servings
-        ingredients
-        instructions
-        steps
-        diet
-        image
-        sourceUrl
-        spoonacularId
-        spoonacularSourceUrl
-        reviews
-      }
+      savedRecipes
     }
   }
 `;
 
 export const REMOVE_RECIPE = gql`
-  mutation removeRecipe($recipeId: String!) {
+  mutation removeRecipe($recipeId: ID!) {
     removeRecipe(recipeId: $recipeId) {
       _id
       userName
       userEmail
-      savedRecipes {
-        title
-        summary
-        readyInMinutes
-        servings
-        ingredients
-        instructions
-        steps
-        diet
-        image
-        sourceUrl
-        spoonacularId
-        spoonacularSourceUrl
-        reviews
-      }
+      savedRecipes
     }
   }
 `;
-
