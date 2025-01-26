@@ -16,7 +16,7 @@ import RecipeDetails from '../interfaces/recipeDetails.ts';
 const RecipeShowcase = () =>  {
   const navigate = useNavigate();
   const { currentRecipeDetails } = useContext(currentRecipeContext);
-  const [loginCheck,setLoginCheck] = useState(false);
+  const [loginCheck, setLoginCheck] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
   //new mutations and queries
@@ -25,34 +25,31 @@ const RecipeShowcase = () =>  {
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
   //const [ exists ] = useQuery(IS_RECIPE_SAVED);
 
-  const { data } = useQuery(IS_RECIPE_SAVED, {
-    variables: {
-      recipeId: currentRecipeDetails.id,
-    },
-    skip: !currentRecipeDetails.id || !Auth.loggedIn(), 
-  });
+  const { data } = useQuery(IS_RECIPE_SAVED);
 
   useLayoutEffect(() => {
     const checkLogin = async () => {
       console.log("Current recipe ID:", currentRecipeDetails.id);
   
       const isLoggedIn = Auth.loggedIn();
+      console.log("isLoggedIn: " + isLoggedIn); 
       setLoginCheck(isLoggedIn);
   
       if (isLoggedIn && currentRecipeDetails.id) {
         try {
           setIsSaved(false); 
-
+          console.log(isSaved); 
           //const exists = await retrieveRecipeByUserId(currentRecipeDetails.id);
+          console.log("Current recipe ID:", currentRecipeDetails.id);
 
-          /*const { data } = await exists({
+          const { userRecipe } = await data({
             variables: {
               recipeId: currentRecipeDetails.id,
-            },
-         });*/
+            },  skip: !currentRecipeDetails.id || !Auth.loggedIn(), 
+         });
 
-          console.log("Exists value:", data);
-          if (data && data.isRecipeSaved) {
+          console.log("Exists value:", userRecipe);
+          if (userRecipe) {
             setIsSaved(true);
           }
         } catch (err) {
@@ -63,9 +60,9 @@ const RecipeShowcase = () =>  {
         setIsSaved(false); // Not logged in or no recipe ID
       }
     };
-  
+   
     checkLogin();
-  }, [currentRecipeDetails, data]);
+  }, [currentRecipeDetails, data, isSaved]);
 
   /* Function to save recipe
    const saveRecipe = async () => {
@@ -147,12 +144,12 @@ const RecipeShowcase = () =>  {
     setIsSaved: React.Dispatch<React.SetStateAction<boolean>>, 
     navigate: NavigateFunction) => {
     
-      //console.log("currrent Recipe details ID:" + currentRecipeDetails.id);
+    console.log("currrent Recipe details ID:" + currentRecipeDetails.id);
 
     try {
       const { data } =  await removeRecipe({
         variables: {
-          recipeId: currentRecipeDetails._id,
+          recipeId: currentRecipeDetails.id,
         },
       });
 
@@ -160,7 +157,7 @@ const RecipeShowcase = () =>  {
         console.log("Recipe successfully deleted with ID: ", data.removeRecipe._id); 
       }
 
-      //console.log('Recipe delete response:', result);
+      console.log('Recipe delete response:', data);
       setIsSaved(false); 
       navigate('/recipe-book');
     } catch (err) {

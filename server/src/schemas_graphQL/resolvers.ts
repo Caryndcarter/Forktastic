@@ -22,7 +22,7 @@ const resolvers = {
       try {
 
          // Convert recipeId string to ObjectId
-         const objectId = new mongoose.Types.ObjectId(recipeId);
+        const objectId = new mongoose.Types.ObjectId(recipeId);
 
         // Find the user by their ID
         const user = await User.findOne({ _id: context.user._id });
@@ -30,6 +30,7 @@ const resolvers = {
         if (!user) {
           throw new GraphQLError("User not found.");
         }
+
 
         // Check if the recipeId exists in the savedRecipes array
         const isSaved = user.savedRecipes.includes(objectId);
