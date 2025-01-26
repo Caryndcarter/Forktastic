@@ -19,11 +19,18 @@ const RecipeShowcase = () =>  {
   const [loginCheck,setLoginCheck] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
-  //mutations and queries
+  //new mutations and queries
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
-  const [ exists ] = useQuery(IS_RECIPE_SAVED);
+  //const [ exists ] = useQuery(IS_RECIPE_SAVED);
+
+  const { data } = useQuery(IS_RECIPE_SAVED, {
+    variables: {
+      recipeId: currentRecipeDetails.id,
+    },
+    skip: !currentRecipeDetails.id || !Auth.loggedIn(), 
+  });
 
   useLayoutEffect(() => {
     const checkLogin = async () => {
@@ -38,20 +45,19 @@ const RecipeShowcase = () =>  {
 
           //const exists = await retrieveRecipeByUserId(currentRecipeDetails.id);
 
-          const { data } = await exists({
+          /*const { data } = await exists({
             variables: {
               recipeId: currentRecipeDetails.id,
             },
-         });
+         });*/
 
           console.log("Exists value:", data);
-          if (data) {
-            setIsSaved(true); 
+          if (data && data.isRecipeSaved) {
+            setIsSaved(true);
           }
-         
         } catch (err) {
           console.error("Error retrieving recipe:", err);
-          setIsSaved(false); // Default to false on error
+          setIsSaved(false); 
         }
       } else {
         setIsSaved(false); // Not logged in or no recipe ID
@@ -59,7 +65,7 @@ const RecipeShowcase = () =>  {
     };
   
     checkLogin();
-  }, [currentRecipeDetails, exists]);
+  }, [currentRecipeDetails, data]);
 
   /* Function to save recipe
    const saveRecipe = async () => {
@@ -237,7 +243,11 @@ const RecipeShowcase = () =>  {
 
       {loginCheck ? (
        <button
-       onClick={isSaved ? deleteCurrentRecipe : saveCurrentRecipe}
+       onClick={() =>
+        isSaved
+          ? deleteCurrentRecipe(currentRecipeDetails, setIsSaved, navigate)
+          : saveCurrentRecipe(currentRecipeDetails, setIsSaved, navigate)
+        } 
        className={`font-semibold py-2 px-4 rounded mb-6 transition-colors duration-300 ${
          isSaved
            ? 'bg-red-500 hover:bg-red-600 text-white'
