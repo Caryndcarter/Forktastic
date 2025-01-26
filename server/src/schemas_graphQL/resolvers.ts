@@ -15,6 +15,9 @@ const resolvers = {
     },
 
     isRecipeSaved: async (_: any, { recipeId }: { recipeId: string }, context: any): Promise<boolean> => {
+      console.log("Received recipeId:", recipeId);
+      console.log("Context user:", context.user);
+      
       if (!context.user) {
         throw new AuthenticationError("User not authenticated.");
       }
@@ -202,7 +205,7 @@ const resolvers = {
     },
 
     // remove a recipe from a user's `savedRecipes`
-    removeRecipe: async ( _parent: any, { recipeId }: { recipeId: string }, context: any) => {
+    removeRecipe: async ( _parent: any, { recipeId }: { recipeId: number }, context: any) => {
       
       if (!context.user) {
         throw new GraphQLError('You must be logged in!');

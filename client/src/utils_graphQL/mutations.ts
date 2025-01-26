@@ -50,36 +50,10 @@ export const UPDATE_ACCOUNT_PREFERENCES = gql`
   }
 `;
 
+
 export const ADD_RECIPE = gql`
-  mutation addRecipe(
-    $title: String!
-    $summary: String!
-    $readyInMinutes: Int!
-    $servings: Int!
-    $ingredients: [String!]!
-    $instructions: String!
-    $steps: [String!]!
-    $diet: [String]
-    $image: String
-    $sourceUrl: String
-    $spoonacularId: Int
-    $spoonacularSourceUrl: String
-  ) {
-    addRecipe(
-      title: $title
-      summary: $summary
-      readyInMinutes: $readyInMinutes
-      servings: $servings
-      ingredients: $ingredients
-      instructions: $instructions
-      steps: $steps
-      diet: $diet
-      image: $image
-      sourceUrl: $sourceUrl
-      spoonacularId: $spoonacularId
-      spoonacularSourceUrl: $spoonacularSourceUrl
-    ) {
-      _id
+  mutation addRecipe($recipeInput: recipeInput!) {
+    addRecipe(recipeInput: $recipeInput) {
       title
       summary
       readyInMinutes
@@ -92,7 +66,6 @@ export const ADD_RECIPE = gql`
       sourceUrl
       spoonacularId
       spoonacularSourceUrl
-      reviews
     }
   }
 `;

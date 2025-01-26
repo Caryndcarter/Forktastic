@@ -11,7 +11,7 @@ if (!secretKey) {
   console.error("JWT_SECRET_KEY is not defined!");
 }
 
-/*export const authenticateToken = ({ req }: any) => {
+export const authenticateToken = ({ req }: any) => {
   // skips authentication process if loging in or signing up
   if (
     req.body.query.includes("loginUser") ||
@@ -23,30 +23,16 @@ if (!secretKey) {
   // Collects token from req.body, req.query, or req.headers
   let token = req.body.token || req.query.token || req.headers.authorization;
 
+  if (req.headers.authorization) {
+    token = token.split(' ').pop().trim();
+  }
+
   // check for the token's existance:
   if (!token) {
     throw new GraphQLError("Authorization token is missing", {
       extensions: { code: "UNAUTHENTICATED" },
     });
-  }*/
-
-  export const authenticateToken = ({ req }: any) => {
-    // Allows token to be sent via req.body, req.query, or headers
-    let token = req.body.token || req.query.token || req.headers.authorization;
-  
-    // console.log('Auth Header:', req.headers.authorization);
-  
-    // If the token is sent in the authorization header, extract the token from the header
-    if (req.headers.authorization) {
-      token = token.split(' ').pop().trim();
-    }
-  
-       // If no token is provided, return context with user as null
-       if (!token) {
-        console.log('No token provided');
-        return req;
-      }
-  
+  }
 
   // Try to verify the token
   try {

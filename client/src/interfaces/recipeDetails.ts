@@ -1,5 +1,5 @@
 export default interface RecipeDetails {
-    id?: number, 
+    id?: string, 
     title: string,
     summary: string,
     readyInMinutes: number,

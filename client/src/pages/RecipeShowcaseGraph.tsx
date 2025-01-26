@@ -6,9 +6,9 @@ import { currentRecipeContext } from "../App";
 import { useState, useLayoutEffect} from 'react';
 
 //new imports
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE } from '../utils_graphQL/mutations';
-import { IS_RECIPE_SAVED } from '../utils_graphQL/queries';
+//import { IS_RECIPE_SAVED } from '../utils_graphQL/queries';
 import Auth from '../utils_graphQL/auth';
 import RecipeDetails from '../interfaces/recipeDetails.ts';
 
@@ -23,9 +23,9 @@ const RecipeShowcase = () =>  {
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
-  //const [ exists ] = useQuery(IS_RECIPE_SAVED);
 
-  const { data } = useQuery(IS_RECIPE_SAVED);
+
+  //const { data } = useQuery(IS_RECIPE_SAVED);
 
   useLayoutEffect(() => {
     const checkLogin = async () => {
@@ -35,23 +35,22 @@ const RecipeShowcase = () =>  {
       console.log("isLoggedIn: " + isLoggedIn); 
       setLoginCheck(isLoggedIn);
   
-      if (isLoggedIn && currentRecipeDetails.id) {
+      if (isLoggedIn) {
         try {
           setIsSaved(false); 
           console.log(isSaved); 
-          //const exists = await retrieveRecipeByUserId(currentRecipeDetails.id);
           console.log("Current recipe ID:", currentRecipeDetails.id);
 
-          const { userRecipe } = await data({
+          /*const { userRecipe } = await data({
             variables: {
-              recipeId: currentRecipeDetails.id,
-            },  skip: !currentRecipeDetails.id || !Auth.loggedIn(), 
+              recipeId: "0",
+            },  
          });
 
           console.log("Exists value:", userRecipe);
           if (userRecipe) {
             setIsSaved(true);
-          }
+          }*/
         } catch (err) {
           console.error("Error retrieving recipe:", err);
           setIsSaved(false); 
@@ -62,23 +61,7 @@ const RecipeShowcase = () =>  {
     };
    
     checkLogin();
-  }, [currentRecipeDetails, data, isSaved]);
-
-  /* Function to save recipe
-   const saveRecipe = async () => {
-   
-    try {
-      const result = await addRecipe(currentRecipeDetails);
-      if (result && result.id) {
-        currentRecipeDetails.id = result.id; // Update the ID with the one from the backend
-      }
-      setIsSaved(true); 
-      navigate('/recipe-book');
-    } catch (err) {
-      console.error('Error saving recipe:', err);
-      alert('Failed to save the recipe.');
-    }
-  }; */
+  }, [currentRecipeDetails, isSaved]);
 
   // Function to save recipe
   const saveCurrentRecipe = async (
@@ -89,24 +72,28 @@ const RecipeShowcase = () =>  {
     try {
       const { data  } = await addRecipe({
         variables: {
-          title: currentRecipeDetails.title,
-          summary: currentRecipeDetails.summary,
-          readyInMinutes: currentRecipeDetails.readyInMinutes,
-          servings: currentRecipeDetails.servings,
-          ingredients: currentRecipeDetails.ingredients,
-          instructions: currentRecipeDetails.instructions,
-          steps: currentRecipeDetails.steps,
-          diet: currentRecipeDetails.diets,
-          image: currentRecipeDetails.image,
-          sourceUrl: currentRecipeDetails.sourceUrl,
-          spoonacularId: currentRecipeDetails.spoonacularId,
-          spoonacularSourceUrl: currentRecipeDetails.spoonacularSourceUrl,
+          recipeInput: {
+            title: currentRecipeDetails.title,
+            summary: currentRecipeDetails.summary,
+            readyInMinutes: currentRecipeDetails.readyInMinutes,
+            servings: currentRecipeDetails.servings,
+            ingredients: currentRecipeDetails.ingredients,
+            instructions: currentRecipeDetails.instructions,
+            steps: currentRecipeDetails.steps,
+            diet: currentRecipeDetails.diets,
+            image: currentRecipeDetails.image,
+            sourceUrl: currentRecipeDetails.sourceUrl,
+            spoonacularId: currentRecipeDetails.spoonacularId,
+            spoonacularSourceUrl: currentRecipeDetails.spoonacularSourceUrl,
+          },
         },
       });
 
-      if (data && data.addRecipe._id) {
-        currentRecipeDetails.id = data.addRecipe._id; // Update the ID with the one from the backend
-      }
+     // if (data && data.addRecipe._id) {
+        //currentRecipeDetails.id = data.addRecipe._id; // Update the ID with the one from the backend
+      //}
+
+      console.log(data);
 
       // Save the recipe ID to the user's savedRecipes array
       await saveRecipe({
@@ -122,21 +109,6 @@ const RecipeShowcase = () =>  {
       alert("Failed to save the recipe.");
     }
   };
-
-
-  /*Function to delete recipe
-  const deleteCurrentRecipe = async () => {
-    console.log("currrent REcipe detials ID:" + currentRecipeDetails.id);
-    try {
-      const result = await deleteRecipe(currentRecipeDetails.id); 
-      console.log('Recipe delete response:', result);
-      setIsSaved(false); 
-      navigate('/recipe-book');
-    } catch (err) {
-      console.error('Error deleting recipe:', err);
-      alert('Failed to delete recipe.');
-    }
-  };*/
 
   // Function to delete recipe
   const deleteCurrentRecipe = async (

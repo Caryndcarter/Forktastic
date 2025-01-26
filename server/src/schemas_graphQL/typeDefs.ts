@@ -2,14 +2,14 @@ const typeDefs = `
 
   type Query {
     getUser: User
-    isRecipeSaved(recipeId: ID!): Boolean
+    isRecipeSaved(recipeId: String!): Boolean
   }
 
   type Mutation {
     login(userEmail: String!, userPassword: String!): Auth
     signUp(userName: String!, userEmail: String!, userPassword: String!): Auth
     updatePreferences(diet: String, cuisine: String, intolerances: [String]): User
-    addRecipe(recipeInput: RecipeInput!): Recipe
+    addRecipe(recipeInput: recipeInput!): Recipe
     saveRecipe(recipeId: ID!): User
     removeRecipe(recipeId: ID!): User
   }
@@ -45,7 +45,7 @@ const typeDefs = `
     spoonacularSourceUrl: String
   }
 
-   input RecipeInput {
+   input recipeInput {
     title: String!
     summary: String!
     readyInMinutes: Int!
