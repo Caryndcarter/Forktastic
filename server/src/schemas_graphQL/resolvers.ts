@@ -14,7 +14,7 @@ const resolvers = {
       throw new AuthenticationError("could not authenticate user.");
     },
 
-    isRecipeSaved: async (_: any, { recipeId }: { recipeId: string }, context: any): Promise<boolean> => {
+    getSpecificRecipeId: async (_: any, { recipeId }: { recipeId: string }, context: any): Promise<string | null> => {
       console.log("Received recipeId:", recipeId);
       console.log("Context user:", context.user);
       
@@ -25,7 +25,7 @@ const resolvers = {
       try {
 
          // Convert recipeId string to ObjectId
-        const objectId = new mongoose.Types.ObjectId(recipeId);
+        //const objectId = new mongoose.Types.ObjectId(recipeId);
 
         // Find the user by their ID
         const user = await User.findOne({ _id: context.user._id });
@@ -36,11 +36,14 @@ const resolvers = {
 
         const savedRecipes = user.savedRecipes || [];
 
-        // Check if the recipeId exists in the savedRecipes array
-        const isSaved = savedRecipes?.includes(objectId);
-        return isSaved;
+       // Check if the provided recipeId exists in savedRecipes
+        const foundRecipe = savedRecipes.find((id) => id.toString() === recipeId);
+
+        // Return the recipeId if found, otherwise return null
+        return foundRecipe ? foundRecipe.toString() : null;
+
       } catch (err) {
-        console.error("Error in isRecipeSaved resolver:", err);
+        console.error("Error in get specific recipe resolver:", err);
         throw new GraphQLError("Failed to check if the recipe is saved.");
       }
     },
@@ -208,21 +211,37 @@ const resolvers = {
     // remove a recipe from a user's `savedRecipes`
     removeRecipe: async ( _parent: any, { recipeId }: { recipeId: string }, context: any) => {
       
+      console.log('Attempting to remove recipe:', recipeId);
+      
       if (!context.user) {
         throw new GraphQLError('You must be logged in!');
       }
 
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: context.user._id },
-        { $pull: { savedRecipes: { recipeId } } },
-        { new: true }
-      );
+        // Convert recipeId to ObjectId to ensure correct matching
+      const objectId = new mongoose.Types.ObjectId(recipeId);
+      console.log('Converted to ObjectId:', objectId);
+
+      try {
+
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { $pull: { savedRecipes: objectId } },
+          { new: true, 
+            runValidators: true }
+        ); 
+    
+        console.log('Saved recipes after:', updatedUser?.savedRecipes);
 
       if (!updatedUser) {
         throw new GraphQLError("Couldn't find user with this id!");
       }
 
       return updatedUser;
+
+      } catch (err) {
+        console.log('Error removing recipe:', err);
+        throw new GraphQLError('Error removing recipe.');
+      }
     },
   },
 };

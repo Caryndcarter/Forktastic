@@ -1,4 +1,5 @@
-import { useNavigate, NavigateFunction } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+//NavigateFunction
 import { useContext } from "react";
 import { currentRecipeContext } from "../App";
 import { useState, useEffect} from 'react';
@@ -6,7 +7,7 @@ import { useState, useEffect} from 'react';
 //new imports
 import { useMutation } from '@apollo/client';
 import { ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE } from '../utils_graphQL/mutations';
-//import { GET_SAVED_RECIPES } from '../utils_graphQL/queries';
+//import { GET_SPECIFIC_RECIPE_ID } from '../utils_graphQL/queries';
 import Auth from '../utils_graphQL/auth';
 import RecipeDetails from '../interfaces/recipeDetails.ts';
 
@@ -21,7 +22,7 @@ const RecipeShowcase = () =>  {
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
-  //const { data } = useQuery(GET_SAVED_RECIPES);
+  //const { data } = useQuery(GET_SPECIFIC_RECIPE_ID);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -31,33 +32,43 @@ const RecipeShowcase = () =>  {
       console.log("isLoggedIn: " + isLoggedIn); 
       setLoginCheck(isLoggedIn);
   
-      if (isLoggedIn && currentRecipeDetails.id === "0") {
+      // if (isLoggedIn && currentRecipeDetails.id === "0") {
 
-        setIsSaved(false); 
+      //   console.log("Current recipe ID again:", currentRecipeDetails.id);
+
+      //   setIsSaved(false); 
+      //   console.log("isSaved 1: " + isSaved); 
        
-      } else if (isLoggedIn && currentRecipeDetails.id !=="0") {
+      // } else if (isLoggedIn && currentRecipeDetails.id !=="0") {
 
-        // try {
-        //   const { userRecipe } = await data({
-        //     variables: {
-        //       savedRecipes: "O",
-        //     },  
-        //  });
+      //   console.log("Current recipe ID 3:", currentRecipeDetails.id);
 
-          // console.log("Exists value:", userRecipe);
-          // if (userRecipe) {
-          //   setIsSaved(true);
-          // }
-        // } catch (err) {
-        //   console.error("Error retrieving recipe:", err);
-        //   setIsSaved(false); 
-        // } 
-        //setIsSaved(true); 
-        console.log("isSaved Revision: " + isSaved); 
+      //   try {
+      //     const { userRecipe } = await data({
+      //       variables: {
+      //         recipeId: currentRecipeDetails.id,
+      //       },  
+      //    });
 
-      } else {
-        setIsSaved(false); 
-      }
+      //     console.log("Recipe exists value:", userRecipe);
+          
+      //     if (userRecipe) {
+      //       setIsSaved(true);
+      //     }
+
+      //     console.log("isSaved Revision: " + isSaved); 
+
+      //   } catch (err) {
+      //     console.error("Recipe not on user: ", err);
+      //     setIsSaved(false); 
+       
+      //     //setIsSaved(true); 
+      //     console.log("isSaved Revision: " + isSaved); 
+      // } 
+
+      // } else {
+      //   setIsSaved(false); //user not logged in
+      // }
     };
    
     checkLogin();
@@ -109,12 +120,15 @@ const RecipeShowcase = () =>  {
     }
   };
 
+
+  
   // Function to delete recipe
   const deleteCurrentRecipe = async (
     currentRecipeDetails: RecipeDetails,
     setIsSaved: React.Dispatch<React.SetStateAction<boolean>>, 
-    navigate: NavigateFunction) => {
-    
+    ) => {
+    //navigate: NavigateFunction
+
     console.log("currrent Recipe details ID:" + currentRecipeDetails.id);
 
     try {
@@ -124,13 +138,12 @@ const RecipeShowcase = () =>  {
         },
       });
 
-      if (data && data.removeRecipe._id) {
-        console.log("Recipe successfully deleted with ID: ", data.removeRecipe._id); 
+     if (data) {
+        console.log("Recipe successfully deleted with ID: ", currentRecipeDetails.id); 
+        setIsSaved(false); 
       }
-
-      console.log('Recipe delete response:', data);
-      setIsSaved(false); 
-      navigate('/recipe-book');
+     
+      //navigate('/recipe-book');
     } catch (err) {
       console.error('Error deleting recipe:', err);
       alert('Failed to delete recipe.');
@@ -213,7 +226,7 @@ const RecipeShowcase = () =>  {
        <button
        onClick={() =>
         isSaved
-          ? deleteCurrentRecipe(currentRecipeDetails, setIsSaved, navigate)
+          ? deleteCurrentRecipe(currentRecipeDetails, setIsSaved)
           : saveCurrentRecipe(currentRecipeDetails, setIsSaved)
         } 
        className={`font-semibold py-2 px-4 rounded mb-6 transition-colors duration-300 ${

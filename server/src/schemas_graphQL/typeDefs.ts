@@ -2,7 +2,7 @@ const typeDefs = `
 
   type Query {
     getUser: User
-    isRecipeSaved(recipeId: String!): Boolean
+    getSpecificRecipeId(recipeId: String!): String
   }
 
   type Mutation {
