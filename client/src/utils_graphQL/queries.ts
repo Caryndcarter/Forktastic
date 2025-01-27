@@ -16,3 +16,10 @@ export const GET_SAVED_RECIPES = gql`
     }
   }
 `;
+
+export const IS_RECIPE_SAVED = gql`
+  query isRecipeSaved($recipeId: String!) {
+    isRecipeSaved(recipeId: $recipeId)
+  }
+`;
+

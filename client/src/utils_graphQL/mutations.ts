@@ -41,3 +41,47 @@ export const UPDATE_ACCOUNT_PREFERENCES = gql`
     }
   }
 `;
+
+
+export const ADD_RECIPE = gql`
+  mutation addRecipe($recipeInput: recipeInput!) {
+    addRecipe(recipeInput: $recipeInput) {
+      _id
+      title
+      summary
+      readyInMinutes
+      servings
+      ingredients
+      instructions
+      steps
+      diet
+      image
+      sourceUrl
+      spoonacularId
+      spoonacularSourceUrl
+    }
+  }
+`;
+
+
+export const SAVE_RECIPE = gql`
+  mutation saveRecipe($recipeId: ID!) {
+    saveRecipe(recipeId: $recipeId) {
+      _id
+      userName
+      userEmail
+      savedRecipes
+    }
+  }
+`;
+
+export const REMOVE_RECIPE = gql`
+  mutation removeRecipe($recipeId: ID!) {
+    removeRecipe(recipeId: $recipeId) {
+      _id
+      userName
+      userEmail
+      savedRecipes
+    }
+  }
+`;

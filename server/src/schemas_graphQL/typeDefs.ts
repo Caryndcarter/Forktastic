@@ -2,12 +2,16 @@ const typeDefs = `
 
   type Query {
     getUser: User
+    isRecipeSaved(recipeId: String!): Boolean
   }
 
   type Mutation {
     login(userEmail: String!, userPassword: String!): Auth
     signUp(userName: String!, userEmail: String!, userPassword: String!): Auth
     updatePreferences(diet: String, intolerances: [String]): User
+    addRecipe(recipeInput: recipeInput!): Recipe
+    saveRecipe(recipeId: ID!): User
+    removeRecipe(recipeId: ID!): User
   }
 
   type User {
@@ -15,7 +19,7 @@ const typeDefs = `
     userName: String!
     userEmail: String!
     userPassword: String!
-    savedRecipes: [ID]!
+    savedRecipes: [ID!]!
     diet: String
     intolerances: [String]
   }
@@ -23,6 +27,37 @@ const typeDefs = `
   type Auth {
     token: String!
     user: User
+  }
+
+   type Recipe {
+    _id: ID!
+    title: String!
+    summary: String!
+    readyInMinutes: Int!
+    servings: Int!
+    ingredients: [String!]!
+    instructions: String!
+    steps: [String!]!
+    diet: [String]
+    image: String
+    sourceUrl: String
+    spoonacularId: Int
+    spoonacularSourceUrl: String
+  }
+
+   input recipeInput {
+    title: String!
+    summary: String!
+    readyInMinutes: Int!
+    servings: Int!
+    ingredients: [String!]!
+    instructions: String!
+    steps: [String!]!
+    diet: [String]
+    image: String
+    sourceUrl: String
+    spoonacularId: Int
+    spoonacularSourceUrl: String
   }
 `;
 

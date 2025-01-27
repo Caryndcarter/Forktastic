@@ -1,65 +1,134 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavigateFunction } from "react-router-dom";
 import { useContext } from "react";
 import { currentRecipeContext } from "../App";
-import { addRecipe, retrieveRecipeByUserId, deleteRecipe } from "../api/recipesAPI";
-import { authService } from '../api/authentication';
-import { useState, useLayoutEffect} from 'react';
+import { useState, useEffect} from 'react';
+
+//new imports
+import { useMutation } from '@apollo/client';
+import { ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE } from '../utils_graphQL/mutations';
+//import { GET_SAVED_RECIPES } from '../utils_graphQL/queries';
+import Auth from '../utils_graphQL/auth';
+import RecipeDetails from '../interfaces/recipeDetails.ts';
 
 
 const RecipeShowcase = () =>  {
   const navigate = useNavigate();
   const { currentRecipeDetails } = useContext(currentRecipeContext);
-  const [loginCheck,setLoginCheck] = useState(false);
+  const [loginCheck, setLoginCheck] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
+  //new mutations and queries
+  const [addRecipe] = useMutation(ADD_RECIPE);
+  const [saveRecipe] = useMutation(SAVE_RECIPE);
+  const [removeRecipe] = useMutation(REMOVE_RECIPE);
+  //const { data } = useQuery(GET_SAVED_RECIPES);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const checkLogin = async () => {
       console.log("Current recipe ID:", currentRecipeDetails.id);
   
-      const isLoggedIn = await authService.loggedIn();
+      const isLoggedIn = Auth.loggedIn();
+      console.log("isLoggedIn: " + isLoggedIn); 
       setLoginCheck(isLoggedIn);
   
-      if (isLoggedIn && currentRecipeDetails.id) {
-        try {
-          setIsSaved(false); 
-          const exists = await retrieveRecipeByUserId(currentRecipeDetails.id);
-          console.log("Exists value:", exists);
-          setIsSaved(true); 
-        } catch (err) {
-          console.error("Error retrieving recipe:", err);
-          setIsSaved(false); // Default to false on error
-        }
+      if (isLoggedIn && currentRecipeDetails.id === "0") {
+
+        setIsSaved(false); 
+       
+      } else if (isLoggedIn && currentRecipeDetails.id !=="0") {
+
+        // try {
+        //   const { userRecipe } = await data({
+        //     variables: {
+        //       savedRecipes: "O",
+        //     },  
+        //  });
+
+          // console.log("Exists value:", userRecipe);
+          // if (userRecipe) {
+          //   setIsSaved(true);
+          // }
+        // } catch (err) {
+        //   console.error("Error retrieving recipe:", err);
+        //   setIsSaved(false); 
+        // } 
+        //setIsSaved(true); 
+        console.log("isSaved Revision: " + isSaved); 
+
       } else {
-        setIsSaved(false); // Not logged in or no recipe ID
+        setIsSaved(false); 
       }
     };
-  
+   
     checkLogin();
-  }, [currentRecipeDetails]);
+  }, [currentRecipeDetails, isSaved]);
 
   // Function to save recipe
-   const saveRecipe = async () => {
-   
+  const saveCurrentRecipe = async (
+    currentRecipeDetails: RecipeDetails,
+    setIsSaved: React.Dispatch<React.SetStateAction<boolean>> ) => {
+    
     try {
-      const result = await addRecipe(currentRecipeDetails);
-      if (result && result.id) {
-        currentRecipeDetails.id = result.id; // Update the ID with the one from the backend
+      const { data  } = await addRecipe({
+        variables: {
+          recipeInput: {
+            title: currentRecipeDetails.title,
+            summary: currentRecipeDetails.summary,
+            readyInMinutes: currentRecipeDetails.readyInMinutes,
+            servings: currentRecipeDetails.servings,
+            ingredients: currentRecipeDetails.ingredients,
+            instructions: currentRecipeDetails.instructions,
+            steps: currentRecipeDetails.steps,
+            diet: currentRecipeDetails.diets,
+            image: currentRecipeDetails.image,
+            sourceUrl: currentRecipeDetails.sourceUrl,
+            spoonacularId: currentRecipeDetails.spoonacularId,
+            spoonacularSourceUrl: currentRecipeDetails.spoonacularSourceUrl,
+          },
+        },
+      });
+
+       // Save the recipe ID to the user's savedRecipes array
+      if (data && data.addRecipe._id) {
+        currentRecipeDetails.id = data.addRecipe._id; // Update the ID with the one from the backend
+        await saveRecipe({
+          variables: {
+            recipeId: data.addRecipe._id,
+          },
+          });
+          setIsSaved(true);
+          console.log("IsSaved:" + isSaved);
+          console.log("Recipe saved successfully.");
+          console.log("just saved id: " + data.addRecipe._id);
       }
-      setIsSaved(true); 
-      navigate('/recipe-book');
+      
+      //navigate("/recipe-book");
     } catch (err) {
-      console.error('Error saving recipe:', err);
-      alert('Failed to save the recipe.');
+      console.error("Error saving recipe:", err);
+      alert("Failed to save the recipe.");
     }
   };
 
-  //Function to delete recipe
-  const deleteCurrentRecipe = async () => {
-    console.log("currrent REcipe detials ID:" + currentRecipeDetails.id);
+  // Function to delete recipe
+  const deleteCurrentRecipe = async (
+    currentRecipeDetails: RecipeDetails,
+    setIsSaved: React.Dispatch<React.SetStateAction<boolean>>, 
+    navigate: NavigateFunction) => {
+    
+    console.log("currrent Recipe details ID:" + currentRecipeDetails.id);
+
     try {
-      const result = await deleteRecipe(currentRecipeDetails.id); 
-      console.log('Recipe delete response:', result);
+      const { data } =  await removeRecipe({
+        variables: {
+          recipeId: currentRecipeDetails.id,
+        },
+      });
+
+      if (data && data.removeRecipe._id) {
+        console.log("Recipe successfully deleted with ID: ", data.removeRecipe._id); 
+      }
+
+      console.log('Recipe delete response:', data);
       setIsSaved(false); 
       navigate('/recipe-book');
     } catch (err) {
@@ -67,6 +136,8 @@ const RecipeShowcase = () =>  {
       alert('Failed to delete recipe.');
     }
   };
+
+
 
   const RawHtmlRenderer = ({ htmlString }: { htmlString: string }) => {
     // Replace multiple line breaks with a single space or remove unwanted elements
@@ -140,7 +211,11 @@ const RecipeShowcase = () =>  {
 
       {loginCheck ? (
        <button
-       onClick={isSaved ? deleteCurrentRecipe : saveRecipe}
+       onClick={() =>
+        isSaved
+          ? deleteCurrentRecipe(currentRecipeDetails, setIsSaved, navigate)
+          : saveCurrentRecipe(currentRecipeDetails, setIsSaved)
+        } 
        className={`font-semibold py-2 px-4 rounded mb-6 transition-colors duration-300 ${
          isSaved
            ? 'bg-red-500 hover:bg-red-600 text-white'
