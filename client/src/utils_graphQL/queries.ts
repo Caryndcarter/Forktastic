@@ -11,8 +11,19 @@ export const GET_ACCOUNT_PREFERENCES = gql`
 
 export const GET_SAVED_RECIPES = gql`
   query getSavedRecipes {
-    getUser {
-      savedRecipes
+    getRecipes {
+      title
+      summary
+      readyInMinutes
+      servings
+      ingredients
+      instructions
+      steps
+      diet
+      image
+      sourceUrl
+      spoonacularId
+      spoonacularSourceUrl
     }
   }
 `;
@@ -22,4 +33,3 @@ export const IS_RECIPE_SAVED = gql`
     isRecipeSaved(recipeId: $recipeId)
   }
 `;
-
