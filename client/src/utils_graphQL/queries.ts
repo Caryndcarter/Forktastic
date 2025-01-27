@@ -20,6 +20,25 @@ export const GET_SAVED_RECIPES = gql`
   }
 `;
 
+export const GET_RECIPE = gql`
+  query getRecipe($mongoID: ID, $spoonacularId: Int) {
+    getRecipe(mongoID: $mongoID, spoonacularId: $spoonacularId) {
+      title
+      summary
+      readyInMinutes
+      servings
+      ingredients
+      instructions
+      steps
+      diet
+      image
+      sourceUrl
+      spoonacularId
+      spoonacularSourceUrl
+    }
+  }
+`;
+
 export const IS_RECIPE_SAVED = gql`
   query isRecipeSaved($recipeId: String!) {
     isRecipeSaved(recipeId: $recipeId)

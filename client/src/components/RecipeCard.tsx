@@ -1,9 +1,11 @@
 import Recipe from "../interfaces/recipe";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import apiService from "../api/apiService";
+import { useContext, useState, useEffect } from "react";
+// import apiService from "../api/apiService";
 import { currentRecipeContext } from "../App";
-import { retrieveRecipe } from "../api/recipesAPI";
+// import { retrieveRecipe } from "../api/recipesAPI";
+import { useQuery } from "@apollo/client";
+import { GET_RECIPE } from "@/utils_graphQL/queries";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -13,23 +15,27 @@ export default function RecipeCard({
   recipe: { _id, spoonacularId, title, image },
 }: RecipeCardProps) {
   const { setCurrentRecipeDetails } = useContext(currentRecipeContext);
-  console.log(_id);
+  const [skipQuery, setSkipQuery] = useState<boolean>(true);
+  const navigate = useNavigate();
+
+  const { loading, error, data } = useQuery(GET_RECIPE, {
+    variables: {
+      mongoID: _id,
+      spoonacularId: spoonacularId,
+    },
+    skip: skipQuery,
+  });
 
   const handleSubmit = async () => {
-    if (!_id) {
-      const spoonId = spoonacularId;
-      const recipeDetails = await apiService.forignInformationSearch(spoonId);
-      setCurrentRecipeDetails(recipeDetails);
-    } else {
-      const customId = _id;
-      const recipeDetails = await retrieveRecipe(customId);
-      setCurrentRecipeDetails(recipeDetails);
-    }
-
-    navigate("/recipe-showcase");
+    setSkipQuery(false);
   };
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (!loading && !error && data?.getRecipe) {
+      setCurrentRecipeDetails(data.getRecipe); // Update context
+      navigate("/recipe-showcase"); // Navigate to the recipe page
+    }
+  }, [data]);
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-transform transform hover:scale-105">
