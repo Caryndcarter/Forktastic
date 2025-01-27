@@ -1,8 +1,6 @@
 import { useNavigate, NavigateFunction } from "react-router-dom";
 import { useContext } from "react";
 import { currentRecipeContext } from "../App";
-//import { addRecipe, retrieveRecipeByUserId, deleteRecipe } from "../api/recipesAPI";
-//import { authService } from '../api/authentication';
 import { useState, useEffect} from 'react';
 
 //new imports
@@ -23,8 +21,6 @@ const RecipeShowcase = () =>  {
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
-
-
   //const { data } = useQuery(GET_SAVED_RECIPES);
 
   useEffect(() => {
@@ -32,15 +28,16 @@ const RecipeShowcase = () =>  {
       console.log("Current recipe ID:", currentRecipeDetails.id);
   
       const isLoggedIn = Auth.loggedIn();
-      console.log("isLoggedIn first check: " + isLoggedIn); 
+      console.log("isLoggedIn: " + isLoggedIn); 
       setLoginCheck(isLoggedIn);
   
       if (isLoggedIn && currentRecipeDetails.id === "0") {
-        try {
-          //setIsSaved(false); 
-          console.log("isSaved: " + isSaved); 
-          console.log("Revised recipe ID:", currentRecipeDetails.id);
 
+        setIsSaved(false); 
+       
+      } else if (isLoggedIn && currentRecipeDetails.id !=="0") {
+
+        // try {
         //   const { userRecipe } = await data({
         //     variables: {
         //       savedRecipes: "O",
@@ -51,12 +48,13 @@ const RecipeShowcase = () =>  {
           // if (userRecipe) {
           //   setIsSaved(true);
           // }
-        } catch (err) {
-          console.error("Error retrieving recipe:", err);
-          setIsSaved(false); 
-        }
-      } else if (isLoggedIn && currentRecipeDetails.id !=="0") {
-        setIsSaved(true); 
+        // } catch (err) {
+        //   console.error("Error retrieving recipe:", err);
+        //   setIsSaved(false); 
+        // } 
+        //setIsSaved(true); 
+        console.log("isSaved Revision: " + isSaved); 
+
       } else {
         setIsSaved(false); 
       }
