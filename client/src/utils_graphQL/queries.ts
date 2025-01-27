@@ -12,18 +12,10 @@ export const GET_ACCOUNT_PREFERENCES = gql`
 export const GET_SAVED_RECIPES = gql`
   query getSavedRecipes {
     getRecipes {
+      _id
       title
-      summary
-      readyInMinutes
-      servings
-      ingredients
-      instructions
-      steps
-      diet
       image
-      sourceUrl
       spoonacularId
-      spoonacularSourceUrl
     }
   }
 `;
