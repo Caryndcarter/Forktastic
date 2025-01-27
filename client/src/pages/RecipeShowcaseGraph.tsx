@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { currentRecipeContext } from "../App";
 //import { addRecipe, retrieveRecipeByUserId, deleteRecipe } from "../api/recipesAPI";
 //import { authService } from '../api/authentication';
-import { useState, useLayoutEffect} from 'react';
+import { useState, useEffect} from 'react';
 
 //new imports
 import { useMutation } from '@apollo/client';
@@ -27,19 +27,19 @@ const RecipeShowcase = () =>  {
 
   //const { data } = useQuery(IS_RECIPE_SAVED);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const checkLogin = async () => {
       console.log("Current recipe ID:", currentRecipeDetails.id);
   
       const isLoggedIn = Auth.loggedIn();
-      console.log("isLoggedIn: " + isLoggedIn); 
+      console.log("isLoggedIn first check: " + isLoggedIn); 
       setLoginCheck(isLoggedIn);
   
       if (isLoggedIn) {
         try {
           setIsSaved(false); 
-          console.log(isSaved); 
-          console.log("Current recipe ID:", currentRecipeDetails.id);
+          console.log("isSaved: " + isSaved); 
+          console.log("Revised recipe ID:", currentRecipeDetails.id);
 
           /*const { userRecipe } = await data({
             variables: {
@@ -92,7 +92,7 @@ const RecipeShowcase = () =>  {
         currentRecipeDetails.id = data.addRecipe._id; // Update the ID with the one from the backend
       }
 
-      console.log(data.addRecipe._id);
+      console.log("just saved id: " + data.addRecipe._id);
 
       // Save the recipe ID to the user's savedRecipes array
       await saveRecipe({
@@ -102,7 +102,7 @@ const RecipeShowcase = () =>  {
       });
 
       setIsSaved(true);
-      console.log(isSaved);
+      console.log("second is saved: " + isSaved);
 
       //navigate("/recipe-book");
     } catch (err) {

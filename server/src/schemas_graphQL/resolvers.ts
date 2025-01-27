@@ -34,9 +34,10 @@ const resolvers = {
           throw new GraphQLError("User not found.");
         }
 
+        const savedRecipes = user.savedRecipes || [];
 
         // Check if the recipeId exists in the savedRecipes array
-        const isSaved = user.savedRecipes?.includes(objectId);
+        const isSaved = savedRecipes?.includes(objectId);
         return isSaved;
       } catch (err) {
         console.error("Error in isRecipeSaved resolver:", err);

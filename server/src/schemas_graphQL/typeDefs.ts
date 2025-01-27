@@ -19,7 +19,7 @@ const typeDefs = `
     userName: String!
     userEmail: String!
     userPassword: String!
-    savedRecipes: [ID]!
+    savedRecipes: [ID!]!
     diet: String
     intolerances: [String]
   }
