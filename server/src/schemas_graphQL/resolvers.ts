@@ -1,6 +1,8 @@
-import { User, Recipe, RecipeDocument } from "../models_mongo/index.js";
+import { User, Recipe } from "../models_mongo/index.js";
 import { signToken, AuthenticationError } from "../middleware/auth_graphQL.js";
 import { GraphQLError } from "graphql";
+import spoonacularService from "../service/spoonacularService.js";
+import { recipe } from "../types/index.js";
 import { diet, intolerance, user_context } from "../types/index.js";
 import mongoose from "mongoose";
 
@@ -51,7 +53,7 @@ const resolvers = {
       _parent: any,
       _args: any,
       context: user_context
-    ): Promise<RecipeDocument[] | null> => {
+    ): Promise<recipe[] | null> => {
       if (!context.user) {
         throw new AuthenticationError("could not authenticate user.");
       }
@@ -71,10 +73,10 @@ const resolvers = {
         console.log(`no recipes found for ${user.userName}`);
         return null;
       }
-      let recipes: RecipeDocument[] = [];
+      let recipes: recipe[] = [];
 
       for (const id of savedRecipes) {
-        const recipe: RecipeDocument | null = await Recipe.findById(id);
+        const recipe: recipe | null = await Recipe.findById(id);
         if (!recipe) {
           console.log("skipping...");
           continue;
@@ -83,6 +85,47 @@ const resolvers = {
       }
 
       return recipes;
+    },
+
+    getRecipe: async (
+      _parent: any,
+      args: {
+        mongoID?: mongoose.Schema.Types.ObjectId;
+        spoonacularId?: number;
+      },
+      context: user_context
+    ): Promise<recipe | null> => {
+      if (!context.user) {
+        throw new AuthenticationError("could not authenticate user.");
+      }
+
+      const user = await User.findOne({ _id: context.user._id });
+
+      if (!user) {
+        throw new AuthenticationError("could not find user.");
+      }
+
+      const { mongoID, spoonacularId } = args;
+
+      console.log(mongoID, spoonacularId);
+      let recipe: recipe | null = null;
+      if (mongoID) {
+        recipe = await Recipe.findById(mongoID);
+      }
+
+      if (recipe) {
+        return recipe;
+      }
+
+      if (spoonacularId) {
+        recipe = await spoonacularService.findInformation(spoonacularId);
+      }
+
+      if (recipe) {
+        return recipe;
+      }
+
+      return null;
     },
   },
 

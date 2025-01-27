@@ -4,6 +4,7 @@ const typeDefs = `
     getUser: User
     isRecipeSaved(recipeId: String!): Boolean
     getRecipes: [Recipe]
+    getRecipe(mongoID: ID, spoonacularId:Int): Recipe
   }
 
   type Mutation {
