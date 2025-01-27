@@ -24,6 +24,8 @@ export default function ReviewComponent({ onSubmit, initialReview }: ReviewCompo
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     onSubmit(rating, comment)
+    setRating(0)
+    setComment("")
   }
 
   return (
@@ -56,7 +58,7 @@ export default function ReviewComponent({ onSubmit, initialReview }: ReviewCompo
         />
       </div>
       <Button type="submit" disabled={rating === 0}>
-        {initialReview ? "Update Review" : "Submit Review"}
+        Submit Review
       </Button>
     </form>
   )

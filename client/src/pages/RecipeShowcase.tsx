@@ -7,13 +7,14 @@ import { useState, useLayoutEffect} from 'react';
 import ReviewComponent from "../components/Review";
 import SavedReview from "../components/SavedReview";
 import { Button } from "@/components/ui/button";
+import AverageReview from "../components/AverageReview"
 
 const RecipeShowcase = () =>  {
-  const navigate = useNavigate();
-  const { currentRecipeDetails } = useContext(currentRecipeContext);
-  const [loginCheck,setLoginCheck] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
-  const [review, setReview] = useState<{ rating: number; comment: string } | null>(null);
+  const navigate = useNavigate()
+  const { currentRecipeDetails } = useContext(currentRecipeContext)
+  const [loginCheck, setLoginCheck] = useState(false)
+  const [isSaved, setIsSaved] = useState(false)
+  const [reviews, setReviews] = useState<Array<{ rating: number; comment: string }>>([])
 
   useLayoutEffect(() => {
     const checkLogin = async () => {
@@ -77,36 +78,11 @@ const RecipeShowcase = () =>  {
   };
 
   const handleReviewSubmit = (rating: number, comment: string) => {
-    setReview({ rating, comment });
+    setReviews({ rating, comment });
   };
 
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24"> {/* Added pt-24 to prevent content from being hidden behind the navbar */}
-  <nav className="bg-[#f5d3a4] shadow-md fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-4 max-w-7xl mx-auto z-10">
-    {/* Forktacular button on the left */}
-    <button
-      onClick={() => navigate('/')}
-      className="text-[#a84e24] hover:text-[#b7572e] font-semibold"
-    >
-      Forktacular
-    </button>
-
-    {/* Title centered */}
-    <div className="text-2xl font-bold text-[#a84e24] flex-1 text-center">
-      My Recipe
-    </div>
-
-    {/* Account button on the right */}
-    <div className="flex">
-      <button
-        onClick={() => navigate('/user-info')}
-        className="text-[#a84e24] hover:text-[#b7572e]"
-      >
-        Account
-      </button>
-    </div>
-  </nav>
-
   {/* Recipe Details */}
   <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
     {/* Recipe Image */}
@@ -122,6 +98,22 @@ const RecipeShowcase = () =>  {
 
     {/* Recipe Title */}
     <h2 className="text-3xl font-bold text-[#a84e24] mb-4">{currentRecipeDetails.title}</h2>
+
+    <div className="p-4">
+        <h1 className="text-2xl font-bold mb-4">Recipe Reviews</h1>
+
+        {/* Display average rating */}
+        <AverageReview averageRating={averageRating} totalReviews={reviews.length} />
+
+        {/* Display all reviews */}
+        {reviews.map((review, index) => (
+          <SavedReview key={index} rating={review.rating} comment={review.comment} />
+        ))}
+
+        {/* Add new review form */}
+        <ReviewComponent onSubmit={handleReviewSubmit} initialReview={null} />
+      </div>
+    </div>
     
     {/* Save Button */}
    
@@ -240,7 +232,6 @@ const RecipeShowcase = () =>  {
       )}
     </div>
   </div>
-</div>
   );
 };
 

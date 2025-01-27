@@ -1,11 +1,6 @@
 const ErrorPage = () => {
   return (
     <div className="min-h-screen bg-[#fef3d0]">
-      {/* Navbar */}
-      <nav className="bg-[#f5d3a4] shadow-md fixed top-0 w-full flex justify-between items-center px-4 py-2">
-        <div className="text-2xl font-bold text-[#a84e24] flex-1 text-center">Error</div>
-      </nav>
-
       {/* Main Content */}
       <div className="pt-20 px-4 text-center">
         <h1 className="text-6xl font-bold text-[#e75456]">404</h1>
