@@ -1,33 +1,25 @@
-import '../index.css';
-import { useNavigate } from 'react-router-dom';
-import RecipeCard from '../components/RecipeCard';
-import Recipe from '../interfaces/recipe';
-import apiService from '../api/apiService';
-import { useState, useEffect } from 'react';
-import { retrieveRecipesByUser } from '../api/recipesAPI'
+import "../index.css";
+import { useNavigate } from "react-router-dom";
+import RecipeCard from "../components/RecipeCard";
+import Recipe from "../interfaces/recipe";
+// import apiService from "../api/apiService";
+import { useState, useEffect } from "react";
+// import { retrieveRecipesByUser } from "../api/recipesAPI";
 
+import { useQuery } from "@apollo/client";
+import { GET_SAVED_RECIPES } from "@/utils_graphQL/queries";
 
 export default function RecipeBook() {
   const navigate = useNavigate();
 
-  const [recipes,setRecipes] = useState<Recipe[]>([]);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const { data } = useQuery(GET_SAVED_RECIPES);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const userRecipes = await retrieveRecipesByUser();
-      if (userRecipes && userRecipes.length > 0) {
-        setRecipes(userRecipes); 
-        console.log(userRecipes);
-      } else {
-        // Call a different function if no recipes exist
-        console.log("no recipes on user");
-        const randomRecipes = await apiService.forignRandomSearch();
-        setRecipes(randomRecipes);
-      }
-    };
-  
-    fetchData();
-  }, []); 
+    if (data?.getRecipes) {
+      setRecipes(data.getRecipes);
+    }
+  }, [data]);
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-[#fef3d0]">
@@ -43,4 +35,4 @@ export default function RecipeBook() {
     </div>
   </div>
   );
-};
+}

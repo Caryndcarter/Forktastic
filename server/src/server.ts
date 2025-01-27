@@ -14,7 +14,8 @@ import db from "./config/connection_mongo.js";
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { typeDefs, resolvers } from "./schemas_graphQL/index.js";
-
+//import { GraphQLError } from "graphql";
+ 
 //Authentication Middleware - commenting out for now
 import { authenticateToken as graphQLAuthMiddleware } from "./middleware/auth_graphQL.js";
 
@@ -28,6 +29,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   introspection: true,
+  //context: ({ req }: { req: Request }) => graphQLAuthMiddleware({ req }), 
   formatError: (error) => {
     console.error("GraphQL Error:", error);
     return error;

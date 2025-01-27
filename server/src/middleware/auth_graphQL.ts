@@ -23,6 +23,10 @@ export const authenticateToken = ({ req }: any) => {
   // Collects token from req.body, req.query, or req.headers
   let token = req.body.token || req.query.token || req.headers.authorization;
 
+  if (req.headers.authorization) {
+    token = token.split(' ').pop().trim();
+  }
+
   // check for the token's existance:
   if (!token) {
     throw new GraphQLError("Authorization token is missing", {
