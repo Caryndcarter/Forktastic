@@ -176,14 +176,14 @@ const resolvers = {
 
       try {
 
-        // console.log('Attempting to update user with recipe:', recipe);
+        console.log('Attempting to update user with recipe:', recipeId);
 
         // Check if the recipe exists in the Recipe collection
-        //const existingRecipe = await Recipe.findById(recipe.recipeId);
+        const existingRecipe = await Recipe.findById(recipeId);
 
-        //if (!existingRecipe) {
-          //throw new GraphQLError("Recipe not found");
-        //}
+        if (!existingRecipe) {
+          throw new GraphQLError("Recipe not found");
+        }
 
         const updatedUser = await User.findOneAndUpdate(
           { _id: context.user._id },
@@ -191,7 +191,7 @@ const resolvers = {
           { new: true, runValidators: true }
         );
 
-        // console.log('Updated user:', updatedUser);
+        console.log('Updated user:', updatedUser);
 
         if (!updatedUser) {
           console.log('User not found or update failed.');

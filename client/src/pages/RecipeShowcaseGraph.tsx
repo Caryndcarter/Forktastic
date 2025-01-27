@@ -8,7 +8,7 @@ import { useState, useEffect} from 'react';
 //new imports
 import { useMutation } from '@apollo/client';
 import { ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE } from '../utils_graphQL/mutations';
-//import { IS_RECIPE_SAVED } from '../utils_graphQL/queries';
+//import { GET_SAVED_RECIPES } from '../utils_graphQL/queries';
 import Auth from '../utils_graphQL/auth';
 import RecipeDetails from '../interfaces/recipeDetails.ts';
 
@@ -25,7 +25,7 @@ const RecipeShowcase = () =>  {
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
 
 
-  //const { data } = useQuery(IS_RECIPE_SAVED);
+  //const { data } = useQuery(GET_SAVED_RECIPES);
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -37,20 +37,20 @@ const RecipeShowcase = () =>  {
   
       if (isLoggedIn) {
         try {
-          setIsSaved(false); 
+          //setIsSaved(false); 
           console.log("isSaved: " + isSaved); 
           console.log("Revised recipe ID:", currentRecipeDetails.id);
 
-          /*const { userRecipe } = await data({
-            variables: {
-              recipeId: "0",
-            },  
-         });
+        //   const { userRecipe } = await data({
+        //     variables: {
+        //       savedRecipe: "O",
+        //     },  
+        //  });
 
-          console.log("Exists value:", userRecipe);
-          if (userRecipe) {
-            setIsSaved(true);
-          }*/
+          // console.log("Exists value:", userRecipe);
+          // if (userRecipe) {
+          //   setIsSaved(true);
+          // }
         } catch (err) {
           console.error("Error retrieving recipe:", err);
           setIsSaved(false); 
