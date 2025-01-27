@@ -35,7 +35,7 @@ const RecipeShowcase = () =>  {
       console.log("isLoggedIn first check: " + isLoggedIn); 
       setLoginCheck(isLoggedIn);
   
-      if (isLoggedIn) {
+      if (isLoggedIn && currentRecipeDetails.id === "0") {
         try {
           //setIsSaved(false); 
           console.log("isSaved: " + isSaved); 
@@ -43,7 +43,7 @@ const RecipeShowcase = () =>  {
 
         //   const { userRecipe } = await data({
         //     variables: {
-        //       savedRecipe: "O",
+        //       savedRecipes: "O",
         //     },  
         //  });
 
@@ -55,8 +55,10 @@ const RecipeShowcase = () =>  {
           console.error("Error retrieving recipe:", err);
           setIsSaved(false); 
         }
+      } else if (isLoggedIn && currentRecipeDetails.id !=="0") {
+        setIsSaved(true); 
       } else {
-        setIsSaved(false); // Not logged in or no recipe ID
+        setIsSaved(false); 
       }
     };
    
@@ -88,22 +90,20 @@ const RecipeShowcase = () =>  {
         },
       });
 
+       // Save the recipe ID to the user's savedRecipes array
       if (data && data.addRecipe._id) {
         currentRecipeDetails.id = data.addRecipe._id; // Update the ID with the one from the backend
+        await saveRecipe({
+          variables: {
+            recipeId: data.addRecipe._id,
+          },
+          });
+          setIsSaved(true);
+          console.log("IsSaved:" + isSaved);
+          console.log("Recipe saved successfully.");
+          console.log("just saved id: " + data.addRecipe._id);
       }
-
-      console.log("just saved id: " + data.addRecipe._id);
-
-      // Save the recipe ID to the user's savedRecipes array
-      await saveRecipe({
-        variables: {
-          recipeId: data.addRecipe._id,
-        },
-      });
-
-      setIsSaved(true);
-      console.log("second is saved: " + isSaved);
-
+      
       //navigate("/recipe-book");
     } catch (err) {
       console.error("Error saving recipe:", err);
