@@ -47,8 +47,87 @@ const resolvers = {
         throw new GraphQLError("Failed to check if the recipe is saved.");
       }
     },
+
+    getRecipes: async (
+      _parent: any,
+      _args: any,
+      context: user_context
+    ): Promise<recipe[] | null> => {
+      if (!context.user) {
+        throw new AuthenticationError("could not authenticate user.");
+      }
+
+      const user = await User.findOne({ _id: context.user._id });
+
+      if (!user) {
+        throw new AuthenticationError("could not find user.");
+      }
+
+      const savedRecipes = user.savedRecipes;
+
+      if (!savedRecipes) {
+        console.log(`no recipes found for ${user.userName}`);
+        return null;
+      } else if (savedRecipes.length == 0) {
+        console.log(`no recipes found for ${user.userName}`);
+        return null;
+      }
+      let recipes: recipe[] = [];
+
+      for (const id of savedRecipes) {
+        const recipe: recipe | null = await Recipe.findById(id);
+        if (!recipe) {
+          console.log("skipping...");
+          continue;
+        }
+        recipes.push(recipe);
+      }
+
+      return recipes;
+    },
+
+    getRecipe: async (
+      _parent: any,
+      args: {
+        mongoID?: mongoose.Schema.Types.ObjectId;
+        spoonacularId?: number;
+      },
+      context: user_context
+    ): Promise<recipe | null> => {
+      if (!context.user) {
+        throw new AuthenticationError("could not authenticate user.");
+      }
+
+      const user = await User.findOne({ _id: context.user._id });
+
+      if (!user) {
+        throw new AuthenticationError("could not find user.");
+      }
+
+      const { mongoID, spoonacularId } = args;
+
+      console.log(mongoID, spoonacularId);
+      let recipe: recipe | null = null;
+      if (mongoID) {
+        recipe = await Recipe.findById(mongoID);
+      }
+
+      if (recipe) {
+        return recipe;
+      }
+
+      if (spoonacularId) {
+        recipe = await spoonacularService.findInformation(spoonacularId);
+      }
+
+      if (recipe) {
+        return recipe;
+      }
+
+      return null;
+    },
   },
-  
+    
 
   Mutation: {
     // create a user, sign a token, and send it back
