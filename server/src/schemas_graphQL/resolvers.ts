@@ -227,6 +227,22 @@ const resolvers = {
       }
     ) => {
       try {
+        const { spoonacularId } = recipeInput;
+
+        // check for duplicates by the spoonacular ID
+        let duplicate: recipe | null = null;
+
+        if (spoonacularId) {
+          duplicate = await Recipe.findOne({
+            spoonacularId: spoonacularId,
+          }).exec();
+        }
+
+        if (duplicate) {
+          console.log("duplicate found.");
+          return duplicate;
+        }
+
         // Create and save the new recipe
         const newRecipe = await Recipe.create(recipeInput);
 
