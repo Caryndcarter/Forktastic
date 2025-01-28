@@ -1,5 +1,4 @@
 import { useState, useCallback, useLayoutEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Recipe from "../interfaces/recipe";
 import RecipeCard from "../components/RecipeCard";
 import FilterForm from "../components/FilterForm";
@@ -23,8 +22,6 @@ const RecipeSearchPage: React.FC = () => {
     intolerances: [],
     includeIngredients: [],
   });
-
-  const navigate = useNavigate();
 
   const getRandomRecipes = async () => {
     const recipes = await apiService.forignRandomSearch();

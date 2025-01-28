@@ -1,25 +1,30 @@
-import { Star } from "lucide-react"
+import type React from "react"
 
 interface AverageReviewProps {
   averageRating: number
   totalReviews: number
 }
 
-export default function AverageReview({ averageRating, totalReviews }: AverageReviewProps) {
+const AverageReview: React.FC<AverageReviewProps> = ({ averageRating, totalReviews }) => {
   return (
-    <div className="flex items-center space-x-2 mb-4">
-      <div className="flex">
+    <div className="flex items-center mb-4">
+      <div className="flex mr-2">
         {[1, 2, 3, 4, 5].map((star) => (
-          <Star
+          <span
             key={star}
-            className={star <= Math.round(averageRating) ? "text-yellow-400 fill-current" : "text-gray-300"}
-          />
+            className={`text-2xl ${star <= Math.round(averageRating) ? "text-yellow-400" : "text-gray-300"}`}
+          >
+            ★
+          </span>
         ))}
       </div>
       <span className="text-lg font-semibold">{averageRating.toFixed(1)}</span>
-      <span className="text-gray-500">
+      <span className="text-gray-600 ml-2">
         ({totalReviews} {totalReviews === 1 ? "review" : "reviews"})
       </span>
     </div>
   )
 }
+
+export default AverageReview
+

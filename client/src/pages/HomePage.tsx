@@ -1,15 +1,10 @@
 import { useNavigate } from "react-router-dom"
 import { useState, useEffect } from "react"
-import Slider from "react-slick"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 import RecipeCard from "../components/RecipeCard"
 import type Recipe from "../interfaces/recipe"
 import { authService } from "../api/authentication"
 import apiService from "../api/apiService"
-
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
-import "../styles/HomePage.css"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 
 const HomePage = () => {
   const navigate = useNavigate()
@@ -28,33 +23,7 @@ const HomePage = () => {
       setIsLoggedIn(loggedIn)
     }
     checkLogin()
-  }, []) // Added dependency array [] to fix the issue
-
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-    prevArrow: <ChevronLeft className="slick-arrow slick-prev" />,
-    nextArrow: <ChevronRight className="slick-arrow slick-next" />,
-  }
+  }, []) // Added [] to specify dependencies
 
   return (
     <div className="min-h-screen bg-[#fef3d0] pt-20 px-4">
@@ -97,13 +66,25 @@ const HomePage = () => {
         <h2 className="text-3xl font-semibold text-[#a84e24] mb-4 text-center">
           {isLoggedIn ? "Discover New Recipes" : "Sample Recipes"}
         </h2>
-        <Slider {...sliderSettings} className="recipe-carousel">
-          {recipes.map((recipe) => (
-            <div key={recipe.id} className="px-2">
-              <RecipeCard recipe={recipe} />
-            </div>
-          ))}
-        </Slider>
+        <Carousel
+          opts={{
+            align: "start",
+            loop: true,
+          }}
+          className="w-full max-w-sm mx-auto"
+        >
+          <CarouselContent>
+            {recipes.map((recipe) => (
+              <CarouselItem key={recipe._id} className="md:basis-1/2 lg:basis-1/3">
+                <div className="p-1">
+                  <RecipeCard recipe={recipe} />
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
       </div>
     </div>
   )

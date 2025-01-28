@@ -44,3 +44,18 @@ export const IS_RECIPE_SAVED = gql`
     isRecipeSaved(recipeId: $recipeId)
   }
 `;
+
+export const GET_RECIPE_REVIEWS = gql`
+  query GetRecipeReviews($recipeId: ID!) {
+    getRecipeReviews(recipeId: $recipeId) {
+      reviews {
+        _id
+        userId
+        rating
+        comment
+      }
+      averageRating
+      totalReviews
+    }
+  }
+`

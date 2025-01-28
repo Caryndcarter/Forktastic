@@ -85,3 +85,23 @@ export const REMOVE_RECIPE = gql`
     }
   }
 `;
+
+export const ADD_REVIEW = gql`
+  mutation AddReview($reviewInput: ReviewInput!) {
+    addReview(reviewInput: $reviewInput) {
+      _id
+      rating
+      comment
+    }
+  }
+`
+
+export const UPDATE_REVIEW = gql`
+  mutation UpdateReview($reviewInput: ReviewInput!) {
+    updateReview(reviewInput: $reviewInput) {
+      _id
+      rating
+      comment
+    }
+  }
+`

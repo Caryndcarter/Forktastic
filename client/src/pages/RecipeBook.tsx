@@ -1,5 +1,4 @@
 import "../index.css";
-import { useNavigate } from "react-router-dom";
 import RecipeCard from "../components/RecipeCard";
 import Recipe from "../interfaces/recipe";
 // import apiService from "../api/apiService";
@@ -10,7 +9,6 @@ import { useQuery } from "@apollo/client";
 import { GET_SAVED_RECIPES } from "@/utils_graphQL/queries";
 
 export default function RecipeBook() {
-  const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const { data } = useQuery(GET_SAVED_RECIPES);

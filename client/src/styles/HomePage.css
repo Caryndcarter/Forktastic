@@ -1,24 +1,31 @@
-.recipe-carousel .slick-arrow {
-    z-index: 1;
-    width: 30px;
-    height: 30px;
-    color: #a84e24;
-  }
-  
-  .recipe-carousel .slick-prev {
-    left: -35px;
-  }
-  
-  .recipe-carousel .slick-next {
-    right: -35px;
-  }
-  
-  .recipe-carousel .slick-dots li button:before {
-    color: #a84e24;
-  }
-  
-  .recipe-carousel .slick-slide {
-    padding: 0 10px;
-  }
-  
-  
+.carousel-container {
+  position: relative;
+  padding: 0 40px;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.carousel-arrow:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.carousel-arrow-prev {
+  left: 0;
+}
+
+.carousel-arrow-next {
+  right: 0;
+}
