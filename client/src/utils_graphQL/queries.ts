@@ -39,8 +39,9 @@ export const GET_RECIPE = gql`
   }
 `;
 
-export const IS_RECIPE_SAVED = gql`
-  query isRecipeSaved($recipeId: String!) {
-    isRecipeSaved(recipeId: $recipeId)
-  }
+export const GET_SPECIFIC_RECIPE_ID = gql`
+    query getSpecificRecipeId($recipeId: String!) {
+      getSpecificRecipeId(recipeId: $recipeId)
+    }
 `;
+
