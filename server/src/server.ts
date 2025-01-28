@@ -1,12 +1,10 @@
-const forceDatabaseRefresh = false;
-
 import express from "express";
 import path from "node:path";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 
 //PostgreSQL
-import sequelize from "./config/connection.js";
+//import sequelize from "./config/connection.js";
 import routes from "./routes/index.js";
 
 // MongoDB and GraphQL
@@ -75,17 +73,17 @@ const startServers = async () => {
   db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
   // Start Express Server with PostgreSQL
-  sequelize
-    .sync({ force: forceDatabaseRefresh })
-    .then(() => {
+  //sequelize
+    //.sync({ force: forceDatabaseRefresh })
+    //.then(() => {
       app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
         console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
       });
-    })
-    .catch((error) => {
-      console.error("Unable to connect to the database:", error);
-    });
+    //})
+    ///.catch((error) => {
+      //console.error("Unable to connect to the database:", error);
+    //});
 };
 
 startServers();
