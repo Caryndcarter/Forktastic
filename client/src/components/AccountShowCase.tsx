@@ -113,7 +113,7 @@ export default function AccountShowCase({
     // Update the formValues state
     setFormValues((prev: accountInfo) => ({
       ...prev,
-      intolerance: updatedIntolerances,
+      intolerances: updatedIntolerances,
     }));
   };
 
