@@ -21,8 +21,9 @@ export const GET_SAVED_RECIPES = gql`
 `;
 
 export const GET_RECIPE = gql`
-  query getRecipe($mongoID: ID, $spoonacularId: Int) {
-    getRecipe(mongoID: $mongoID, spoonacularId: $spoonacularId) {
+  query getRecipe($mongoID: ID!) {
+    getRecipe(mongoID: $mongoID) {
+      _id
       title
       summary
       readyInMinutes
@@ -40,10 +41,7 @@ export const GET_RECIPE = gql`
 `;
 
 export const GET_SPECIFIC_RECIPE_ID = gql`
-    query getSpecificRecipeId($recipeId: String!) {
-      getSpecificRecipeId(recipeId: $recipeId)
-    }
+  query getSpecificRecipeId($recipeId: String!) {
+    getSpecificRecipeId(recipeId: $recipeId)
+  }
 `;
-
-
-

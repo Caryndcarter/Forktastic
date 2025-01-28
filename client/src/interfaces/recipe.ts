@@ -1,7 +1,6 @@
-  
 export default interface Recipe {
-    id: number, 
-    spoonacularId: number,
-    title: string,
-    image: string,
+  _id: number;
+  spoonacularId: number;
+  title: string;
+  image: string;
 }
