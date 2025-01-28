@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import RecipeCard from "../components/RecipeCard";
 import Recipe from "../interfaces/recipe";
 // import apiService from "../api/apiService";
-import { useState, useEffect } from "react";
+import { useState, useLayoutEffect, useEffect } from "react";
 // import { retrieveRecipesByUser } from "../api/recipesAPI";
 
 import { useQuery } from "@apollo/client";
@@ -13,13 +13,19 @@ export default function RecipeBook() {
   const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const { data } = useQuery(GET_SAVED_RECIPES);
+  const { data, refetch } = useQuery(GET_SAVED_RECIPES);
 
+  // grab the recipes from the database
   useEffect(() => {
     if (data?.getRecipes) {
       setRecipes(data.getRecipes);
     }
   }, [data]);
+
+  // trigger the query each time the page is visited
+  useLayoutEffect(() => {
+    refetch();
+  }, []);
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-[#fef3d0]">
