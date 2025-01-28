@@ -15,34 +15,36 @@ export default function RecipeCard({
 }: RecipeCardProps) {
   const { setCurrentRecipeDetails } = useContext(currentRecipeContext);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
-  const { data } = useQuery(GET_RECIPE, {
-    variables: { mongoID: _id },
+  const { data, loading } = useQuery(GET_RECIPE, {
+    variables: { mongoID: _id, spoonacularId: spoonacularId },
     skip: skipQuery,
   });
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    console.log(_id);
-    if (_id) {
-      console.log("mongo");
-      setSkipQuery(false);
-    } else if (spoonacularId) {
-      console.log("spoon");
-      const recipe = await apiService.forignInformationSearch(spoonacularId);
-      setCurrentRecipeDetails(recipe);
-      navigate("/recipe-showcase");
-    }
+    setSkipQuery(false);
+  };
+
+  const searchSpoonacular = async () => {
+    const recipe = await apiService.forignInformationSearch(spoonacularId);
+    setCurrentRecipeDetails(recipe);
+    navigate("/recipe-showcase");
   };
 
   useEffect(() => {
-    if (skipQuery) {
+    if (loading || skipQuery) {
       return;
     }
+
     if (data?.getRecipe) {
+      console.log("mongo");
       setCurrentRecipeDetails(data.getRecipe);
       navigate("/recipe-showcase");
+    } else {
+      searchSpoonacular();
+      return;
     }
-  }, [data]);
+  }, [data, loading]);
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-transform transform hover:scale-105">
