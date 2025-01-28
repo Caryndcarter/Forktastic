@@ -2,7 +2,7 @@ const typeDefs = `
 
   type Query {
     getUser: User
-    isRecipeSaved(recipeId: String!): Boolean
+    getSpecificRecipeId(recipeId: String!): String
     getRecipes: [Recipe]
     getRecipe(mongoID: ID, spoonacularId:Int): Recipe
   }
