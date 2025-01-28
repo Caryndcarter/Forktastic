@@ -15,21 +15,18 @@ const resolvers = {
       throw new AuthenticationError("could not authenticate user.");
     },
 
-    isRecipeSaved: async (
-      _: any,
-      { recipeId }: { recipeId: string },
-      context: any
-    ): Promise<boolean> => {
+    getSpecificRecipeId: async (_: any, { recipeId }: { recipeId: string }, context: any): Promise<string | null> => {
       console.log("Received recipeId:", recipeId);
       console.log("Context user:", context.user);
-
+      
       if (!context.user) {
         throw new AuthenticationError("User not authenticated.");
       }
 
       try {
-        // Convert recipeId string to ObjectId
-        const objectId = new mongoose.Types.ObjectId(recipeId);
+
+         // Convert recipeId string to ObjectId
+        //const objectId = new mongoose.Types.ObjectId(recipeId);
 
         // Find the user by their ID
         const user = await User.findOne({ _id: context.user._id });
@@ -40,15 +37,19 @@ const resolvers = {
 
         const savedRecipes = user.savedRecipes || [];
 
-        // Check if the recipeId exists in the savedRecipes array
-        const isSaved = savedRecipes?.includes(objectId);
-        return isSaved;
+       // Check if the provided recipeId exists in savedRecipes
+        const foundRecipe = savedRecipes.find((id) => id.toString() === recipeId);
+
+        // Return the recipeId if found, otherwise return null
+        return foundRecipe ? foundRecipe.toString() : null;
+
       } catch (err) {
-        console.error("Error in isRecipeSaved resolver:", err);
+        console.error("Error in get specific recipe resolver:", err);
         throw new GraphQLError("Failed to check if the recipe is saved.");
       }
     },
-
+  },
+  
     getRecipes: async (
       _parent: any,
       _args: any,
