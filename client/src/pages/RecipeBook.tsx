@@ -13,29 +13,37 @@ export default function RecipeBook() {
   const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const { data, loading, refetch } = useQuery(GET_SAVED_RECIPES);
+  const { loading, refetch } = useQuery(GET_SAVED_RECIPES); // Remove data from destructuring since we're not using it directly
 
-  // grab the recipes from the database
   useEffect(() => {
-    const fetchRecipes = async () => {
-      if (loading) return; // Wait until the query completes otherwise the random recipes appear
+    const loadRecipes = async () => {
+      if (loading) return;
 
-      if (data?.getRecipes) {
-        setRecipes(data.getRecipes);
+      // Force refetch to get latest data
+      const { data: refreshedData } = await refetch();
 
+      if (refreshedData?.getRecipes?.length) {
+        setRecipes(refreshedData.getRecipes);
+        
       } else {
-
+        
         try {
-          const spoonRecipes = await apiService.forignRandomSearch(); 
-          setRecipes(spoonRecipes); 
+          const spoonRecipes = await apiService.forignRandomSearch();
+          setRecipes(spoonRecipes);
         } catch (error) {
           console.error("Error fetching recipes:", error);
         }
       }
     };
-  
-    fetchRecipes(); 
-  }, [data, loading]);
+
+    loadRecipes();
+  }, [loading, refetch]);
+
+  // This ensures we refetch when the component mounts
+  useEffect(() => {
+    refetch();
+  }, []);
+
   
 
   // trigger the query each time the page is visited
