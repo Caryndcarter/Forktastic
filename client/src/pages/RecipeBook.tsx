@@ -38,7 +38,7 @@ export default function RecipeBook() {
 
     loadRecipes();
   }, [loading, refetch]);
-  
+
   // trigger the query each time the page is visited
   useLayoutEffect(() => {
     refetch();
