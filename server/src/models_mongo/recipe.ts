@@ -2,7 +2,7 @@ import { Schema, model, type Document } from "mongoose";
 //import { diet, dietValues } from "../types/diet.js";
 
 
-interface RecipeDocument extends Document {
+export interface RecipeDocument extends Document {
     title: string;
     summary: string;
     readyInMinutes: number; 
