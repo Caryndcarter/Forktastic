@@ -4,7 +4,7 @@ const typeDefs = `
     getUser: User
     getSpecificRecipeId(recipeId: String!): String
     getRecipes: [Recipe]
-    getRecipe(mongoID: ID!): Recipe
+    getRecipe(mongoID: ID, spoonacularId: Int): Recipe
   }
 
   type Mutation {

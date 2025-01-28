@@ -94,6 +94,7 @@ const resolvers = {
       _parent: any,
       args: {
         mongoID: mongoose.Schema.Types.ObjectId;
+        spoonacularId: number;
       },
       context: user_context
     ): Promise<recipe | null> => {
@@ -107,19 +108,19 @@ const resolvers = {
         throw new AuthenticationError("could not find user.");
       }
 
-      const { mongoID } = args;
+      const { mongoID, spoonacularId } = args;
 
-      console.log(mongoID);
+      console.log(mongoID, spoonacularId);
+
       let recipe: recipe | null = null;
+
       if (mongoID) {
         recipe = await Recipe.findById(mongoID);
+      } else if (spoonacularId) {
+        recipe = await Recipe.findOne({ spoonacularId: spoonacularId });
       }
 
-      if (recipe) {
-        return recipe;
-      }
-
-      return null;
+      return recipe;
     },
   },
 
