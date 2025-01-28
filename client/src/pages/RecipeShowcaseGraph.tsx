@@ -93,7 +93,7 @@ const RecipeShowcase = () => {
         await refetch();
       }
 
-      //navigate("/recipe-book");
+      navigate("/recipe-book");
     } catch (err) {
       console.error("Error saving recipe:", err);
       alert("Failed to save the recipe.");
@@ -123,7 +123,7 @@ const RecipeShowcase = () => {
       // refetch the query:
       await refetch();
 
-      //navigate('/recipe-book');
+      navigate('/recipe-book');
     } catch (err) {
       console.error("Error deleting recipe:", err);
       alert("Failed to delete recipe.");
