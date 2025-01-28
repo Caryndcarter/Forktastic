@@ -2,7 +2,7 @@ import "../index.css";
 import { useNavigate } from "react-router-dom";
 import RecipeCard from "../components/RecipeCard";
 import Recipe from "../interfaces/recipe";
-// import apiService from "../api/apiService";
+import apiService from "../api/apiService";
 import { useState, useLayoutEffect, useEffect } from "react";
 // import { retrieveRecipesByUser } from "../api/recipesAPI";
 
@@ -13,14 +13,30 @@ export default function RecipeBook() {
   const navigate = useNavigate();
 
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const { data, refetch } = useQuery(GET_SAVED_RECIPES);
+  const { data, loading, refetch } = useQuery(GET_SAVED_RECIPES);
 
   // grab the recipes from the database
   useEffect(() => {
-    if (data?.getRecipes) {
-      setRecipes(data.getRecipes);
-    }
-  }, [data]);
+    const fetchRecipes = async () => {
+      if (loading) return; // Wait until the query completes otherwise the random recipes appear
+
+      if (data?.getRecipes) {
+        setRecipes(data.getRecipes);
+
+      } else {
+
+        try {
+          const spoonRecipes = await apiService.forignRandomSearch(); 
+          setRecipes(spoonRecipes); 
+        } catch (error) {
+          console.error("Error fetching recipes:", error);
+        }
+      }
+    };
+  
+    fetchRecipes(); 
+  }, [data, loading]);
+  
 
   // trigger the query each time the page is visited
   useLayoutEffect(() => {
