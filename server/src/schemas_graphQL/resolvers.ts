@@ -1,7 +1,8 @@
-import User from "../models_mongo/user.js";
-import Recipe from "../models_mongo/recipe.js"
+import { User, Recipe } from "../models_mongo/index.js";
 import { signToken, AuthenticationError } from "../middleware/auth_graphQL.js";
 import { GraphQLError } from "graphql";
+import spoonacularService from "../service/spoonacularService.js";
+import { recipe } from "../types/index.js";
 import { diet, intolerance, user_context } from "../types/index.js";
 import mongoose from "mongoose";
 
