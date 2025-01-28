@@ -5,9 +5,9 @@ import { currentRecipeContext } from "../App";
 import { useState, useEffect} from 'react';
 
 //new imports
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE } from '../utils_graphQL/mutations';
-//import { GET_SPECIFIC_RECIPE_ID } from '../utils_graphQL/queries';
+import { GET_SPECIFIC_RECIPE_ID } from '../utils_graphQL/queries';
 import Auth from '../utils_graphQL/auth';
 import RecipeDetails from '../interfaces/recipeDetails.ts';
 
@@ -22,7 +22,7 @@ const RecipeShowcase = () =>  {
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
-  //const { data } = useQuery(GET_SPECIFIC_RECIPE_ID);
+  const { data } = useQuery(GET_SPECIFIC_RECIPE_ID, {variables: {recipeId: currentRecipeDetails.id}}); 
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -32,47 +32,40 @@ const RecipeShowcase = () =>  {
       console.log("isLoggedIn: " + isLoggedIn); 
       setLoginCheck(isLoggedIn);
   
-      // if (isLoggedIn && currentRecipeDetails.id === "0") {
+      if (isLoggedIn && currentRecipeDetails.id === "0") {
 
-      //   console.log("Current recipe ID again:", currentRecipeDetails.id);
+        console.log("Current recipe ID saved:", currentRecipeDetails.id);
 
-      //   setIsSaved(false); 
-      //   console.log("isSaved 1: " + isSaved); 
+        setIsSaved(false); 
+        console.log("isSaved 1: " + isSaved); 
        
-      // } else if (isLoggedIn && currentRecipeDetails.id !=="0") {
+      } else if (isLoggedIn && currentRecipeDetails.id !=="0") {
 
-      //   console.log("Current recipe ID 3:", currentRecipeDetails.id);
+        console.log("Current recipe ID 3:", currentRecipeDetails.id);
 
-      //   try {
-      //     const { userRecipe } = await data({
-      //       variables: {
-      //         recipeId: currentRecipeDetails.id,
-      //       },  
-      //    });
-
-      //     console.log("Recipe exists value:", userRecipe);
+        try {
           
-      //     if (userRecipe) {
-      //       setIsSaved(true);
-      //     }
+          if (data?.getSpecificRecipeId) {
+            setIsSaved(true);
+          }
 
-      //     console.log("isSaved Revision: " + isSaved); 
+          console.log("isSaved Revision: " + isSaved); 
 
-      //   } catch (err) {
-      //     console.error("Recipe not on user: ", err);
-      //     setIsSaved(false); 
+        } catch (err) {
+          console.error("Recipe not on user: ", err);
+          setIsSaved(false); 
        
-      //     //setIsSaved(true); 
-      //     console.log("isSaved Revision: " + isSaved); 
-      // } 
+          //setIsSaved(true); 
+          console.log("isSaved Revision: " + isSaved); 
+      } 
 
-      // } else {
-      //   setIsSaved(false); //user not logged in
-      // }
+      } else {
+        setIsSaved(false); //user not logged in
+      }
     };
    
     checkLogin();
-  }, [currentRecipeDetails, isSaved]);
+  }, [currentRecipeDetails, isSaved, data]);
 
   // Function to save recipe
   const saveCurrentRecipe = async (
