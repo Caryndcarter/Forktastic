@@ -48,7 +48,7 @@ const resolvers = {
         throw new GraphQLError("Failed to check if the recipe is saved.");
       }
     },
-  },
+  
   
     getRecipes: async (
       _parent: any,
@@ -128,7 +128,7 @@ const resolvers = {
 
       return null;
     },
- 
+  },
 
   Mutation: {
     // create a user, sign a token, and send it back
