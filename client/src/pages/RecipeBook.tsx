@@ -38,14 +38,7 @@ export default function RecipeBook() {
 
     loadRecipes();
   }, [loading, refetch]);
-
-  // This ensures we refetch when the component mounts
-  useEffect(() => {
-    refetch();
-  }, []);
-
   
-
   // trigger the query each time the page is visited
   useLayoutEffect(() => {
     refetch();
