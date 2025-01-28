@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 //NavigateFunction
-import { useContext } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
 import { useState, useEffect } from "react";
 
@@ -13,64 +13,47 @@ import {
 } from "../utils_graphQL/mutations";
 import { GET_SPECIFIC_RECIPE_ID } from "../utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
-import RecipeDetails from "../interfaces/recipeDetails.ts";
+// import RecipeDetails from "../interfaces/recipeDetails.ts";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
-  const { currentRecipeDetails } = useContext(currentRecipeContext);
+  const { currentRecipeDetails, setCurrentRecipeDetails } =
+    useContext(currentRecipeContext);
   const [loginCheck, setLoginCheck] = useState(false);
+  const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState(false);
 
   //new mutations and queries
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
-  const { data } = useQuery(GET_SPECIFIC_RECIPE_ID, {
+  const { data, refetch } = useQuery(GET_SPECIFIC_RECIPE_ID, {
     variables: { recipeId: currentRecipeDetails._id },
+    skip: skipQuery,
   });
 
+  // before the page renders, perform the login check. This runs once.
+  useLayoutEffect(() => {
+    const isLoggedIn = Auth.loggedIn();
+    setLoginCheck(isLoggedIn);
+    // if logged in, activate the query to check if the recipe is saved:
+    if (isLoggedIn) {
+      setSkipQuery(false);
+    }
+  }, []);
+
+  // This effect determines if the recipe is saved by checking the database.
+  // This is updated whenever the query refetches.
   useEffect(() => {
-    const checkLogin = async () => {
-      console.log("Current recipe ID:", currentRecipeDetails._id);
-
-      const isLoggedIn = Auth.loggedIn();
-      console.log("isLoggedIn: " + isLoggedIn);
-      setLoginCheck(isLoggedIn);
-
-      if (isLoggedIn && currentRecipeDetails._id === "0") {
-        console.log("Current recipe ID is 0:", currentRecipeDetails._id);
-
-        setIsSaved(false);
-        console.log("isSaved should be false: " + isSaved);
-      } else if (isLoggedIn && currentRecipeDetails._id !== "0") {
-        console.log("Current recipe ID is not 0:", currentRecipeDetails._id);
-
-        try {
-          if (data?.getSpecificRecipeId) {
-            setIsSaved(true);
-          }
-
-          console.log("isSaved should be true: " + isSaved);
-        } catch (err) {
-          console.error("Recipe not on user: ", err);
-          setIsSaved(false);
-
-          console.log("isSaved false error: " + isSaved);
-        }
-      } else {
-        setIsSaved(false); //user not logged in
-        console.log("user is not logged in");
-      }
-    };
-
-    checkLogin();
-  }, [currentRecipeDetails, isSaved, data]);
+    if (data?.getSpecificRecipeId) {
+      setIsSaved(true);
+    } else {
+      setIsSaved(false);
+    }
+  }, [data]);
 
   // Function to save recipe
-  const saveCurrentRecipe = async (
-    currentRecipeDetails: RecipeDetails,
-    setIsSaved: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
+  const saveCurrentRecipe = async () => {
     try {
       const { data } = await addRecipe({
         variables: {
@@ -92,17 +75,22 @@ const RecipeShowcase = () => {
       });
 
       // Save the recipe ID to the user's savedRecipes array
-      if (data && data.addRecipe._id) {
-        currentRecipeDetails._id = data.addRecipe._id; // Update the ID with the one from the backend
+      if (data?.addRecipe._id) {
+        // Update the ID with the one from the backend
+        setCurrentRecipeDetails({
+          ...currentRecipeDetails,
+          _id: data.addRecipe._id, // Ensure _id is always valid
+        });
+
+        // save this recipe to the user
         await saveRecipe({
           variables: {
             recipeId: data.addRecipe._id,
           },
         });
-        setIsSaved(true);
-        console.log("IsSaved should be true saving:" + isSaved);
-        console.log("Recipe saved successfully.");
-        console.log("just saved id: " + data.addRecipe._id);
+
+        // refetch the query:
+        await refetch();
       }
 
       //navigate("/recipe-book");
@@ -113,10 +101,7 @@ const RecipeShowcase = () => {
   };
 
   // Function to delete recipe
-  const deleteCurrentRecipe = async (
-    currentRecipeDetails: RecipeDetails,
-    setIsSaved: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
+  const deleteCurrentRecipe = async () => {
     //navigate: NavigateFunction
 
     console.log("currrent Recipe details ID:" + currentRecipeDetails._id);
@@ -133,8 +118,10 @@ const RecipeShowcase = () => {
           "Recipe successfully deleted with ID: ",
           currentRecipeDetails._id
         );
-        setIsSaved(false);
       }
+
+      // refetch the query:
+      await refetch();
 
       //navigate('/recipe-book');
     } catch (err) {
@@ -228,9 +215,7 @@ const RecipeShowcase = () => {
           {loginCheck ? (
             <button
               onClick={() =>
-                isSaved
-                  ? deleteCurrentRecipe(currentRecipeDetails, setIsSaved)
-                  : saveCurrentRecipe(currentRecipeDetails, setIsSaved)
+                isSaved ? deleteCurrentRecipe() : saveCurrentRecipe()
               }
               className={`font-semibold py-2 px-4 rounded mb-6 transition-colors duration-300 ${
                 isSaved
