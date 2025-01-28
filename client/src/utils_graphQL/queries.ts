@@ -21,8 +21,8 @@ export const GET_SAVED_RECIPES = gql`
 `;
 
 export const GET_RECIPE = gql`
-  query getRecipe($mongoID: ID!) {
-    getRecipe(mongoID: $mongoID) {
+  query getRecipe($mongoID: ID, $spoonacularId: Int) {
+    getRecipe(mongoID: $mongoID, spoonacularId: $spoonacularId) {
       _id
       title
       summary
