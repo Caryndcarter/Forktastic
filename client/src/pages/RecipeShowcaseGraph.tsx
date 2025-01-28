@@ -34,14 +34,14 @@ const RecipeShowcase = () =>  {
   
       if (isLoggedIn && currentRecipeDetails.id === "0") {
 
-        console.log("Current recipe ID saved:", currentRecipeDetails.id);
+        console.log("Current recipe ID is 0:", currentRecipeDetails.id);
 
         setIsSaved(false); 
-        console.log("isSaved 1: " + isSaved); 
+        console.log("isSaved should be false: " + isSaved); 
        
       } else if (isLoggedIn && currentRecipeDetails.id !=="0") {
 
-        console.log("Current recipe ID 3:", currentRecipeDetails.id);
+        console.log("Current recipe ID is not 0:", currentRecipeDetails.id);
 
         try {
           
@@ -49,18 +49,18 @@ const RecipeShowcase = () =>  {
             setIsSaved(true);
           }
 
-          console.log("isSaved Revision: " + isSaved); 
+          console.log("isSaved should be true: " + isSaved); 
 
         } catch (err) {
           console.error("Recipe not on user: ", err);
           setIsSaved(false); 
        
-          //setIsSaved(true); 
-          console.log("isSaved Revision: " + isSaved); 
+          console.log("isSaved false error: " + isSaved); 
       } 
 
       } else {
         setIsSaved(false); //user not logged in
+        console.log("user is not logged in");
       }
     };
    
@@ -101,7 +101,7 @@ const RecipeShowcase = () =>  {
           },
           });
           setIsSaved(true);
-          console.log("IsSaved:" + isSaved);
+          console.log("IsSaved should be true saving:" + isSaved);
           console.log("Recipe saved successfully.");
           console.log("just saved id: " + data.addRecipe._id);
       }
