@@ -57,7 +57,7 @@ const UserInfo = () => {
         {
           loginCheck 
             ? (<h2 className="text-2xl font-bold mb-6 text-center text-[#a84e24]">
-              { signIn ? 'Dietary Requirements' : 'Sign Up'}
+              { signIn ? 'Dietary Preferences' : 'Sign Up'}
               </h2>
             )
             : <></>
