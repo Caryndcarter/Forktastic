@@ -13,8 +13,7 @@ import { Review } from "../components/Review";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
-  const { currentRecipeDetails, setCurrentRecipeDetails } =
-    useContext(currentRecipeContext);
+  const { currentRecipeDetails, setCurrentRecipeDetails } = useContext(currentRecipeContext);
   const [loginCheck, setLoginCheck] = useState(false);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState(false);
@@ -32,7 +31,7 @@ const RecipeShowcase = () => {
   // before the page renders, perform the login check. This runs once.
   useLayoutEffect(() => {
     const isLoggedIn = Auth.loggedIn();
-    console.log(Auth.getProfile());
+    console.log("Auth Profile: " , Auth.getProfile());
     setLoginCheck(isLoggedIn);
     // if logged in, activate the query to check if the recipe is saved:
     if (isLoggedIn) {

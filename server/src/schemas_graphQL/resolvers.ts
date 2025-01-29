@@ -376,7 +376,6 @@ const resolvers = {
         }
 
         return savedReview;
-        
       } catch (err) {
         console.error("Error saving review to collection:", err);
         throw new GraphQLError("Error saving review to collection.");
