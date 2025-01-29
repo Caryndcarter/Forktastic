@@ -13,6 +13,7 @@ import {
 import { GET_SPECIFIC_RECIPE_ID } from "../utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
 // import RecipeDetails from "../interfaces/recipeDetails.ts";
+import { Review } from "../components/Review";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
@@ -31,9 +32,11 @@ const RecipeShowcase = () => {
     skip: skipQuery,
   });
 
+
   // before the page renders, perform the login check. This runs once.
   useLayoutEffect(() => {
     const isLoggedIn = Auth.loggedIn();
+    console.log(Auth.getProfile());
     setLoginCheck(isLoggedIn);
     // if logged in, activate the query to check if the recipe is saved:
     if (isLoggedIn) {
@@ -231,6 +234,18 @@ const RecipeShowcase = () => {
           )}
         </div>
 
+        {loginCheck && (
+            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+              <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
+              <Review
+                recipeId={currentRecipeDetails._id}
+                userId={Auth.getProfile()?.sub}
+                existingReview={null} // Replace with actual review data if available
+                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+              />
+            </div>
+           )}
+
         {/* Recipe Summary */}
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">
@@ -305,6 +320,7 @@ const RecipeShowcase = () => {
               </a>
             </h4>
           )}
+
         </div>
       </div>
     </div>
