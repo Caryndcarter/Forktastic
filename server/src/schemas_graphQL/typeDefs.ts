@@ -67,8 +67,8 @@ const typeDefs = `
 
   type Review {
     _id: ID!
-    user: User!
-    recipe: Recipe!
+    userId: ID!
+    recipeId: ID!
     rating: Int!
     comment: String!
   }

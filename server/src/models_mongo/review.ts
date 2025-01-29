@@ -32,13 +32,17 @@ const reviewSchema = new Schema<ReviewDocument>(
         userName: {
             type: String, 
             required: true
-        }
-      },
+        },
+    },
+  
     {
-        timestamps: true,
-        _id: false
+      toJSON: {
+        virtuals: true,
+      },
     }
-);
+  );
+  
+      
 
 const Review = model<ReviewDocument>("Review", reviewSchema);
 

@@ -338,22 +338,14 @@ const resolvers = {
       }
     },
 
-     // Add a review to the overall collection
-     addReview: async (
+        // Add a review to the overall collection
+    addReview: async (
       _parent: any,
-      {
-        userId,
-        recipeId,
-        rating,
-        comment,
-      }: {
-        userId: string;
-        recipeId: string;
-        rating: number;
-        comment: string;
-      }
+      { reviewInput }: { reviewInput: { userId: string; recipeId: string; rating: number; comment: string } }
     ) => {
       try {
+        const { userId, recipeId, rating, comment } = reviewInput;
+
         const user = await User.findById(userId);
         if (!user) {
           throw new GraphQLError("User not found.");
@@ -371,25 +363,26 @@ const resolvers = {
           comment,
           userName: user.userName, 
         });
-
+        
+        console.log(newReview); // 
         // // Save the review to the database
-        // const savedReview: ReviewDocument = await newReview.save();
+        const savedReview = await newReview.save();
 
-        // // Add the review to the user's reviews array
-        // user.reviews?.push(savedReview._id.toString());
-        // await user.save();
+        // Create and save the new recipe
+        //const savedReview = await Review.create(newReview);
 
-        // // Add the review to the recipe's reviews array
-        // recipe.reviews?.push(savedReview._id);
-        // await recipe.save();
+        if (!savedReview) {
+          throw new GraphQLError("Error saving review to collection.");
+        }
 
-        // Return the saved review object
-        return newReview;
+        return savedReview;
+        
       } catch (err) {
         console.error("Error saving review to collection:", err);
         throw new GraphQLError("Error saving review to collection.");
       }
     },
+
   },
 };
 

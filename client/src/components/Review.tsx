@@ -26,7 +26,7 @@ export function Review({ recipeId, userId, existingReview, onReviewSubmit }: Rev
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const reviewInput = { recipeId, userId, rating, comment }
+    const reviewInput = { userId, recipeId, rating, comment }
     try {
       if (existingReview) {
         //await updateReview({ variables: { reviewInput } })
