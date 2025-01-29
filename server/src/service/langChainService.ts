@@ -1,114 +1,111 @@
-import { type Request, type Response } from "express";
 import { ChatOpenAI } from "@langchain/openai";
-import { PromptTemplate } from "@langchain/core/prompts";
-import { StructuredOutputParser } from "langchain/output_parsers";
+import { z } from "zod";
 import dotenv from "dotenv";
+import { dietValues } from "../types/index.js";
+import { Request, Response } from "express";
 
+// Retrive API key
 dotenv.config();
-
-// Get the OpenAI API key from the environment variables
 const apiKey = process.env.OPENAI_API_KEY;
-let model: ChatOpenAI;
+
+// Define response schema
+const ResponseFormatter = z.object({
+  title: z.string().describe("The title of the recipe (string)."),
+  Summary: z.string().describe("A detailed summary of the recipe (string)."),
+  ReadyInMinutes: z
+    .string()
+    .describe("The total preparation time in minutes (integer)."),
+  Servings: z
+    .string()
+    .describe("Number of servings this recipe makes (integer)."),
+  Ingredients: z
+    .string()
+    .describe("List of ingredients separated by semicolons (string)."),
+  Instructions: z
+    .string()
+    .describe("Steps for making the recipe, formatted as a string."),
+  Steps: z
+    .string()
+    .describe("Steps formatted as a semicolon-delimited list (string)."),
+  Diets: z
+    .string()
+    .describe(
+      `A list of applicable diets, chosen **only** from the following: ${dietValues}`
+    ),
+});
+
+// interface recipeResponse {
+//   title: string;
+//   summary: string;
+//   ReadyInMinutes: string;
+//   Servings: string;
+//   Ingredients: string;
+//   Steps: string;
+//   Diets: string;
+// }
+
+// Create the system prompt
+const systemPrompt = `You are a fun, helpful cooking expert. 
+Your job is to provide high-quality recipies, adhearing to any of 
+the user's instructions. If the question is unrelated to cooking, 
+just create a template recipe.`;
+
+// Create the model
+let model: ReturnType<ChatOpenAI["withStructuredOutput"]>;
 
 if (apiKey) {
-  // Initialize the OpenAI model if the API key is provided
   model = new ChatOpenAI({
     temperature: 0,
     openAIApiKey: apiKey,
     modelName: "gpt-4o-mini",
+  }).withStructuredOutput(ResponseFormatter, {
+    name: "extract_traits",
+    strict: true,
   });
-} else {
-  console.error("OPENAI_API_KEY is not configured.");
 }
 
-// With a `StructuredOutputParser` we can define a schema for the output.
-const parser = StructuredOutputParser.fromNamesAndDescriptions({
-  title: "title of the recipe",
-  Summary: "detailed summary of the recipe you are creating.",
-  ReadyInMinutes: "the number of minutes it takes to prepare the meal",
-  Servings: "the number of servings creted by this recipe",
-  Ingredients:
-    "A comprehensive list of ingredients needed to make the recipe. This is a list delimited by semi-colons.",
-  Instructions: "A comprehensive list of steps in order to make the recipe",
-  Steps:
-    "All of the steps from the instruction set, formatted in a list delimited by semi-colons.",
-  Diets:
-    "A comprehensive list of diets this meal could fit into. This is a list delimited by semi-colons.",
-});
-
-const formatInstructions = parser.getFormatInstructions();
-
-// Create a new prompt template for formatting prompts
-const promptTemplate = new PromptTemplate({
-  template:
-    "You are a fun, helpful cooking expert expert. Your job is to provide high-quality recipies, adhearing to any of the user's instructions. If the question is unrelated to cooking, just create a template recipe.\n{format_instructions}\n{question}",
-  inputVariables: ["question"],
-  partialVariables: { format_instructions: formatInstructions },
-});
-
-// Format the prompt using the prompt template with the user's question
-const formatPrompt = async (question: string): Promise<string> => {
-  return await promptTemplate.format({ question });
+// Define functions to generate the AI response
+const parseAiMsg = (
+  aiMsg: Record<string, any> | { raw: any; parsed: Record<string, any> }
+) => {
+  if ("raw" in aiMsg && "parsed" in aiMsg) {
+    return aiMsg.parsed;
+  } else {
+    return aiMsg;
+  }
 };
 
-// Call the OpenAI API to get a response to the formatted prompt
 const promptFunc = async (input: string): Promise<string> => {
   try {
-    if (model) {
-      const response = await model.invoke(input);
-      //return await model.invoke(input);
-
-    console.log(response); 
-    }
-    return '```json\n{\n    "code": "No OpenAI API key provided.",\n    "explanation": "Unable to provide a response."\n}\n```';
+    const aiMsg = await model.invoke([
+      {
+        role: "system",
+        content: systemPrompt,
+      },
+      {
+        role: "user",
+        content: input,
+      },
+    ]);
+    return parseAiMsg(aiMsg);
   } catch (err) {
-    console.error(err);
     throw err;
   }
 };
 
-// Parse the response from the model
-const parseResponse = async (
-  response: string
-): Promise<{ [key: string]: string }> => {
+// Handle the POST request to generate the AI response
+export const askQuestion = async (req: Request, res: Response) => {
   try {
-    return await parser.parse(response);
-  } catch (err) {
-    console.error("Error in parseResponse:", err);
-    return { error: "Failed to parse the response from the model." };
-  }
-};
-
-// Handle the POST request to ask a question
-export const askQuestion = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  let userQuestion: string = req.body.question;
-
-  try {
-    if (!userQuestion) {
-      userQuestion = "Please make me a recipe!";
-    }
-
-    const formattedPrompt: string = await formatPrompt(userQuestion);
-    const rawResponse: string = await promptFunc(formattedPrompt);
-    const result: { [key: string]: string } = await parseResponse(rawResponse);
+    const userQuestion: string = req.body.question;
+    const aiAnswer: string = await promptFunc(userQuestion);
     res.json({
       question: userQuestion,
-      prompt: formattedPrompt,
-      response: rawResponse,
-      formattedResponse: result,
+      formattedResponse: aiAnswer,
     });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Error:", error.message);
-    }
+  } catch (err) {
     res.status(500).json({
-      question: userQuestion,
-      prompt: null,
-      response: "Internal Server Error",
-      formattedResponse: null,
+      response: "Error generating the AI Resposne",
     });
+    console.error(err);
   }
 };
