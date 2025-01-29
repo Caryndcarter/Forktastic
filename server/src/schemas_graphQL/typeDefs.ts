@@ -33,6 +33,7 @@ const typeDefs = `
 
    type Recipe {
     _id: ID!
+    author: ID
     title: String!
     summary: String!
     readyInMinutes: Int!

@@ -25,6 +25,7 @@ export const GET_RECIPE = gql`
     getRecipe(mongoID: $mongoID, spoonacularId: $spoonacularId) {
       _id
       title
+      author
       summary
       readyInMinutes
       servings
