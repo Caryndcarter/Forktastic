@@ -1,18 +1,19 @@
 import { type Request, type Response } from "express";
-import { ChatOpenAI } from "@langchain/openai";
+import { OpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
 import { StructuredOutputParser } from "langchain/output_parsers";
 import dotenv from "dotenv";
+import { dietValues } from "../types/index.js";
 
 dotenv.config();
 
 // Get the OpenAI API key from the environment variables
 const apiKey = process.env.OPENAI_API_KEY;
-let model: ChatOpenAI;
+let model: OpenAI;
 
 if (apiKey) {
   // Initialize the OpenAI model if the API key is provided
-  model = new ChatOpenAI({
+  model = new OpenAI({
     temperature: 0,
     openAIApiKey: apiKey,
     modelName: "gpt-4o-mini",
@@ -23,17 +24,15 @@ if (apiKey) {
 
 // With a `StructuredOutputParser` we can define a schema for the output.
 const parser = StructuredOutputParser.fromNamesAndDescriptions({
-  title: "title of the recipe",
-  Summary: "detailed summary of the recipe you are creating.",
-  ReadyInMinutes: "the number of minutes it takes to prepare the meal",
-  Servings: "the number of servings creted by this recipe",
-  Ingredients:
-    "A comprehensive list of ingredients needed to make the recipe. This is a list delimited by semi-colons.",
-  Instructions: "A comprehensive list of steps in order to make the recipe",
-  Steps:
-    "All of the steps from the instruction set, formatted in a list delimited by semi-colons.",
-  Diets:
-    "A comprehensive list of diets this meal could fit into. This is a list delimited by semi-colons.",
+  title: "The title of the recipe (string).",
+  Summary: "A detailed summary of the recipe (string).",
+  ReadyInMinutes: "The total preparation time in minutes (integer).",
+  Servings: "Number of servings this recipe makes (integer).",
+  Ingredients: "List of ingredients separated by semicolons (string).",
+  Instructions: "Steps for making the recipe, formatted as a string.",
+  Steps: "Steps formatted as a semicolon-delimited list (string).",
+  Diets: `A list of applicable diets, chosen **only** from the following: ${dietValues}. 
+  formatted as a semicolon-delimited list (string).`,
 });
 
 const formatInstructions = parser.getFormatInstructions();
@@ -55,10 +54,7 @@ const formatPrompt = async (question: string): Promise<string> => {
 const promptFunc = async (input: string): Promise<string> => {
   try {
     if (model) {
-      const response = await model.invoke(input);
-      //return await model.invoke(input);
-
-    console.log(response); 
+      return await model.invoke(input);
     }
     return '```json\n{\n    "code": "No OpenAI API key provided.",\n    "explanation": "Unable to provide a response."\n}\n```';
   } catch (err) {
