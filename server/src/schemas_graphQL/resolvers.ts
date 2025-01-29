@@ -2,9 +2,14 @@ import { User, Recipe, Review } from "../models_mongo/index.js";
 import { signToken, AuthenticationError } from "../middleware/auth_graphQL.js";
 import { GraphQLError } from "graphql";
 import { recipe } from "../types/index.js";
-//import { ReviewDocument } from "../models_mongo/review.js";
-import { diet, intolerance, user_context } from "../types/index.js";
+import {
+  diet,
+  intolerance,
+  user_context,
+  recipeAuthor,
+} from "../types/index.js";
 import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
 const resolvers = {
   Query: {
@@ -20,6 +25,10 @@ const resolvers = {
       { recipeId }: { recipeId: string },
       context: any
     ): Promise<string | null> => {
+      if (!recipeId) {
+        return null;
+      }
+
       console.log("Received recipeId:", recipeId);
       console.log("Context user:", context.user);
 
@@ -98,7 +107,7 @@ const resolvers = {
         spoonacularId: number;
       },
       context: user_context
-    ): Promise<recipe | null> => {
+    ): Promise<recipeAuthor | null> => {
       if (!context.user) {
         throw new AuthenticationError("could not authenticate user.");
       }
@@ -121,7 +130,17 @@ const resolvers = {
         recipe = await Recipe.findOne({ spoonacularId: spoonacularId });
       }
 
-      return recipe;
+      if (recipe) {
+        let author = false;
+        const id = context.user._id;
+        const authorID = recipe.author;
+        if (id && authorID) {
+          author = id == authorID.toString();
+        }
+        return { recipe: recipe, author: author };
+      } else {
+        return null;
+      }
     },
   },
 
@@ -206,7 +225,7 @@ const resolvers = {
       };
     },
 
-    //Save a recipe to the overall recipe collection
+    // Save a recipe to the overall recipe collection
     addRecipe: async (
       _parent: any,
       {
@@ -245,6 +264,43 @@ const resolvers = {
           return duplicate;
         }
 
+        // Create and save the new recipe
+        const newRecipe = await Recipe.create(recipeInput);
+
+        if (!newRecipe) {
+          throw new GraphQLError("Error saving recipe to collection.");
+        }
+
+        return newRecipe;
+      } catch (err) {
+        console.error("Error saving recipe to collection:", err);
+        throw new GraphQLError("Error saving recipe to collection.");
+      }
+    },
+
+    // Save a user-generated recipe to the overall recipe collection
+    createRecipe: async (
+      _parent: any,
+      {
+        recipeInput,
+      }: {
+        recipeInput: {
+          title: string;
+          author: any;
+          summary: string;
+          readyInMinutes: number;
+          servings: number;
+          ingredients: string[];
+          instructions: string;
+          steps: string[];
+          diet?: string[];
+          image?: string;
+        };
+      },
+      context: user_context
+    ) => {
+      try {
+        recipeInput.author = context.user._id as ObjectId;
         // Create and save the new recipe
         const newRecipe = await Recipe.create(recipeInput);
 
@@ -338,11 +394,12 @@ const resolvers = {
       }
     },
 
-        // Add a review to the overall collection
+    // Add a review to the overall collection
     addReview: async (
       _parent: any,
-      { reviewInput }: { reviewInput: { recipeId: string; rating: number; comment: string } 
-    },
+      {
+        reviewInput,
+      }: { reviewInput: { recipeId: string; rating: number; comment: string } },
       context: user_context
     ): Promise<any> => {
       try {
@@ -363,10 +420,10 @@ const resolvers = {
           recipeId,
           rating,
           comment,
-          userName: user.userName, 
+          userName: user.userName,
         });
-        
-        console.log(newReview); // 
+
+        console.log(newReview); //
         // // Save the review to the database
         const savedReview = await newReview.save();
 

@@ -10,6 +10,7 @@ import { GET_SPECIFIC_RECIPE_ID } from "../utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
 // import RecipeDetails from "../interfaces/recipeDetails.ts";
 import { Review } from "../components/Review";
+import Navbar from "../components/Navbar";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
@@ -136,31 +137,7 @@ const RecipeShowcase = () => {
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24">
       {" "}
-      {/* Added pt-24 to prevent content from being hidden behind the navbar */}
-      <nav className="bg-[#f5d3a4] shadow-md fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-4 max-w-7xl mx-auto z-10">
-        {/* Forktacular button on the left */}
-        <button
-          onClick={() => navigate("/")}
-          className="text-[#a84e24] hover:text-[#b7572e] font-semibold"
-        >
-          Forktacular
-        </button>
-
-        {/* Title centered */}
-        <div className="text-2xl font-bold text-[#a84e24] flex-1 text-center">
-          My Recipe
-        </div>
-
-        {/* Account button on the right */}
-        <div className="flex">
-          <button
-            onClick={() => navigate("/user-info")}
-            className="text-[#a84e24] hover:text-[#b7572e]"
-          >
-            Account
-          </button>
-        </div>
-      </nav>
+      <Navbar />
       {/* Recipe Details */}
       <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
         {/* Recipe Image */}
@@ -285,12 +262,12 @@ const RecipeShowcase = () => {
           <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">Steps</h3>
           <ol className="list-decimal list-inside space-y-2">
             {currentRecipeDetails.steps
-              ?.slice(0, -1) // Remove the last element
-              .map((step: string, index: number) => (
-                <li key={index} className="text-gray-800">
-                  <RawHtmlRenderer htmlString={step} />
-                </li>
-            ))}
+                ?.slice(0, -1)
+                .map((step: string, index: number) => (
+                  <li key={index} className="text-gray-800">
+                    <RawHtmlRenderer htmlString={step} />
+                  </li>
+              ))}
           </ol>
         </div>
 

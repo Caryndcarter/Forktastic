@@ -2,9 +2,9 @@ const typeDefs = `
 
   type Query {
     getUser: User
-    getSpecificRecipeId(recipeId: String!): String
+    getSpecificRecipeId(recipeId: String): String
     getRecipes: [Recipe]
-    getRecipe(mongoID: ID, spoonacularId: Int): Recipe
+    getRecipe(mongoID: ID, spoonacularId: Int): RecipeAuthor
   }
 
   type Mutation {
@@ -12,6 +12,7 @@ const typeDefs = `
     signUp(userName: String!, userEmail: String!, userPassword: String!): Auth
     updatePreferences(diet: String, intolerances: [String]): User
     addRecipe(recipeInput: recipeInput!): Recipe
+    createRecipe(recipeInput: recipeInput!): Recipe
     saveRecipe(recipeId: ID!): User
     removeRecipe(recipeId: ID!): User
     addReview(reviewInput: ReviewInput!): Review
@@ -35,8 +36,14 @@ const typeDefs = `
     user: User
   }
 
+  type RecipeAuthor {
+    recipe: Recipe
+    author: Boolean
+  }
+
    type Recipe {
     _id: ID!
+    author: ID
     title: String!
     summary: String!
     readyInMinutes: Int!

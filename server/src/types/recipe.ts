@@ -1,5 +1,7 @@
 interface recipe {
+  _id?: any;
   title: string;
+  author?: any;
   summary: string;
   readyInMinutes: number;
   servings: number;
