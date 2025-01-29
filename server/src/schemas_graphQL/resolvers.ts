@@ -361,19 +361,13 @@ const resolvers = {
       _parent: any,
       {
         reviewInput,
-      }: {
-        reviewInput: {
-          userId: string;
-          recipeId: string;
-          rating: number;
-          comment: string;
-        };
-      }
-    ) => {
+      }: { reviewInput: { recipeId: string; rating: number; comment: string } },
+      context: user_context
+    ): Promise<any> => {
       try {
-        const { userId, recipeId, rating, comment } = reviewInput;
+        const { recipeId, rating, comment } = reviewInput;
 
-        const user = await User.findById(userId);
+        const user = await User.findOne({ _id: context.user._id });
         if (!user) {
           throw new GraphQLError("User not found.");
         }
@@ -384,7 +378,7 @@ const resolvers = {
         }
 
         const newReview = new Review({
-          userId,
+          userId: context.user._id,
           recipeId,
           rating,
           comment,
@@ -394,9 +388,6 @@ const resolvers = {
         console.log(newReview); //
         // // Save the review to the database
         const savedReview = await newReview.save();
-
-        // Create and save the new recipe
-        //const savedReview = await Review.create(newReview);
 
         if (!savedReview) {
           throw new GraphQLError("Error saving review to collection.");

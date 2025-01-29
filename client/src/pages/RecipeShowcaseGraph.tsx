@@ -235,7 +235,6 @@ const RecipeShowcase = () => {
               <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
               <Review
                 recipeId="6799282b18390c891b3eeb6a"
-                userId="679797df6b0b7a3533cc40c4"
                 existingReview={null} // Replace with actual review data if available
                 onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
               />

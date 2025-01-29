@@ -7,7 +7,6 @@ import { Textarea } from "@/components/ui/textarea"
 
 interface ReviewProps {
   recipeId: string | undefined
-  userId: string | undefined
   existingReview: ReviewData | null
   onReviewSubmit: () => void
 }
@@ -17,7 +16,7 @@ interface ReviewData {
   comment: string
 }
 
-export function Review({ recipeId, userId, existingReview, onReviewSubmit }: ReviewProps) {
+export function Review({ recipeId, existingReview, onReviewSubmit }: ReviewProps) {
   const [rating, setRating] = useState(existingReview?.rating || 0)
   const [comment, setComment] = useState(existingReview?.comment || "")
 
@@ -26,7 +25,7 @@ export function Review({ recipeId, userId, existingReview, onReviewSubmit }: Rev
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const reviewInput = { userId, recipeId, rating, comment }
+    const reviewInput = {recipeId, rating, comment }
     try {
       if (existingReview) {
         //await updateReview({ variables: { reviewInput } })

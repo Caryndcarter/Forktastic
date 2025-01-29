@@ -80,7 +80,6 @@ const typeDefs = `
   }
 
   input ReviewInput {
-  userId: String!
   recipeId: String!
   rating: Int!
   comment: String!
