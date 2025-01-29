@@ -98,3 +98,15 @@ export const ADD_REVIEW = gql`
     }
   }
 `;
+
+
+export const SAVE_REVIEW_TO_USER = gql`
+  mutation saveReviewToUser($reviewId: ID!) {
+    saveReviewToUser(reviewId: $reviewId) {
+      _id
+      userName
+      userEmail
+      reviews
+    }
+  }
+`;
