@@ -16,6 +16,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 ## Usage
 
 1. View Recipies
+
    <img src="assets/HomePageDemo.gif"/>
 
 <br/>
@@ -26,6 +27,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 2. Change Account Information
+
    <img src="assets/AccountInfoDemo.gif"/>
 
 <br/>
@@ -36,6 +38,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 3. Save Recipes
+
    <img src="assets/RecipeBookDemo.gif"/>
 
 <br/>
@@ -46,6 +49,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 4. Search for Recipes
+
    <img src="assets/RecipeSearchDemo.gif"/>
 
 <br/>
@@ -56,6 +60,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 5. Create Custom Recipies
+
    <img src="assets/RecipeMakerDemo.gif"/>
 
 ## Installation
