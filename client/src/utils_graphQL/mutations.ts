@@ -42,7 +42,6 @@ export const UPDATE_ACCOUNT_PREFERENCES = gql`
   }
 `;
 
-
 export const ADD_RECIPE = gql`
   mutation addRecipe($recipeInput: recipeInput!) {
     addRecipe(recipeInput: $recipeInput) {
@@ -63,6 +62,25 @@ export const ADD_RECIPE = gql`
   }
 `;
 
+export const CREATE_RECIPE = gql`
+  mutation createRecipe($recipeInput: recipeInput!) {
+    createRecipe(recipeInput: $recipeInput) {
+      _id
+      title
+      summary
+      readyInMinutes
+      servings
+      ingredients
+      instructions
+      steps
+      diet
+      image
+      sourceUrl
+      spoonacularId
+      spoonacularSourceUrl
+    }
+  }
+`;
 
 export const SAVE_RECIPE = gql`
   mutation saveRecipe($recipeId: ID!) {
@@ -85,7 +103,6 @@ export const REMOVE_RECIPE = gql`
     }
   }
 `;
-
 
 export const ADD_REVIEW = gql`
   mutation addReview($reviewInput: ReviewInput!) {
