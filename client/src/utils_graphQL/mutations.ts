@@ -85,3 +85,17 @@ export const REMOVE_RECIPE = gql`
     }
   }
 `;
+
+
+export const ADD_REVIEW = gql `
+    mutation AddReview($userId: ID!, $recipeId: ID!, $rating: Int!, $comment: String!) {
+      addReview(userId: $userId, recipeId: $recipeId, rating: $rating, comment: $comment) {
+        _id
+        userId
+        recipeId
+        rating
+        comment
+        userName
+      }
+    }
+`;

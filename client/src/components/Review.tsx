@@ -1,6 +1,6 @@
 import { useState } from "react"
-//import { useMutation } from "@apollo/client"
-//import { ADD_REVIEW, UPDATE_REVIEW } from "../utils_graphQL/mutations"
+import { useMutation } from "@apollo/client"
+import { ADD_REVIEW } from "../utils_graphQL/mutations"
 import { Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -21,7 +21,7 @@ export function Review({ recipeId, userId, existingReview, onReviewSubmit }: Rev
   const [rating, setRating] = useState(existingReview?.rating || 0)
   const [comment, setComment] = useState(existingReview?.comment || "")
 
-  //const [addReview] = useMutation(ADD_REVIEW)
+  const [addReview] = useMutation(ADD_REVIEW)
   //const [updateReview] = useMutation(UPDATE_REVIEW)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,9 +30,9 @@ export function Review({ recipeId, userId, existingReview, onReviewSubmit }: Rev
     try {
       if (existingReview) {
         //await updateReview({ variables: { reviewInput } })
-        console.log(reviewInput)
+        console.log("no existing review: " , reviewInput)
       } else {
-        //await addReview({ variables: { reviewInput } })
+        await addReview({ variables: { reviewInput } })
         console.log(reviewInput)
       }
       onReviewSubmit()

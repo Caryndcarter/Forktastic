@@ -1,7 +1,8 @@
-import { User, Recipe } from "../models_mongo/index.js";
+import { User, Recipe, Review } from "../models_mongo/index.js";
 import { signToken, AuthenticationError } from "../middleware/auth_graphQL.js";
 import { GraphQLError } from "graphql";
 import { recipe } from "../types/index.js";
+//import { ReviewDocument } from "../models_mongo/review.js";
 import { diet, intolerance, user_context } from "../types/index.js";
 import mongoose from "mongoose";
 
@@ -334,6 +335,59 @@ const resolvers = {
       } catch (err) {
         console.log("Error removing recipe:", err);
         throw new GraphQLError("Error removing recipe.");
+      }
+    },
+
+     // Add a review to the overall collection
+     addReview: async (
+      _parent: any,
+      {
+        userId,
+        recipeId,
+        rating,
+        comment,
+      }: {
+        userId: string;
+        recipeId: string;
+        rating: number;
+        comment: string;
+      }
+    ) => {
+      try {
+        const user = await User.findById(userId);
+        if (!user) {
+          throw new GraphQLError("User not found.");
+        }
+
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe) {
+          throw new GraphQLError("Recipe not found.");
+        }
+
+        const newReview = new Review({
+          userId,
+          recipeId,
+          rating,
+          comment,
+          userName: user.userName, 
+        });
+
+        // // Save the review to the database
+        // const savedReview: ReviewDocument = await newReview.save();
+
+        // // Add the review to the user's reviews array
+        // user.reviews?.push(savedReview._id.toString());
+        // await user.save();
+
+        // // Add the review to the recipe's reviews array
+        // recipe.reviews?.push(savedReview._id);
+        // await recipe.save();
+
+        // Return the saved review object
+        return newReview;
+      } catch (err) {
+        console.error("Error saving review to collection:", err);
+        throw new GraphQLError("Error saving review to collection.");
       }
     },
   },

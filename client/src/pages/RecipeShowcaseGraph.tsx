@@ -5,11 +5,7 @@ import { useState, useEffect } from "react";
 
 //new imports
 import { useMutation, useQuery } from "@apollo/client";
-import {
-  ADD_RECIPE,
-  SAVE_RECIPE,
-  REMOVE_RECIPE,
-} from "../utils_graphQL/mutations";
+import {ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE} from "../utils_graphQL/mutations";
 import { GET_SPECIFIC_RECIPE_ID } from "../utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
 // import RecipeDetails from "../interfaces/recipeDetails.ts";

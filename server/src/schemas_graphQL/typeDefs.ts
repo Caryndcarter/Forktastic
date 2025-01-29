@@ -14,6 +14,7 @@ const typeDefs = `
     addRecipe(recipeInput: recipeInput!): Recipe
     saveRecipe(recipeId: ID!): User
     removeRecipe(recipeId: ID!): User
+    addReview(reviewInput: ReviewInput!): Review
   }
 
   type User {
@@ -24,6 +25,7 @@ const typeDefs = `
     savedRecipes: [ID!]!
     diet: String
     intolerances: [String]
+    reviews: [Review!]!
   }
 
   type Auth {
@@ -45,6 +47,7 @@ const typeDefs = `
     sourceUrl: String
     spoonacularId: Int
     spoonacularSourceUrl: String
+    reviews: [Review!]!
   }
 
    input recipeInput {
@@ -61,6 +64,22 @@ const typeDefs = `
     spoonacularId: Int
     spoonacularSourceUrl: String
   }
+
+  type Review {
+    _id: ID!
+    user: User!
+    recipe: Recipe!
+    rating: Int!
+    comment: String!
+  }
+
+  input ReviewInput {
+  userId: String!
+  recipeId: String!
+  rating: Int!
+  comment: String!
+}
+
 `;
 
 export default typeDefs;
