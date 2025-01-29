@@ -270,11 +270,13 @@ const RecipeShowcase = () => {
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">Steps</h3>
           <ol className="list-decimal list-inside space-y-2">
-            {currentRecipeDetails.steps?.map((step: string, index: number) => (
-              <li key={index} className="text-gray-800">
-                <RawHtmlRenderer htmlString={step} />
-              </li>
-            ))}
+            {currentRecipeDetails.steps
+                ?.slice(0, -1)
+                .map((step: string, index: number) => (
+                  <li key={index} className="text-gray-800">
+                    <RawHtmlRenderer htmlString={step} />
+                  </li>
+              ))}
           </ol>
         </div>
 
