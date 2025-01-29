@@ -10,6 +10,7 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { useMutation } from "@apollo/client";
 import { CREATE_RECIPE } from "@/utils_graphQL/mutations";
 import { SAVE_RECIPE } from "@/utils_graphQL/mutations";
+import Navbar from "../components/Navbar";
 
 const RecipeMaker = () => {
   const navigate = useNavigate();
@@ -123,6 +124,7 @@ const RecipeMaker = () => {
 
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24 px-6">
+      <Navbar />
       <h1 className="text-3xl font-bold text-center mb-8">Create a Recipe</h1>
 
       <form
