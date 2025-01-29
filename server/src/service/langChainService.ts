@@ -55,7 +55,7 @@ let model: ReturnType<ChatOpenAI["withStructuredOutput"]>;
 
 if (apiKey) {
   model = new ChatOpenAI({
-    temperature: 0,
+    temperature: 1,
     openAIApiKey: apiKey,
     modelName: "gpt-4o-mini",
   }).withStructuredOutput(ResponseFormatter, {

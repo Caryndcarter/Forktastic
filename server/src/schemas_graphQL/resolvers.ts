@@ -9,6 +9,7 @@ import {
   recipeAuthor,
 } from "../types/index.js";
 import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
 const resolvers = {
   Query: {
@@ -285,7 +286,7 @@ const resolvers = {
       }: {
         recipeInput: {
           title: string;
-          author?: any;
+          author: any;
           summary: string;
           readyInMinutes: number;
           servings: number;
@@ -299,7 +300,7 @@ const resolvers = {
       context: user_context
     ) => {
       try {
-        recipeInput.author = context.user._id;
+        recipeInput.author = context.user._id as ObjectId;
         // Create and save the new recipe
         const newRecipe = await Recipe.create(recipeInput);
 
@@ -479,7 +480,6 @@ const resolvers = {
         throw new GraphQLError("Error saving review ID to user.");
       }
     },
-
   },
 };
 

@@ -25,7 +25,8 @@ const recipeSchema = new Schema<RecipeDocument>(
       required: true,
     },
     author: {
-      type: [{ type: Schema.Types.ObjectId, ref: "User" }],
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: false,
       default: null,
     },
