@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Loader2 } from "lucide-react";
+import Navbar from "../components/Navbar";
 
 const RecipeMaker = () => {
   const navigate = useNavigate();
@@ -96,6 +97,7 @@ const RecipeMaker = () => {
 
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24 px-6">
+      <Navbar />
       <h1 className="text-3xl font-bold text-center mb-8">Create a Recipe</h1>
 
       <form
