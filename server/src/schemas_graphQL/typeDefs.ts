@@ -12,9 +12,11 @@ const typeDefs = `
     signUp(userName: String!, userEmail: String!, userPassword: String!): Auth
     updatePreferences(diet: String, intolerances: [String]): User
     addRecipe(recipeInput: recipeInput!): Recipe
+    createRecipe(recipeInput: recipeInput!): Recipe
     saveRecipe(recipeId: ID!): User
     removeRecipe(recipeId: ID!): User
     addReview(reviewInput: ReviewInput!): Review
+    saveReviewToUser(reviewId: ID!): User
   }
 
   type User {
@@ -25,7 +27,7 @@ const typeDefs = `
     savedRecipes: [ID!]!
     diet: String
     intolerances: [String]
-    reviews: [Review!]!
+    reviews: [ID!]!
   }
 
   type Auth {
@@ -53,7 +55,7 @@ const typeDefs = `
     sourceUrl: String
     spoonacularId: Int
     spoonacularSourceUrl: String
-    reviews: [Review!]!
+    reviews: [ID!]!
   }
 
    input recipeInput {
@@ -80,10 +82,10 @@ const typeDefs = `
   }
 
   input ReviewInput {
-  recipeId: String!
-  rating: Int!
-  comment: String!
-}
+    recipeId: String!
+    rating: Int!
+    comment: String!
+  }
 
 `;
 

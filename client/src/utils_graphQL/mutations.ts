@@ -42,7 +42,6 @@ export const UPDATE_ACCOUNT_PREFERENCES = gql`
   }
 `;
 
-
 export const ADD_RECIPE = gql`
   mutation addRecipe($recipeInput: recipeInput!) {
     addRecipe(recipeInput: $recipeInput) {
@@ -63,6 +62,13 @@ export const ADD_RECIPE = gql`
   }
 `;
 
+export const CREATE_RECIPE = gql`
+  mutation createRecipe($recipeInput: recipeInput!) {
+    createRecipe(recipeInput: $recipeInput) {
+      _id
+    }
+  }
+`;
 
 export const SAVE_RECIPE = gql`
   mutation saveRecipe($recipeId: ID!) {
@@ -86,7 +92,6 @@ export const REMOVE_RECIPE = gql`
   }
 `;
 
-
 export const ADD_REVIEW = gql`
   mutation addReview($reviewInput: ReviewInput!) {
     addReview(reviewInput: $reviewInput) {
@@ -95,6 +100,17 @@ export const ADD_REVIEW = gql`
       recipeId
       rating
       comment
+    }
+  }
+`;
+
+export const SAVE_REVIEW_TO_USER = gql`
+  mutation saveReviewToUser($reviewId: ID!) {
+    saveReviewToUser(reviewId: $reviewId) {
+      _id
+      userName
+      userEmail
+      reviews
     }
   }
 `;

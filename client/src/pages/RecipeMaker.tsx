@@ -1,6 +1,5 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { currentRecipeContext } from "../App";
 import RecipeDetails from "../interfaces/recipeDetails";
 import askService from "../api/askService";
 
@@ -8,14 +7,18 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Loader2 } from "lucide-react";
+import { useMutation } from "@apollo/client";
+import { CREATE_RECIPE } from "@/utils_graphQL/mutations";
+import { SAVE_RECIPE } from "@/utils_graphQL/mutations";
 import Navbar from "../components/Navbar";
 
 const RecipeMaker = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
-  const { setCurrentRecipeDetails } = useContext(currentRecipeContext);
   const [prompt, setPrompt] = useState<string>("");
   const [AILoading, setAILoading] = useState<boolean>(false);
+  const [createRecipe] = useMutation(CREATE_RECIPE);
+  const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [recipe, setRecipe] = useState<RecipeDetails>({
     title: "",
     summary: "",
@@ -64,7 +67,7 @@ const RecipeMaker = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (recipe.image) {
       if (recipe.image.length > 250) {
@@ -72,8 +75,32 @@ const RecipeMaker = () => {
         return;
       }
     }
-    setCurrentRecipeDetails(recipe);
-    navigate("/recipe-showcase");
+    const { data } = await createRecipe({
+      variables: {
+        recipeInput: {
+          title: recipe.title,
+          summary: recipe.summary,
+          readyInMinutes: recipe.readyInMinutes,
+          servings: recipe.servings,
+          ingredients: recipe.ingredients,
+          instructions: recipe.instructions,
+          steps: recipe.steps,
+          diet: recipe.diets,
+          image: recipe.image,
+        },
+      },
+    });
+
+    if (data?.createRecipe) {
+      console.log(data.createRecipe._id);
+      await saveRecipe({
+        variables: {
+          recipeId: data.createRecipe._id,
+        },
+      });
+    }
+
+    navigate("/recipe-book");
   };
 
   const handleAiCall = async (e: any) => {
@@ -85,8 +112,8 @@ const RecipeMaker = () => {
       ...prev,
       title: recipe.title,
       summary: recipe.Summary,
-      readyInMinutes: recipe.ReadyInMinutes,
-      servings: recipe.Servings,
+      readyInMinutes: parseInt(recipe.ReadyInMinutes),
+      servings: parseInt(recipe.Servings),
       ingredients: recipe.Ingredients.split(";"),
       instructions: recipe.Instructions,
       diets: recipe.Diets.split(";"),

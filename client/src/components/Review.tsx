@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useMutation } from "@apollo/client"
-import { ADD_REVIEW } from "../utils_graphQL/mutations"
+import { ADD_REVIEW, SAVE_REVIEW_TO_USER } from "../utils_graphQL/mutations"
 import { Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -22,6 +22,8 @@ export function Review({ recipeId, existingReview, onReviewSubmit }: ReviewProps
 
   const [addReview] = useMutation(ADD_REVIEW)
   //const [updateReview] = useMutation(UPDATE_REVIEW)
+  const [saveReviewToUser] = useMutation(SAVE_REVIEW_TO_USER)
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,8 +33,22 @@ export function Review({ recipeId, existingReview, onReviewSubmit }: ReviewProps
         //await updateReview({ variables: { reviewInput } })
         console.log("no existing review: " , reviewInput)
       } else {
-        await addReview({ variables: { reviewInput } })
-        console.log(reviewInput)
+           // Save the review to the review collection
+        const { data } = await addReview({ 
+          variables: { 
+            reviewInput 
+          },
+         },
+        )
+            // Save the review ID to the user's reviews array
+          if (data?.addReview._id) {
+            // save this review to the user
+            await saveReviewToUser({
+              variables: {
+                reviewId: data.addReview._id,
+              },
+            });
+          }      
       }
       onReviewSubmit()
     } catch (error) {
