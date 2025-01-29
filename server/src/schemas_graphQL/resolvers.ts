@@ -2,7 +2,12 @@ import { User, Recipe } from "../models_mongo/index.js";
 import { signToken, AuthenticationError } from "../middleware/auth_graphQL.js";
 import { GraphQLError } from "graphql";
 import { recipe } from "../types/index.js";
-import { diet, intolerance, user_context } from "../types/index.js";
+import {
+  diet,
+  intolerance,
+  user_context,
+  recipeAuthor,
+} from "../types/index.js";
 import mongoose from "mongoose";
 
 const resolvers = {
@@ -19,6 +24,10 @@ const resolvers = {
       { recipeId }: { recipeId: string },
       context: any
     ): Promise<string | null> => {
+      if (!recipeId) {
+        return null;
+      }
+
       console.log("Received recipeId:", recipeId);
       console.log("Context user:", context.user);
 
@@ -97,7 +106,7 @@ const resolvers = {
         spoonacularId: number;
       },
       context: user_context
-    ): Promise<recipe | null> => {
+    ): Promise<recipeAuthor | null> => {
       if (!context.user) {
         throw new AuthenticationError("could not authenticate user.");
       }
@@ -120,7 +129,17 @@ const resolvers = {
         recipe = await Recipe.findOne({ spoonacularId: spoonacularId });
       }
 
-      return recipe;
+      if (recipe) {
+        let author = false;
+        const id = context.user._id;
+        const authorID = recipe.author;
+        if (id && authorID) {
+          author = id == authorID.toString();
+        }
+        return { recipe: recipe, author: author };
+      } else {
+        return null;
+      }
     },
   },
 
