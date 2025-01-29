@@ -1,29 +1,24 @@
 import { useNavigate } from "react-router-dom";
-//NavigateFunction
 import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
 import { useState, useEffect } from "react";
 
 //new imports
 import { useMutation, useQuery } from "@apollo/client";
-import {
-  ADD_RECIPE,
-  SAVE_RECIPE,
-  REMOVE_RECIPE,
-} from "../utils_graphQL/mutations";
+import {ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE} from "../utils_graphQL/mutations";
 import { GET_SPECIFIC_RECIPE_ID } from "../utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
 // import RecipeDetails from "../interfaces/recipeDetails.ts";
+import { Review } from "../components/Review";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
-  const { currentRecipeDetails, setCurrentRecipeDetails } =
-    useContext(currentRecipeContext);
+  const { currentRecipeDetails, setCurrentRecipeDetails } = useContext(currentRecipeContext);
   const [loginCheck, setLoginCheck] = useState(false);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState(false);
 
-  //new mutations and queries
+  //mutations and queries
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
@@ -32,9 +27,11 @@ const RecipeShowcase = () => {
     skip: skipQuery,
   });
 
+
   // before the page renders, perform the login check. This runs once.
   useLayoutEffect(() => {
     const isLoggedIn = Auth.loggedIn();
+    console.log("Auth Profile: " , Auth.getProfile());
     setLoginCheck(isLoggedIn);
     // if logged in, activate the query to check if the recipe is saved:
     if (isLoggedIn) {
@@ -232,6 +229,24 @@ const RecipeShowcase = () => {
           )}
         </div>
 
+         {/* Review */}
+        {loginCheck ? (
+            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+              <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
+              <Review
+                recipeId="6799282b18390c891b3eeb6a"
+                userId="679797df6b0b7a3533cc40c4"
+                existingReview={null} // Replace with actual review data if available
+                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+              />
+            </div>
+         ) : (
+            <div className="text-gray-500 italic mb-6">
+              Log in to write a review.
+            </div>
+          )}
+         
+
         {/* Recipe Summary */}
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">
@@ -306,6 +321,7 @@ const RecipeShowcase = () => {
               </a>
             </h4>
           )}
+
         </div>
       </div>
     </div>

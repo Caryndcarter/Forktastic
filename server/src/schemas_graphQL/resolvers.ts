@@ -1,4 +1,4 @@
-import { User, Recipe } from "../models_mongo/index.js";
+import { User, Recipe, Review } from "../models_mongo/index.js";
 import { signToken, AuthenticationError } from "../middleware/auth_graphQL.js";
 import { GraphQLError } from "graphql";
 import { recipe } from "../types/index.js";
@@ -353,6 +353,59 @@ const resolvers = {
       } catch (err) {
         console.log("Error removing recipe:", err);
         throw new GraphQLError("Error removing recipe.");
+      }
+    },
+
+    // Add a review to the overall collection
+    addReview: async (
+      _parent: any,
+      {
+        reviewInput,
+      }: {
+        reviewInput: {
+          userId: string;
+          recipeId: string;
+          rating: number;
+          comment: string;
+        };
+      }
+    ) => {
+      try {
+        const { userId, recipeId, rating, comment } = reviewInput;
+
+        const user = await User.findById(userId);
+        if (!user) {
+          throw new GraphQLError("User not found.");
+        }
+
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe) {
+          throw new GraphQLError("Recipe not found.");
+        }
+
+        const newReview = new Review({
+          userId,
+          recipeId,
+          rating,
+          comment,
+          userName: user.userName,
+        });
+
+        console.log(newReview); //
+        // // Save the review to the database
+        const savedReview = await newReview.save();
+
+        // Create and save the new recipe
+        //const savedReview = await Review.create(newReview);
+
+        if (!savedReview) {
+          throw new GraphQLError("Error saving review to collection.");
+        }
+
+        return savedReview;
+      } catch (err) {
+        console.error("Error saving review to collection:", err);
+        throw new GraphQLError("Error saving review to collection.");
       }
     },
   },

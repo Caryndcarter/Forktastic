@@ -85,3 +85,16 @@ export const REMOVE_RECIPE = gql`
     }
   }
 `;
+
+
+export const ADD_REVIEW = gql`
+  mutation addReview($reviewInput: ReviewInput!) {
+    addReview(reviewInput: $reviewInput) {
+      _id
+      userId
+      recipeId
+      rating
+      comment
+    }
+  }
+`;
