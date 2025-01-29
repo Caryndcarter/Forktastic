@@ -110,3 +110,13 @@ export const SAVE_REVIEW_TO_USER = gql`
     }
   }
 `;
+
+export const SAVE_REVIEW_TO_RECIPE = gql`
+  mutation saveReviewToRecipe($recipeId: ID!, $reviewId: ID!) {
+    saveReviewToRecipe(recipeId: $recipeId, reviewId: $reviewId) {
+      _id
+      title
+      reviews
+    }
+  }
+`;

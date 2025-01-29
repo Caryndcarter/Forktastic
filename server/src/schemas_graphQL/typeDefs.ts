@@ -16,6 +16,7 @@ const typeDefs = `
     removeRecipe(recipeId: ID!): User
     addReview(reviewInput: ReviewInput!): Review
     saveReviewToUser(reviewId: ID!): User
+    saveReviewToRecipe(recipeId: ID!, reviewId: ID!): Recipe
   }
 
   type User {
@@ -75,7 +76,7 @@ const typeDefs = `
   }
 
   input ReviewInput {
-    recipeId: String!
+    recipeId: ID!
     rating: Int!
     comment: String!
   }
