@@ -12,6 +12,7 @@ const typeDefs = `
     signUp(userName: String!, userEmail: String!, userPassword: String!): Auth
     updatePreferences(diet: String, intolerances: [String]): User
     addRecipe(recipeInput: recipeInput!): Recipe
+    createRecipe(recipeInput: recipeInput!): Recipe
     saveRecipe(recipeId: ID!): User
     removeRecipe(recipeId: ID!): User
     addReview(reviewInput: ReviewInput!): Review

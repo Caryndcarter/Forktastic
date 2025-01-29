@@ -224,7 +224,7 @@ const resolvers = {
       };
     },
 
-    //Save a recipe to the overall recipe collection
+    // Save a recipe to the overall recipe collection
     addRecipe: async (
       _parent: any,
       {
@@ -263,6 +263,43 @@ const resolvers = {
           return duplicate;
         }
 
+        // Create and save the new recipe
+        const newRecipe = await Recipe.create(recipeInput);
+
+        if (!newRecipe) {
+          throw new GraphQLError("Error saving recipe to collection.");
+        }
+
+        return newRecipe;
+      } catch (err) {
+        console.error("Error saving recipe to collection:", err);
+        throw new GraphQLError("Error saving recipe to collection.");
+      }
+    },
+
+    // Save a user-generated recipe to the overall recipe collection
+    createRecipe: async (
+      _parent: any,
+      {
+        recipeInput,
+      }: {
+        recipeInput: {
+          title: string;
+          author?: any;
+          summary: string;
+          readyInMinutes: number;
+          servings: number;
+          ingredients: string[];
+          instructions: string;
+          steps: string[];
+          diet?: string[];
+          image?: string;
+        };
+      },
+      context: user_context
+    ) => {
+      try {
+        recipeInput.author = context.user._id;
         // Create and save the new recipe
         const newRecipe = await Recipe.create(recipeInput);
 
