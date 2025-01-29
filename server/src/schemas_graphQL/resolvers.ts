@@ -2,8 +2,12 @@ import { User, Recipe, Review } from "../models_mongo/index.js";
 import { signToken, AuthenticationError } from "../middleware/auth_graphQL.js";
 import { GraphQLError } from "graphql";
 import { recipe } from "../types/index.js";
-//import { ReviewDocument } from "../models_mongo/review.js";
-import { diet, intolerance, user_context } from "../types/index.js";
+import {
+  diet,
+  intolerance,
+  user_context,
+  recipeAuthor,
+} from "../types/index.js";
 import mongoose from "mongoose";
 
 const resolvers = {
@@ -20,6 +24,10 @@ const resolvers = {
       { recipeId }: { recipeId: string },
       context: any
     ): Promise<string | null> => {
+      if (!recipeId) {
+        return null;
+      }
+
       console.log("Received recipeId:", recipeId);
       console.log("Context user:", context.user);
 
@@ -98,7 +106,7 @@ const resolvers = {
         spoonacularId: number;
       },
       context: user_context
-    ): Promise<recipe | null> => {
+    ): Promise<recipeAuthor | null> => {
       if (!context.user) {
         throw new AuthenticationError("could not authenticate user.");
       }
@@ -121,7 +129,17 @@ const resolvers = {
         recipe = await Recipe.findOne({ spoonacularId: spoonacularId });
       }
 
-      return recipe;
+      if (recipe) {
+        let author = false;
+        const id = context.user._id;
+        const authorID = recipe.author;
+        if (id && authorID) {
+          author = id == authorID.toString();
+        }
+        return { recipe: recipe, author: author };
+      } else {
+        return null;
+      }
     },
   },
 
@@ -338,11 +356,12 @@ const resolvers = {
       }
     },
 
-        // Add a review to the overall collection
+    // Add a review to the overall collection
     addReview: async (
       _parent: any,
-      { reviewInput }: { reviewInput: { recipeId: string; rating: number; comment: string } 
-    },
+      {
+        reviewInput,
+      }: { reviewInput: { recipeId: string; rating: number; comment: string } },
       context: user_context
     ): Promise<any> => {
       try {
@@ -363,10 +382,10 @@ const resolvers = {
           recipeId,
           rating,
           comment,
-          userName: user.userName, 
+          userName: user.userName,
         });
-        
-        console.log(newReview); // 
+
+        console.log(newReview); //
         // // Save the review to the database
         const savedReview = await newReview.save();
 
@@ -380,7 +399,6 @@ const resolvers = {
         throw new GraphQLError("Error saving review to collection.");
       }
     },
-
   },
 };
 

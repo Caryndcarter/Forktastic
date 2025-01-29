@@ -36,9 +36,9 @@ export default function RecipeCard({
       return;
     }
 
-    if (data?.getRecipe) {
+    if (data?.getRecipe?.recipe) {
       console.log("mongo");
-      setCurrentRecipeDetails(data.getRecipe);
+      setCurrentRecipeDetails(data.getRecipe.recipe);
       navigate("/recipe-showcase");
     } else {
       searchSpoonacular();
