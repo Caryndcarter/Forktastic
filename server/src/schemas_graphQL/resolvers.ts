@@ -341,12 +341,14 @@ const resolvers = {
         // Add a review to the overall collection
     addReview: async (
       _parent: any,
-      { reviewInput }: { reviewInput: { userId: string; recipeId: string; rating: number; comment: string } }
-    ) => {
+      { reviewInput }: { reviewInput: { userId: string; recipeId: string; rating: number; comment: string } 
+    },
+      context: user_context
+    ): Promise<any> => {
       try {
-        const { userId, recipeId, rating, comment } = reviewInput;
+        const { recipeId, rating, comment } = reviewInput;
 
-        const user = await User.findById(userId);
+        const user = await User.findOne({ _id: context.user._id });
         if (!user) {
           throw new GraphQLError("User not found.");
         }
@@ -357,7 +359,7 @@ const resolvers = {
         }
 
         const newReview = new Review({
-          userId,
+          userId: context.user._id,
           recipeId,
           rating,
           comment,
