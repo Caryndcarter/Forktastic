@@ -341,7 +341,7 @@ const resolvers = {
         // Add a review to the overall collection
     addReview: async (
       _parent: any,
-      { reviewInput }: { reviewInput: { userId: string; recipeId: string; rating: number; comment: string } 
+      { reviewInput }: { reviewInput: { recipeId: string; rating: number; comment: string } 
     },
       context: user_context
     ): Promise<any> => {
@@ -369,9 +369,6 @@ const resolvers = {
         console.log(newReview); // 
         // // Save the review to the database
         const savedReview = await newReview.save();
-
-        // Create and save the new recipe
-        //const savedReview = await Review.create(newReview);
 
         if (!savedReview) {
           throw new GraphQLError("Error saving review to collection.");
