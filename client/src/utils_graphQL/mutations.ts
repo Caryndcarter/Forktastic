@@ -66,18 +66,6 @@ export const CREATE_RECIPE = gql`
   mutation createRecipe($recipeInput: recipeInput!) {
     createRecipe(recipeInput: $recipeInput) {
       _id
-      title
-      summary
-      readyInMinutes
-      servings
-      ingredients
-      instructions
-      steps
-      diet
-      image
-      sourceUrl
-      spoonacularId
-      spoonacularSourceUrl
     }
   }
 `;
