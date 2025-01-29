@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-//NavigateFunction
 import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
 import { useState, useEffect } from "react";
@@ -23,7 +22,7 @@ const RecipeShowcase = () => {
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState(false);
 
-  //new mutations and queries
+  //mutations and queries
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
@@ -270,7 +269,9 @@ const RecipeShowcase = () => {
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">Steps</h3>
           <ol className="list-decimal list-inside space-y-2">
-            {currentRecipeDetails.steps?.map((step: string, index: number) => (
+            {currentRecipeDetails.steps
+            ?.filter((step: string) => step && step.trim() !== '')
+            .map((step: string, index: number) => (
               <li key={index} className="text-gray-800">
                 <RawHtmlRenderer htmlString={step} />
               </li>
