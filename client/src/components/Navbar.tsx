@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
           <Home className="w-6 h-6" />
         </Link>
         <div className="flex-1 flex justify-center">
-          <span className="text-white text-2xl font-bold">Recipe App</span>
+          <span className="text-white text-2xl font-bold">Forktastic</span>
         </div>
         <div className="flex items-center">
           <div className="relative mr-4">
