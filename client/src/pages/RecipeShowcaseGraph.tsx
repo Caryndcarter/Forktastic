@@ -270,11 +270,11 @@ const RecipeShowcase = () => {
           <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">Steps</h3>
           <ol className="list-decimal list-inside space-y-2">
             {currentRecipeDetails.steps
-            ?.filter((step: string) => step && step.trim() !== '')
-            .map((step: string, index: number) => (
-              <li key={index} className="text-gray-800">
-                <RawHtmlRenderer htmlString={step} />
-              </li>
+              ?.slice(0, -1) // Remove the last element
+              .map((step: string, index: number) => (
+                <li key={index} className="text-gray-800">
+                  <RawHtmlRenderer htmlString={step} />
+                </li>
             ))}
           </ol>
         </div>
