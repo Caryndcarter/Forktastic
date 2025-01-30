@@ -15,11 +15,11 @@ import {
 } from "../utils_graphQL/mutations";
 import { GET_SPECIFIC_RECIPE_ID } from "../utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
-// import RecipeDetails from "../interfaces/recipeDetails.ts";
+//import RecipeDetails from "../interfaces/recipeDetails.ts";
 import { Review } from "../components/Review";
+import SavedReview from "../components/SavedReview";
 import Navbar from "../components/Navbar";
 import AverageRating from "../components/AverageRating";
-import SavedReview from "@/components/SavedReview";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
@@ -72,7 +72,7 @@ const RecipeShowcase = () => {
     if (currentRecipeDetails.author == id) {
       setIsAuthor(true);
     }
-  }, [data]);
+  }, [data, currentRecipeDetails.author]);
 
   // Function to save recipe
   const saveCurrentRecipe = async () => {
@@ -244,6 +244,33 @@ const RecipeShowcase = () => {
           )}
         </div>
 
+        {/* Render Saved Reviews if there are any */}
+        {loginCheck && <SavedReview recipeId={currentRecipeDetails._id} />}
+
+        {/* Review */}
+        {loginCheck ? (
+          isSaved ? (
+            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+              <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">
+                Save a Review
+              </h3>
+              <Review
+                recipeId={currentRecipeDetails._id}
+                existingReview={null} // Replace with actual review data if available
+                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+              />
+            </div>
+          ) : (
+            <div className="text-gray-500 italic mb-6">
+              Save a recipe to write a review.
+            </div>
+          )
+        ) : (
+          <div className="text-gray-500 italic mb-6">
+            Log in to write a review.
+          </div>
+        )}
+
         {/* Recipe Summary */}
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">
@@ -291,32 +318,6 @@ const RecipeShowcase = () => {
               ))}
           </ol>
         </div>
-
-        {/* Review */}
-        {loginCheck ? (
-          isSaved ? (
-            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
-              <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">
-                Your Review
-              </h3>
-              <Review
-                recipeId={currentRecipeDetails._id}
-                existingReview={null} // Replace with actual review data if available
-                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
-              />
-            </div>
-          ) : (
-            <div className="text-gray-500 italic mb-6">
-              Save a recipe to write a review.
-            </div>
-          )
-        ) : (
-          <div className="text-gray-500 italic mb-6">
-            Log in to write a review.
-          </div>
-        )}
-
-        <SavedReview rating={0} comment={""} />
 
         {/* Recipe Source Links */}
         <div className="mb-8 flex space-x-4">

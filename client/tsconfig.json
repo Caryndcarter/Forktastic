@@ -26,6 +26,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../../../../../Desktop/Scratch/SavedReviewOld.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

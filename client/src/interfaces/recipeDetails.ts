@@ -13,4 +13,5 @@ export default interface RecipeDetails {
   sourceUrl?: string | null;
   spoonacularSourceUrl?: string | null;
   spoonacularId?: number | null;
+  reviews?: string[]; 
 }
