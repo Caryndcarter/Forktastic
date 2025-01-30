@@ -3,8 +3,8 @@ import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
 import { editingContext } from "../App";
 import { useState, useEffect } from "react";
-import CopyRecipeButton from "@/components/copyButton";
-import EditRecipeButton from "@/components/editButton";
+import CopyRecipeButton from "@/components/CopyButton";
+import EditRecipeButton from "@/components/EditButton";
 
 //new imports
 import { useMutation, useQuery } from "@apollo/client";
@@ -18,6 +18,7 @@ import Auth from "../utils_graphQL/auth";
 // import RecipeDetails from "../interfaces/recipeDetails.ts";
 import { Review } from "../components/Review";
 import Navbar from "../components/Navbar";
+import AverageRating from "../components/AverageRating";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
@@ -38,13 +39,21 @@ const RecipeShowcase = () => {
     skip: skipQuery,
   });
 
-  // before the page renders, perform the login check. This runs once.
   useLayoutEffect(() => {
-    const isLoggedIn = Auth.loggedIn();
-    setLoginCheck(isLoggedIn);
-    // if logged in, activate the query to check if the recipe is saved:
-    if (isLoggedIn) {
-      setSkipQuery(false);
+    try {
+      const isLoggedIn = Auth.loggedIn();
+      // Only try to get profile if logged in
+      const profile = isLoggedIn ? Auth.getProfile() : null;
+      console.log("Auth Profile: ", profile);
+      setLoginCheck(isLoggedIn);
+      // if logged in, activate the query to check if the recipe is saved
+      if (isLoggedIn) {
+        setSkipQuery(false);
+      }
+    } catch (error) {
+      console.log("Auth error:", error);
+      setLoginCheck(false);
+      setSkipQuery(true);
     }
   }, []);
 
@@ -105,7 +114,7 @@ const RecipeShowcase = () => {
         await refetch();
       }
 
-      navigate("/recipe-book");
+      //navigate("/recipe-book");
     } catch (err) {
       console.error("Error saving recipe:", err);
       alert("Failed to save the recipe.");
@@ -175,8 +184,6 @@ const RecipeShowcase = () => {
           {currentRecipeDetails.title}
         </h2>
 
-        {/* Save Button */}
-
         {/* Additional Info */}
         <div className="mb-6 space-y-2">
           {currentRecipeDetails.readyInMinutes && (
@@ -205,6 +212,16 @@ const RecipeShowcase = () => {
               </h4>
             )}
 
+          {/* Average Rating Component */}
+          <AverageRating recipeId={currentRecipeDetails._id} />
+
+          {isAuthor ? (
+            <EditRecipeButton onClick={editRecipe} />
+          ) : (
+            <CopyRecipeButton onClick={editRecipe} />
+          )}
+
+          {/* Save Button */}
           {loginCheck ? (
             <button
               onClick={() =>
@@ -213,7 +230,7 @@ const RecipeShowcase = () => {
               className={`font-semibold py-2 px-4 rounded mb-6 transition-colors duration-300 ${
                 isSaved
                   ? "bg-red-500 hover:bg-red-600 text-white"
-                  : "bg-[#a84e24] hover:bg-green-600 text-white"
+                  : "bg-[#A84E24] hover:bg-green-600 text-white"
               }`}
             >
               {isSaved ? "Delete Recipe" : "Save Recipe"}
@@ -224,30 +241,6 @@ const RecipeShowcase = () => {
             </div>
           )}
         </div>
-
-        {isAuthor ? (
-          <EditRecipeButton onClick={editRecipe} />
-        ) : (
-          <CopyRecipeButton onClick={editRecipe} />
-        )}
-
-        {/* Review */}
-        {loginCheck ? (
-          <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
-            <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">
-              Your Review
-            </h3>
-            <Review
-              recipeId="6799282b18390c891b3eeb6a"
-              existingReview={null} // Replace with actual review data if available
-              onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
-            />
-          </div>
-        ) : (
-          <div className="text-gray-500 italic mb-6">
-            Log in to write a review.
-          </div>
-        )}
 
         {/* Recipe Summary */}
         <div className="mb-8">
@@ -296,6 +289,30 @@ const RecipeShowcase = () => {
               ))}
           </ol>
         </div>
+
+        {/* Review */}
+        {loginCheck ? (
+          isSaved ? (
+            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+              <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">
+                Your Review
+              </h3>
+              <Review
+                recipeId={currentRecipeDetails._id}
+                existingReview={null} // Replace with actual review data if available
+                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+              />
+            </div>
+          ) : (
+            <div className="text-gray-500 italic mb-6">
+              Save a recipe to write a review.
+            </div>
+          )
+        ) : (
+          <div className="text-gray-500 italic mb-6">
+            Log in to write a review.
+          </div>
+        )}
 
         {/* Recipe Source Links */}
         <div className="mb-8 flex space-x-4">
