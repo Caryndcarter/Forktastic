@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
+import { editingContext } from "../App";
 import { useState, useEffect } from "react";
 import CopyRecipeButton from "@/components/copyButton";
 import EditRecipeButton from "@/components/editButton";
@@ -22,6 +23,7 @@ const RecipeShowcase = () => {
   const navigate = useNavigate();
   const { currentRecipeDetails, setCurrentRecipeDetails } =
     useContext(currentRecipeContext);
+  const { setIsEditing } = useContext(editingContext);
   const [loginCheck, setLoginCheck] = useState(false);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -111,6 +113,7 @@ const RecipeShowcase = () => {
   };
 
   const editRecipe = () => {
+    setIsEditing(true);
     navigate("/recipe-maker");
   };
 

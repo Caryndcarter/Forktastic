@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useContext, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecipeDetails from "../interfaces/recipeDetails";
 import askService from "../api/askService";
+import { currentRecipeContext, editingContext } from "@/App";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,6 +14,8 @@ import { SAVE_RECIPE } from "@/utils_graphQL/mutations";
 import Navbar from "../components/Navbar";
 
 const RecipeMaker = () => {
+  const { isEditing, setIsEditing } = useContext(editingContext);
+  const { currentRecipeDetails } = useContext(currentRecipeContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [prompt, setPrompt] = useState<string>("");
@@ -30,6 +33,13 @@ const RecipeMaker = () => {
     diets: [],
     image: "",
   });
+
+  useLayoutEffect(() => {
+    if (isEditing) {
+      setRecipe(currentRecipeDetails);
+      setIsEditing(false);
+    } else return;
+  }, []);
 
   const handleChange = (field: keyof RecipeDetails, value: any) => {
     setRecipe((prev) => ({
