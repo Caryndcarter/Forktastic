@@ -12,6 +12,7 @@ import Auth from "../utils_graphQL/auth";
 import { Review } from "../components/Review";
 import Navbar from "../components/Navbar";
 import AverageRating from "../components/AverageRating";
+import SavedReview from "@/components/SavedReview";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
@@ -286,7 +287,7 @@ const RecipeShowcase = () => {
             </div>
           )}
 
-         
+          <SavedReview rating={0} comment={""} />
 
         {/* Recipe Source Links */}
         <div className="mb-8 flex space-x-4">
