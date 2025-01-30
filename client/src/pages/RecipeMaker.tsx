@@ -107,11 +107,13 @@ const RecipeMaker = () => {
         return;
       }
     }
+
     const { data } = await createRecipe({
       variables: {
         recipeInput: {
           title: recipe.title,
           summary: recipe.summary,
+          author: Auth.getProfile()._id,
           readyInMinutes: recipe.readyInMinutes,
           servings: recipe.servings,
           ingredients: recipe.ingredients,
@@ -165,7 +167,7 @@ const RecipeMaker = () => {
       >
         <div className="space-y-2">
           <Label htmlFor="prompt" className="font-bold">
-            Prompt
+            Use AI to generate a recipe instantly!
           </Label>
           <div className="relative">
             <Textarea

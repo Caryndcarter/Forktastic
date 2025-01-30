@@ -64,6 +64,7 @@ const typeDefs = `
 
    input recipeInput {
     title: String!
+    author: ID
     summary: String!
     readyInMinutes: Int!
     servings: Int!
