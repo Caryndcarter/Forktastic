@@ -67,9 +67,12 @@ const RecipeShowcase = () => {
       setIsSaved(false);
     }
 
-    const id = Auth.getProfile()?._id;
+    let id;
+    if (loginCheck) {
+      id = Auth.getProfile()?._id;
+    }
 
-    if (currentRecipeDetails.author == id) {
+    if (currentRecipeDetails.author == id && loginCheck) {
       setIsAuthor(true);
     }
   }, [data, currentRecipeDetails.author]);
@@ -217,10 +220,14 @@ const RecipeShowcase = () => {
           {/* Average Rating Component */}
           <AverageRating recipeId={currentRecipeDetails._id} />
 
-          {isAuthor ? (
-            <EditRecipeButton onClick={editRecipe} />
+          {loginCheck ? (
+            isAuthor ? (
+              <EditRecipeButton onClick={editRecipe} />
+            ) : (
+              <CopyRecipeButton onClick={editRecipe} />
+            )
           ) : (
-            <CopyRecipeButton onClick={editRecipe} />
+            <div></div>
           )}
 
           {/* Save Button */}
