@@ -102,6 +102,7 @@ const RecipeShowcase = () => {
           ...currentRecipeDetails,
           _id: data.addRecipe._id, // Ensure _id is always valid
         });
+        console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
 
         // save this recipe to the user
         await saveRecipe({

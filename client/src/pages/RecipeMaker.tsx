@@ -107,11 +107,13 @@ const RecipeMaker = () => {
         return;
       }
     }
+
     const { data } = await createRecipe({
       variables: {
         recipeInput: {
           title: recipe.title,
           summary: recipe.summary,
+          author: Auth.getProfile()._id,
           readyInMinutes: recipe.readyInMinutes,
           servings: recipe.servings,
           ingredients: recipe.ingredients,
