@@ -163,8 +163,6 @@ const RecipeShowcase = () => {
           {currentRecipeDetails.title}
         </h2>
 
-        {/* Save Button */}
-
         {/* Additional Info */}
         <div className="mb-6 space-y-2">
           {currentRecipeDetails.readyInMinutes && (
@@ -193,6 +191,7 @@ const RecipeShowcase = () => {
               </h4>
             )}
 
+      {/* Save Button */}
           {loginCheck ? (
             <button
               onClick={() =>
