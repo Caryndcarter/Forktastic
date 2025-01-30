@@ -194,8 +194,27 @@ const RecipeShowcase = () => {
 
             {/* Average Rating Component */}
             <AverageRating recipeId={currentRecipeDetails._id} />
-
+            
             {/* Save Button */}
+              {loginCheck ? (
+                <button
+                  onClick={() =>
+                    isSaved ? deleteCurrentRecipe() : saveCurrentRecipe()
+                  }
+                  className={`font-semibold py-2 px-4 rounded mb-6 transition-colors duration-300 ${
+                    isSaved
+                      ? "bg-red-500 hover:bg-red-600 text-white"
+                      : "bg-[#A84E24] hover:bg-green-600 text-white"
+                  }`}
+                >
+                  {isSaved ? "Delete Recipe" : "Save Recipe"}
+                </button>
+              ) : (
+                <div className="text-gray-500 italic mb-6">
+                  Log in to save recipes.
+                </div>
+              )}
+            </div>
 
             {/* Review */}
             {loginCheck ? (
