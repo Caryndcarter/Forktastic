@@ -36,8 +36,9 @@ const client = new ApolloClient({
 });
 
 const defaultRecipe: RecipeDetails = {
-  _id: undefined,
+  _id: null,
   title: "",
+  author: null,
   summary: "",
   readyInMinutes: 0,
   servings: 0,
