@@ -167,7 +167,7 @@ const RecipeMaker = () => {
       >
         <div className="space-y-2">
           <Label htmlFor="prompt" className="font-bold">
-            Prompt
+            Use AI to generate a recipe instantly!
           </Label>
           <div className="relative">
             <Textarea
