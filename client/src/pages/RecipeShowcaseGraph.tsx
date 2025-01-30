@@ -29,14 +29,21 @@ const RecipeShowcase = () => {
   });
 
 
-  // before the page renders, perform the login check. This runs once.
   useLayoutEffect(() => {
-    const isLoggedIn = Auth.loggedIn();
-    console.log("Auth Profile: " , Auth.getProfile());
-    setLoginCheck(isLoggedIn);
-    // if logged in, activate the query to check if the recipe is saved:
-    if (isLoggedIn) {
-      setSkipQuery(false);
+    try {
+      const isLoggedIn = Auth.loggedIn();
+      // Only try to get profile if logged in
+      const profile = isLoggedIn ? Auth.getProfile() : null;
+      console.log("Auth Profile: ", profile);
+      setLoginCheck(isLoggedIn);
+      // if logged in, activate the query to check if the recipe is saved
+      if (isLoggedIn) {
+        setSkipQuery(false);
+      }
+    } catch (error) {
+      console.log("Auth error:", error);
+      setLoginCheck(false);
+      setSkipQuery(true);
     }
   }, []);
 
