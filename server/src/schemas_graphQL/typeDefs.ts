@@ -5,6 +5,7 @@ const typeDefs = `
     getSpecificRecipeId(recipeId: String): String
     getRecipes: [Recipe]
     getRecipe(mongoID: ID, spoonacularId: Int): RecipeAuthor
+    getReviews(recipeId: ID!): Recipe
   }
 
   type Mutation {
@@ -18,6 +19,7 @@ const typeDefs = `
     addReview(reviewInput: ReviewInput!): Review
     saveReviewToUser(reviewId: ID!): User
     saveReviewToRecipe(recipeId: ID!, reviewId: ID!): Recipe
+    deleteReview(reviewId: ID!): User!
   }
 
   type User {
