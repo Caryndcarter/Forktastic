@@ -83,6 +83,7 @@ const typeDefs = `
     recipeId: ID!
     rating: Int!
     comment: String!
+    userName: String!
   }
 
   input ReviewInput {

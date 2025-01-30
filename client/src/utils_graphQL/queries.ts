@@ -66,7 +66,7 @@ export const GET_REVIEWS = gql `
 
 export const GET_REVIEWS_BY_RECIPE_ID = gql`
   query GetReviewsByRecipeId($reviewIds: [ID!]!) {
-    getReviewsByIds(reviewIds: $reviewIds) {
+    getReviewsByRecipeId(reviewIds: $reviewIds) {
       _id
       rating
       comment

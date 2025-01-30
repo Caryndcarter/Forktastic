@@ -27,14 +27,17 @@ export default function SavedReview({ recipeId }: SavedReviewProps) {
   console.log(recipeId); 
 
   // Fetch the reviews associated with these IDs
-  const { data, loading, error } = useQuery(GET_REVIEWS_BY_RECIPE_ID, {
+  const { data, loading, error, refetch } = useQuery(GET_REVIEWS_BY_RECIPE_ID, {
     variables: { reviewIds },
     skip: reviewIds.length === 0, 
-  });
+  });  
 
   useLayoutEffect(() => {
     const isLoggedIn = Auth.loggedIn();
     setLoginCheck(isLoggedIn);
+    if (isLoggedIn && reviewIds.length > 0) {
+      refetch();
+    }
   }, []);
 
   if (!loginCheck) {
