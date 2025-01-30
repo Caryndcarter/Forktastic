@@ -148,13 +148,18 @@ const resolvers = {
 
         const objectId = new mongoose.Types.ObjectId(recipeId);
         // Find the recipe and populate its reviews with user details
-        const recipeReviews = await Recipe.findById(objectId).populate('reviews');
+        const recipeReviews = await Recipe.findById(objectId)
+        .populate({
+          path: 'reviews',
+          model: 'Review',  // Name of your Review model
+          select: 'rating comment userName' // Specify the fields you want
+        });
           
         if (!recipeReviews) {
           throw new GraphQLError("Recipe not found");
         }
     
-        return recipeReviews;
+        return recipeReviews.reviews;
       } catch (err) {
         console.error("Error fetching reviews:", err);
         throw new GraphQLError("Failed to fetch reviews");

@@ -5,7 +5,7 @@ const typeDefs = `
     getSpecificRecipeId(recipeId: String): String
     getRecipes: [Recipe]
     getRecipe(mongoID: ID, spoonacularId: Int): RecipeAuthor
-    getReviews(recipeId: ID!): Recipe
+    getReviews(recipeId: ID!): [Review]
     getReviewsByRecipeId(reviewIds: [ID!]!): [Review!]!
   }
 

@@ -2,7 +2,7 @@ import { Star } from "lucide-react";
 import { useState, useContext, useLayoutEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { currentRecipeContext } from "@/App";
-import { GET_REVIEWS_BY_RECIPE_ID } from "@/utils_graphQL/queries";
+import { GET_REVIEWS } from "@/utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
 
 interface Review {
@@ -27,9 +27,8 @@ export default function SavedReview({ recipeId }: SavedReviewProps) {
   console.log(recipeId); 
 
   // Fetch the reviews associated with these IDs
-  const { data, loading, error, refetch } = useQuery(GET_REVIEWS_BY_RECIPE_ID, {
-    variables: { reviewIds },
-    skip: reviewIds.length === 0, 
+  const { data, loading, error, refetch } = useQuery(GET_REVIEWS, {
+    variables:  {recipeId} 
   });  
 
   useLayoutEffect(() => {
@@ -47,7 +46,7 @@ export default function SavedReview({ recipeId }: SavedReviewProps) {
   if (loading) return <p>Loading reviews...</p>;
   if (error) return <p>Error loading reviews.</p>;
 
-  const reviews: Review[] = data?.getReviewsByRecipeId || [];
+  const reviews: Review[] = data?.getReviews || [];
     // If there are no reviews or no data, return null
     if (!reviews.length) {
       return null;
