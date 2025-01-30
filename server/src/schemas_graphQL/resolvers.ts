@@ -91,7 +91,7 @@ const resolvers = {
       for (const id of savedRecipes) {
         const recipe: recipe | null = await Recipe.findById(id);
         if (!recipe) {
-          console.log("skipping...");
+          //console.log("skipping...");
           continue;
         }
         recipes.push(recipe);
