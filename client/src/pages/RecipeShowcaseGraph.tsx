@@ -8,8 +8,9 @@ import { useMutation, useQuery } from "@apollo/client";
 import {ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE} from "../utils_graphQL/mutations";
 import { GET_SPECIFIC_RECIPE_ID } from "../utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
-// import RecipeDetails from "../interfaces/recipeDetails.ts";
+//import RecipeDetails from "../interfaces/recipeDetails.ts";
 import { Review } from "../components/Review";
+import SavedReview from "../components/SavedReview";
 import Navbar from "../components/Navbar";
 
 const RecipeShowcase = () => {
@@ -213,11 +214,14 @@ const RecipeShowcase = () => {
           )}
         </div>
 
+        {/* Render Saved Reviews if there are any */}
+        {loginCheck && <SavedReview recipeId={currentRecipeDetails._id} />}
+
          {/* Review */}
           {loginCheck ? (
             isSaved ? (
               <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
-                <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
+                <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Save a Review</h3>
                 <Review
                   recipeId={currentRecipeDetails._id}
                   existingReview={null} // Replace with actual review data if available

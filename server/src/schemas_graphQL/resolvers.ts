@@ -91,7 +91,7 @@ const resolvers = {
       for (const id of savedRecipes) {
         const recipe: recipe | null = await Recipe.findById(id);
         if (!recipe) {
-          console.log("skipping...");
+          //console.log("skipping...");
           continue;
         }
         recipes.push(recipe);
@@ -158,6 +158,19 @@ const resolvers = {
       } catch (err) {
         console.error("Error fetching reviews:", err);
         throw new GraphQLError("Failed to fetch reviews");
+      }
+    },
+
+    getReviewsByRecipeId: async (_: any, { reviewIds }: {reviewIds: string []}): Promise<any> => {
+      try {
+        // Find reviews by the array of review IDs
+        const reviews = await Review.find({ '_id': { $in: reviewIds } });
+
+        // Return the found reviews
+        return reviews;
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+        throw new Error("Failed to fetch reviews");
       }
     },
   },
@@ -556,7 +569,7 @@ const resolvers = {
     }
 
     try {
-      
+
     // Convert recipeId to ObjectId to ensure correct matching
     const objectId = new mongoose.Types.ObjectId(reviewId);
     console.log("Converted to ObjectId:", objectId);

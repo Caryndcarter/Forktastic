@@ -6,6 +6,7 @@ const typeDefs = `
     getRecipes: [Recipe]
     getRecipe(mongoID: ID, spoonacularId: Int): RecipeAuthor
     getReviews(recipeId: ID!): Recipe
+    getReviewsByRecipeId(reviewIds: [ID!]!): [Review!]!
   }
 
   type Mutation {

@@ -51,7 +51,7 @@ export const GET_SPECIFIC_RECIPE_ID = gql`
 `;
 
 export const GET_REVIEWS = gql `
-  query getReview($recipeId: ID!, ) {
+  query getReviews($recipeId: ID!, ) {
     getReviews(recipeId: $recipeId) {
         _id
       reviews {
@@ -63,3 +63,16 @@ export const GET_REVIEWS = gql `
     }
   }
 `;
+
+export const GET_REVIEWS_BY_RECIPE_ID = gql`
+  query GetReviewsByRecipeId($reviewIds: [ID!]!) {
+    getReviewsByIds(reviewIds: $reviewIds) {
+      _id
+      rating
+      comment
+      userName
+    }
+  }
+`;
+
+
