@@ -11,6 +11,7 @@ import Auth from "../utils_graphQL/auth";
 // import RecipeDetails from "../interfaces/recipeDetails.ts";
 import { Review } from "../components/Review";
 import Navbar from "../components/Navbar";
+import AverageRating from "../components/AverageRating";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
@@ -27,7 +28,6 @@ const RecipeShowcase = () => {
     variables: { recipeId: currentRecipeDetails._id },
     skip: skipQuery,
   });
-
 
   // before the page renders, perform the login check. This runs once.
   useLayoutEffect(() => {
@@ -156,8 +156,6 @@ const RecipeShowcase = () => {
           {currentRecipeDetails.title}
         </h2>
 
-        {/* Save Button */}
-
         {/* Additional Info */}
         <div className="mb-6 space-y-2">
           {currentRecipeDetails.readyInMinutes && (
@@ -186,6 +184,11 @@ const RecipeShowcase = () => {
               </h4>
             )}
 
+            {/* Average Rating Component */}
+            <AverageRating recipeId={currentRecipeDetails._id} />
+
+            {/* Save Button */}
+
           {loginCheck ? (
             <button
               onClick={() =>
@@ -205,23 +208,6 @@ const RecipeShowcase = () => {
             </div>
           )}
         </div>
-
-         {/* Review */}
-        {loginCheck ? (
-            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
-              <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
-              <Review
-                recipeId="6799282b18390c891b3eeb6a"
-                existingReview={null} // Replace with actual review data if available
-                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
-              />
-            </div>
-         ) : (
-            <div className="text-gray-500 italic mb-6">
-              Log in to write a review.
-            </div>
-          )}
-         
 
         {/* Recipe Summary */}
         <div className="mb-8">
@@ -270,6 +256,23 @@ const RecipeShowcase = () => {
               ))}
           </ol>
         </div>
+
+        {/* Review */}
+        {loginCheck ? (
+            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+              <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
+              <Review
+                recipeId="6799282b18390c891b3eeb6a"
+                existingReview={null} // Replace with actual review data if available
+                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+              />
+            </div>
+         ) : (
+            <div className="text-gray-500 italic mb-6">
+              Log in to write a review.
+            </div>
+          )}
+         
 
         {/* Recipe Source Links */}
         <div className="mb-8 flex space-x-4">

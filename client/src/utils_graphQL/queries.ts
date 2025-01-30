@@ -49,3 +49,11 @@ export const GET_SPECIFIC_RECIPE_ID = gql`
     getSpecificRecipeId(recipeId: $recipeId)
   }
 `;
+
+export const GET_REVIEWS_FOR_RECIPE = gql`
+  query GetReviewsForRecipe($recipeId: ID!) {
+    getReviewsForRecipe(recipeId: $recipeId) {
+      rating
+    }
+  }
+`;
