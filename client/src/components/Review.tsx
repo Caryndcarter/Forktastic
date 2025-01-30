@@ -86,6 +86,7 @@ export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
             onClick={() => setRating(star)}
             className={`focus:outline-none ${star <= rating ? "text-yellow-400" : "text-gray-300"}`}
             aria-label={`Rate ${star} stars`}
+            
           >
             <Star className="w-6 h-6 fill-current" />
           </button>
@@ -97,7 +98,7 @@ export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
         placeholder="Write your review here..."
         className="w-full p-2 border rounded"
       />
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full bg-[#a84e24]">
         {existingReview ? "Update Review" : "Submit Review"}
       </Button>
     </form>
