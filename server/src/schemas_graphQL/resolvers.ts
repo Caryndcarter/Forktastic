@@ -299,7 +299,19 @@ const resolvers = {
       },
       context: user_context
     ) => {
+      const userID = context.user._id;
+      const authorID = recipeInput.author;
+
+      console.log("User's id: " + userID + "type of: " + typeof userID);
+      console.log("Author's id: " + authorID + "type of: " + typeof authorID);
+
       try {
+        if (context.user._id == recipeInput.author) {
+          console.log("editing my own recipe");
+        } else {
+          console.log("editing another's recipe");
+        }
+
         recipeInput.author = context.user._id as ObjectId;
         // Create and save the new recipe
         const newRecipe = await Recipe.create(recipeInput);

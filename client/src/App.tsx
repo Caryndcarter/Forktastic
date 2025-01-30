@@ -58,17 +58,28 @@ export const currentRecipeContext = createContext({
   },
 });
 
+export const editingContext = createContext({
+  isEditing: false,
+  setIsEditing: (editing: boolean) => {
+    console.log(editing);
+  },
+});
+
 function App() {
   const [currentRecipeDetails, setCurrentRecipeDetails] =
     useState<RecipeDetails>(defaultRecipe);
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
     <currentRecipeContext.Provider
       value={{ currentRecipeDetails, setCurrentRecipeDetails }}
     >
-      <ApolloProvider client={client}>
-        <Outlet />
-      </ApolloProvider>
+      <editingContext.Provider value={{ isEditing, setIsEditing }}>
+        <ApolloProvider client={client}>
+          <Outlet />
+        </ApolloProvider>
+      </editingContext.Provider>
     </currentRecipeContext.Provider>
   );
 }
