@@ -5,6 +5,7 @@ import apiService from "../api/apiService";
 import { currentRecipeContext } from "../App";
 import { useQuery } from "@apollo/client";
 import { GET_RECIPE } from "@/utils_graphQL/queries";
+import { RecipeDetails } from "@/interfaces";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -21,31 +22,45 @@ export default function RecipeCard({
   });
   const navigate = useNavigate();
 
+  // on submit, trigger the graphQL querry
   const handleSubmit = async () => {
     setSkipQuery(false);
   };
 
-  const searchSpoonacular = async () => {
-    const recipe = await apiService.forignInformationSearch(spoonacularId);
-    setCurrentRecipeDetails(recipe);
-    navigate("/recipe-showcase");
-  };
-
+  // this effect will wait for the querry to finish executing, then proceed.
   useEffect(() => {
+    // wait for the query to finish
     if (loading || skipQuery) {
       return;
     }
 
+    // proceed after the data is retrived, continue
+    handleRecipeSearch();
+  }, [loading]);
+
+  const handleRecipeSearch = async () => {
+    let response: RecipeDetails;
+
+    // if a valid response is obtained from the query, use that as the
+    // recipe to showcase.
     if (data?.getRecipe?.recipe) {
-      console.log("mongo");
-      setCurrentRecipeDetails(data.getRecipe.recipe);
-      console.log(`Current recipe author: ${data.getRecipe.recipe.author}`);
-      navigate("/recipe-showcase");
-    } else {
-      searchSpoonacular();
-      return;
+      console.log("the recipe was found in our database.");
+      response = data.getRecipe.recipe;
     }
-  }, [data, loading]);
+
+    // otherwise, make a spoonacular API call to find the recipe
+    else {
+      console.log("the recipe was retrieved from spoonacular.");
+      response = await apiService.forignInformationSearch(spoonacularId);
+    }
+
+    // update the context with the recipe, then go to the recipe showcase page.
+    setCurrentRecipeDetails(response);
+    console.log(`Current recipe author: ${response.author}`);
+    navigate("/recipe-showcase");
+
+    return;
+  };
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-transform transform hover:scale-105">

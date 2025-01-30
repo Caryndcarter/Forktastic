@@ -1,8 +1,6 @@
-
-
 export default interface RecipeDetails {
-  _id?: string;
-  author?: string;
+  _id: string | null;
+  author: string | null;
   title: string;
   summary: string;
   readyInMinutes: number;

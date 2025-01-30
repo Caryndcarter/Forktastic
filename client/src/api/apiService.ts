@@ -1,3 +1,4 @@
+import { RecipeDetails } from "@/interfaces";
 import { authService } from "./authentication";
 
 class apiService {
@@ -26,8 +27,8 @@ class apiService {
 
   async forignInformationSearch(id: number) {
     const response = await fetch(`/open/information/${id}`);
-    const information: any = await response.json();
-    return information;
+    const information: RecipeDetails = await response.json();
+    return { ...information, author: null, _id: null };
   }
 
   async getAccountInformation() {
