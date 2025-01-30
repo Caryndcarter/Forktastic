@@ -23,24 +23,37 @@ export const GET_SAVED_RECIPES = gql`
 export const GET_RECIPE = gql`
   query getRecipe($mongoID: ID, $spoonacularId: Int) {
     getRecipe(mongoID: $mongoID, spoonacularId: $spoonacularId) {
-      title
-      summary
-      readyInMinutes
-      servings
-      ingredients
-      instructions
-      steps
-      diet
-      image
-      sourceUrl
-      spoonacularId
-      spoonacularSourceUrl
+      recipe {
+        _id
+        title
+        author
+        summary
+        readyInMinutes
+        servings
+        ingredients
+        instructions
+        steps
+        diet
+        image
+        sourceUrl
+        spoonacularId
+        spoonacularSourceUrl
+      }
+      author
     }
   }
 `;
 
-export const IS_RECIPE_SAVED = gql`
-  query isRecipeSaved($recipeId: String!) {
-    isRecipeSaved(recipeId: $recipeId)
+export const GET_SPECIFIC_RECIPE_ID = gql`
+  query getSpecificRecipeId($recipeId: String) {
+    getSpecificRecipeId(recipeId: $recipeId)
+  }
+`;
+
+export const GET_REVIEWS_FOR_RECIPE = gql`
+  query GetReviewsForRecipe($recipeId: ID!) {
+    getReviewsForRecipe(recipeId: $recipeId) {
+      rating
+    }
   }
 `;

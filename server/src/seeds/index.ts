@@ -1,29 +1,18 @@
+import { seedRecipes } from './recipe-seeds-mongo'
+import { seedUsers } from './user-seeds-mongo';
 
-import { seedUsers } from './user-seeds.js'; 
-import { seedRecipes } from './recipe-seeds.js';
-import { seedUserRecipes } from './user-recipes-seeds.js';
-import sequelize from '../config/connection.js';
-
-
-const seedAll = async (): Promise<void> => {
+const runSeeds = async () => {
   try {
-    await sequelize.sync({ force: true });
-    console.log('\n----- DATABASE SYNCED -----\n');
-    
-    await seedUsers(); 
-    console.log('\n----- USERS SEEDED -----\n');
-
-    await seedRecipes(); 
-    console.log('\n----- RECIPES SEEDED -----\n');
-
-    await seedUserRecipes();
-    console.log('\n----- USER-RECIPES SEEDED -----\n');
-    
-    process.exit(0);
+    console.log('Seeding users...');
+    await seedUsers();
+    console.log('Seeding recipes...');
+    await seedRecipes();
+    console.log('Seeding completed successfully!');
   } catch (error) {
-    console.error('Error seeding database:', error);
-    process.exit(1);
+    console.error('Error running seeds:', error);
+  } finally {
+    process.exit(); 
   }
 };
 
-seedAll();
+runSeeds();

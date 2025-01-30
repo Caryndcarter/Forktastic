@@ -1,75 +1,65 @@
-import { useNavigate, NavigateFunction } from "react-router-dom";
-import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
 import { useState, useEffect } from "react";
 
 //new imports
-import { useMutation } from "@apollo/client";
-import {
-  ADD_RECIPE,
-  SAVE_RECIPE,
-  REMOVE_RECIPE,
-} from "../utils_graphQL/mutations";
-// import { GET_RECIPE } from "../utils_graphQL/queries.ts";
-//import { GET_SAVED_RECIPES } from '../utils_graphQL/queries';
+import { useMutation, useQuery } from "@apollo/client";
+import {ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE} from "../utils_graphQL/mutations";
+import { GET_SPECIFIC_RECIPE_ID } from "../utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
-import RecipeDetails from "../interfaces/recipeDetails.ts";
+// import RecipeDetails from "../interfaces/recipeDetails.ts";
+import { Review } from "../components/Review";
+import Navbar from "../components/Navbar";
+import AverageRating from "../components/AverageRating";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
-  const { currentRecipeDetails } = useContext(currentRecipeContext);
+  const { currentRecipeDetails, setCurrentRecipeDetails } = useContext(currentRecipeContext);
   const [loginCheck, setLoginCheck] = useState(false);
+  const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState(false);
 
-  //new mutations and queries
+  //mutations and queries
   const [addRecipe] = useMutation(ADD_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [removeRecipe] = useMutation(REMOVE_RECIPE);
-  //const { data } = useQuery(GET_SAVED_RECIPES);
+  const { data, refetch } = useQuery(GET_SPECIFIC_RECIPE_ID, {
+    variables: { recipeId: currentRecipeDetails._id },
+    skip: skipQuery,
+  });
 
-  // const { data } = useQuery(GET_RECIPE);
 
-  useEffect(() => {
-    const checkLogin = async () => {
-      console.log("Current recipe ID:", currentRecipeDetails.id);
-
+  useLayoutEffect(() => {
+    try {
       const isLoggedIn = Auth.loggedIn();
-      console.log("isLoggedIn: " + isLoggedIn);
+      // Only try to get profile if logged in
+      const profile = isLoggedIn ? Auth.getProfile() : null;
+      console.log("Auth Profile: ", profile);
       setLoginCheck(isLoggedIn);
-
-      if (isLoggedIn && currentRecipeDetails.id === "0") {
-        setIsSaved(false);
-      } else if (isLoggedIn && currentRecipeDetails.id !== "0") {
-        // try {
-        //   const { userRecipe } = await data({
-        //     variables: {
-        //       savedRecipes: "O",
-        //     },
-        //  });
-
-        // console.log("Exists value:", userRecipe);
-        // if (userRecipe) {
-        //   setIsSaved(true);
-        // }
-        // } catch (err) {
-        //   console.error("Error retrieving recipe:", err);
-        //   setIsSaved(false);
-        // }
-        //setIsSaved(true);
-        console.log("isSaved Revision: " + isSaved);
-      } else {
-        setIsSaved(false);
+      // if logged in, activate the query to check if the recipe is saved
+      if (isLoggedIn) {
+        setSkipQuery(false);
       }
-    };
+    } catch (error) {
+      console.log("Auth error:", error);
+      setLoginCheck(false);
+      setSkipQuery(true);
+    }
+  }, []);
 
-    checkLogin();
-  }, [currentRecipeDetails, isSaved]);
+  // This effect determines if the recipe is saved by checking the database.
+  // This is updated whenever the query refetches.
+  useEffect(() => {
+    if (data?.getSpecificRecipeId) {
+      setIsSaved(true);
+    } else {
+      setIsSaved(false);
+    }
+  }, [data]);
 
   // Function to save recipe
-  const saveCurrentRecipe = async (
-    currentRecipeDetails: RecipeDetails,
-    setIsSaved: React.Dispatch<React.SetStateAction<boolean>>
-  ) => {
+  const saveCurrentRecipe = async () => {
     try {
       const { data } = await addRecipe({
         variables: {
@@ -91,17 +81,22 @@ const RecipeShowcase = () => {
       });
 
       // Save the recipe ID to the user's savedRecipes array
-      if (data && data.addRecipe._id) {
-        currentRecipeDetails.id = data.addRecipe._id; // Update the ID with the one from the backend
+      if (data?.addRecipe._id) {
+        // Update the ID with the one from the backend
+        setCurrentRecipeDetails({
+          ...currentRecipeDetails,
+          _id: data.addRecipe._id, // Ensure _id is always valid
+        });
+
+        // save this recipe to the user
         await saveRecipe({
           variables: {
             recipeId: data.addRecipe._id,
           },
         });
-        setIsSaved(true);
-        console.log("IsSaved:" + isSaved);
-        console.log("Recipe saved successfully.");
-        console.log("just saved id: " + data.addRecipe._id);
+
+        // refetch the query:
+        await refetch();
       }
 
       //navigate("/recipe-book");
@@ -112,30 +107,29 @@ const RecipeShowcase = () => {
   };
 
   // Function to delete recipe
-  const deleteCurrentRecipe = async (
-    currentRecipeDetails: RecipeDetails,
-    setIsSaved: React.Dispatch<React.SetStateAction<boolean>>,
-    navigate: NavigateFunction
-  ) => {
-    console.log("currrent Recipe details ID:" + currentRecipeDetails.id);
+  const deleteCurrentRecipe = async () => {
+    //navigate: NavigateFunction
+
+    console.log("currrent Recipe details ID:" + currentRecipeDetails._id);
 
     try {
       const { data } = await removeRecipe({
         variables: {
-          recipeId: currentRecipeDetails.id,
+          recipeId: currentRecipeDetails._id,
         },
       });
 
-      if (data && data.removeRecipe._id) {
+      if (data) {
         console.log(
           "Recipe successfully deleted with ID: ",
-          data.removeRecipe._id
+          currentRecipeDetails._id
         );
       }
 
-      console.log("Recipe delete response:", data);
-      setIsSaved(false);
-      navigate("/recipe-book");
+      // refetch the query:
+      await refetch();
+
+      navigate('/recipe-book');
     } catch (err) {
       console.error("Error deleting recipe:", err);
       alert("Failed to delete recipe.");
@@ -151,31 +145,7 @@ const RecipeShowcase = () => {
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24">
       {" "}
-      {/* Added pt-24 to prevent content from being hidden behind the navbar */}
-      <nav className="bg-[#f5d3a4] shadow-md fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-4 max-w-7xl mx-auto z-10">
-        {/* Forktacular button on the left */}
-        <button
-          onClick={() => navigate("/")}
-          className="text-[#a84e24] hover:text-[#b7572e] font-semibold"
-        >
-          Forktacular
-        </button>
-
-        {/* Title centered */}
-        <div className="text-2xl font-bold text-[#a84e24] flex-1 text-center">
-          My Recipe
-        </div>
-
-        {/* Account button on the right */}
-        <div className="flex">
-          <button
-            onClick={() => navigate("/user-info")}
-            className="text-[#a84e24] hover:text-[#b7572e]"
-          >
-            Account
-          </button>
-        </div>
-      </nav>
+      <Navbar />
       {/* Recipe Details */}
       <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
         {/* Recipe Image */}
@@ -193,8 +163,6 @@ const RecipeShowcase = () => {
         <h2 className="text-3xl font-bold text-[#a84e24] mb-4">
           {currentRecipeDetails.title}
         </h2>
-
-        {/* Save Button */}
 
         {/* Additional Info */}
         <div className="mb-6 space-y-2">
@@ -224,31 +192,32 @@ const RecipeShowcase = () => {
               </h4>
             )}
 
-          {loginCheck ? (
-            <button
-              onClick={() =>
-                isSaved
-                  ? deleteCurrentRecipe(
-                      currentRecipeDetails,
-                      setIsSaved,
-                      navigate
-                    )
-                  : saveCurrentRecipe(currentRecipeDetails, setIsSaved)
-              }
-              className={`font-semibold py-2 px-4 rounded mb-6 transition-colors duration-300 ${
-                isSaved
-                  ? "bg-red-500 hover:bg-red-600 text-white"
-                  : "bg-[#a84e24] hover:bg-green-600 text-white"
-              }`}
-            >
-              {isSaved ? "Delete Recipe" : "Save Recipe"}
-            </button>
+            {/* Average Rating Component */}
+            <AverageRating recipeId={currentRecipeDetails._id} />
+
+            {/* Save Button */}
+
+            {/* Review */}
+            {loginCheck ? (
+            isSaved ? (
+              <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+                <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
+                <Review
+                  recipeId={currentRecipeDetails._id}
+                  existingReview={null} // Replace with actual review data if available
+                  onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+                />
+              </div>
+            ) : (
+              <div className="text-gray-500 italic mb-6">
+                Save a recipe to write a review.
+              </div>
+            )
           ) : (
             <div className="text-gray-500 italic mb-6">
-              Log in to save recipes.
+              Log in to write a review.
             </div>
           )}
-        </div>
 
         {/* Recipe Summary */}
         <div className="mb-8">
@@ -288,13 +257,32 @@ const RecipeShowcase = () => {
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">Steps</h3>
           <ol className="list-decimal list-inside space-y-2">
-            {currentRecipeDetails.steps?.map((step: string, index: number) => (
-              <li key={index} className="text-gray-800">
-                <RawHtmlRenderer htmlString={step} />
-              </li>
-            ))}
+            {currentRecipeDetails.steps
+                ?.slice(0, -1)
+                .map((step: string, index: number) => (
+                  <li key={index} className="text-gray-800">
+                    <RawHtmlRenderer htmlString={step} />
+                  </li>
+              ))}
           </ol>
         </div>
+
+        {/* Review */}
+        {loginCheck ? (
+            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+              <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
+              <Review
+                recipeId={currentRecipeDetails._id}
+                existingReview={null} // Replace with actual review data if available
+                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+              />
+            </div>
+         ) : (
+            <div className="text-gray-500 italic mb-6">
+              Log in to write a review.
+            </div>
+          )}
+         
 
         {/* Recipe Source Links */}
         <div className="mb-8 flex space-x-4">
@@ -322,6 +310,7 @@ const RecipeShowcase = () => {
               </a>
             </h4>
           )}
+
         </div>
       </div>
     </div>

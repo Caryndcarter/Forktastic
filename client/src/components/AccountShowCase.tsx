@@ -1,6 +1,6 @@
 import { authService } from "../api/authentication";
 import { useNavigate } from "react-router-dom";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
 import { useMutation } from "@apollo/client";
@@ -25,23 +25,34 @@ export default function AccountShowCase({
     intolerances: [],
   });
 
-  const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
+  const { loading, refetch } = useQuery(GET_ACCOUNT_PREFERENCES);
   const [updateAccount] = useMutation(UPDATE_ACCOUNT_PREFERENCES);
 
+  useEffect(() => {
+    const loadPreferences = async () => {
+      if (loading) return;
+
+      // Force refetch to get latest data
+      const { data: refreshedData } = await refetch();
+
+      if (refreshedData?.getUser) {
+        setFormValues(prev => ({
+          ...prev,
+          diet: refreshedData.getUser.diet || "",
+          intolerances: refreshedData.getUser.intolerances || []
+        }));
+      }
+    };
+
+    loadPreferences();
+  }, [loading, refetch]);
+
+  // Refetch when component mounts
   useLayoutEffect(() => {
-    if (data?.getUser.diet) {
-      setFormValues((prev) => ({
-        ...prev,
-        diet: data.getUser.diet,
-      }));
-    }
-    if (data?.getUser.intolerances) {
-      setFormValues((prev) => ({
-        ...prev,
-        intolerances: data.getUser.intolerances,
-      }));
-    }
-  }, [data]);
+    refetch();
+  }, []);
+
+
 
   const handleLogOut = () => {
     authService.logout();
@@ -102,9 +113,13 @@ export default function AccountShowCase({
     // Update the formValues state
     setFormValues((prev: accountInfo) => ({
       ...prev,
-      intolerance: updatedIntolerances,
+      intolerances: updatedIntolerances,
     }));
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Or your loading component
+  }
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6">
