@@ -114,7 +114,7 @@ const RecipeMaker = () => {
         recipeInput: {
           title: recipe.title,
           summary: recipe.summary,
-          author: Auth.getProfile()._id,
+          author: recipe.author,
           readyInMinutes: recipe.readyInMinutes,
           servings: recipe.servings,
           ingredients: recipe.ingredients,
