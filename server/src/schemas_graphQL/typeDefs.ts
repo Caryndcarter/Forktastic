@@ -2,9 +2,9 @@ const typeDefs = `
 
   type Query {
     getUser: User
-    isRecipeSaved(recipeId: String!): Boolean
+    getSpecificRecipeId(recipeId: String): String
     getRecipes: [Recipe]
-    getRecipe(mongoID: ID, spoonacularId:Int): Recipe
+    getRecipe(mongoID: ID, spoonacularId: Int): RecipeAuthor
   }
 
   type Mutation {
@@ -12,8 +12,12 @@ const typeDefs = `
     signUp(userName: String!, userEmail: String!, userPassword: String!): Auth
     updatePreferences(diet: String, intolerances: [String]): User
     addRecipe(recipeInput: recipeInput!): Recipe
+    createRecipe(recipeInput: recipeInput!): Recipe
     saveRecipe(recipeId: ID!): User
     removeRecipe(recipeId: ID!): User
+    addReview(reviewInput: ReviewInput!): Review
+    saveReviewToUser(reviewId: ID!): User
+    saveReviewToRecipe(recipeId: ID!, reviewId: ID!): Recipe
   }
 
   type User {
@@ -24,6 +28,7 @@ const typeDefs = `
     savedRecipes: [ID!]!
     diet: String
     intolerances: [String]
+    reviews: [ID!]!
   }
 
   type Auth {
@@ -31,8 +36,14 @@ const typeDefs = `
     user: User
   }
 
+  type RecipeAuthor {
+    recipe: Recipe
+    author: Boolean
+  }
+
    type Recipe {
     _id: ID!
+    author: ID
     title: String!
     summary: String!
     readyInMinutes: Int!
@@ -45,6 +56,7 @@ const typeDefs = `
     sourceUrl: String
     spoonacularId: Int
     spoonacularSourceUrl: String
+    reviews: [ID!]!
   }
 
    input recipeInput {
@@ -61,6 +73,21 @@ const typeDefs = `
     spoonacularId: Int
     spoonacularSourceUrl: String
   }
+
+  type Review {
+    _id: ID!
+    userId: ID!
+    recipeId: ID!
+    rating: Int!
+    comment: String!
+  }
+
+  input ReviewInput {
+    recipeId: ID!
+    rating: Int!
+    comment: String!
+  }
+
 `;
 
 export default typeDefs;

@@ -1,10 +1,14 @@
+<!-- prettier-ignore -->
 # Forktastic
-![MIT License](https://img.shields.io/badge/License-MIT-green) 
+
+![MIT License](https://img.shields.io/badge/License-MIT-green)
+
 ## Description
 
- This is a recipe app that lets users save and create recipes online. This is so that users can take a more modern approach to the recipe books you would have at home while being able to take up less space.
+This is a recipe app that lets users save and create recipes online. This is so that users can take a more modern approach to the recipe books you would have at home while being able to take up less space.
 
 ## 📁 Table of Contents
+
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
@@ -75,20 +79,23 @@
 ## Installation
 
 please visit [our deployed site](https://forktastic.onrender.com/) to access the application. If you want to run the application from your local machine, follow these instructions:
+please visit [our deployed site](https://forktastic.onrender.com/) to access the application. If you want to run the application from your local machine, follow these instructions:
 
 Ensure you have the Node Package Manager and Postgres installed on your machine. You will need a JWT Secret Key, a Spoonacular API key, and optionally an OpenAI API key.
+
 - [Node.js](https://nodejs.org)
 - [MongoDB installation guide](https://www.mongodb.com/docs/manual/installation/)
 - [Generate a JWT Secret Key](https://pinetools.com/random-string-generator)
 - [Spoonacular API Key](https://spoonacular.com/food-api/console#Dashboard)
 - [OpenAI API Key](https://platform.openai.com/settings/organization/api-keys)
+
 ```shell
 # Step 1: clone this repository, and go to the root directory
 git clone https://github.com/Dan-Swarts/Forktacular.git
 cd Forktacular
 
 # Step 2: Ensure you have node installed, then use the Node Package Manager to install dependencies:
-node -v 
+node -v
 # Example output: v20.17.0
 npm install
 
@@ -100,7 +107,7 @@ npm install
 cd server/
 npm run build
 npm run seed
-cd ../ 
+cd ../
 
 # Step 5: start the application:
 npm run build

@@ -1,8 +1,9 @@
-import { cuisine, cuisineValues } from "./cuisine";
-import { diet, dietValues } from "./diet";
-import { intolerance, intoleranceValues } from "./intolerance";
-import { user, user_context } from "./user_context";
-import recipe from "./recipe";
+import { cuisine, cuisineValues } from "./cuisine.js";
+import { diet, dietValues } from "./diet.js";
+import { intolerance, intoleranceValues } from "./intolerance.js";
+import { user, user_context } from "./user_context.js";
+import recipeAuthor from "./recipeAuthor.js";
+import recipe from "./recipe.js";
 
 export {
   cuisine,
@@ -14,4 +15,5 @@ export {
   user,
   user_context,
   recipe,
+  recipeAuthor,
 };

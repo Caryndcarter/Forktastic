@@ -1,11 +1,11 @@
 import { useState, useCallback, useLayoutEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Recipe from "../interfaces/recipe";
 import RecipeCard from "../components/RecipeCard";
 import FilterForm from "../components/FilterForm";
 import apiService from "../api/apiService";
 import { useQuery } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
+import Navbar from "@/components/Navbar";
 
 export interface filterInfo {
   diet?: string;
@@ -23,8 +23,6 @@ const RecipeSearchPage: React.FC = () => {
     intolerances: [],
     includeIngredients: [],
   });
-
-  const navigate = useNavigate();
 
   const getRandomRecipes = async () => {
     const recipes = await apiService.forignRandomSearch();
@@ -112,40 +110,7 @@ const RecipeSearchPage: React.FC = () => {
         filterVisible ? "filter-blur" : ""
       }`}
     >
-      {/* Navbar */}
-      <nav className="bg-[#f5d3a4] shadow-md fixed top-0 left-0 right-0 flex justify-between items-center px-6 py-2 max-w-7xl mx-auto z-10">
-        <button
-          onClick={() => navigate("/")}
-          className="text-[#a84e24] hover:text-[#b7572e] font-semibold"
-        >
-          Forktacular
-        </button>
-
-        <div className="text-2xl font-bold text-[#a84e24] flex-1 text-center">
-          Recipe Search
-        </div>
-
-        <div className="flex space-x-4">
-          <button
-            onClick={() => navigate("/recipe-book")}
-            className="text-[#a84e24] hover:text-[#b7572e]"
-          >
-            Recipe Book
-          </button>
-          <button
-            onClick={() => navigate("/recipe-maker")}
-            className="text-[#a84e24] hover:text-[#b7572e]"
-          >
-            Recipe Maker
-          </button>
-          <button
-            onClick={() => navigate("/user-info")}
-            className="text-[#a84e24] hover:text-[#b7572e]"
-          >
-            Account
-          </button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Main Content */}
       <div className="pt-20 px-4">

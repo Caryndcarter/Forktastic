@@ -3,6 +3,7 @@ import { Schema, model, type Document } from "mongoose";
 
 export interface RecipeDocument extends Document {
   title: string;
+  author?: string;
   summary: string;
   readyInMinutes: number;
   servings: number;
@@ -22,6 +23,12 @@ const recipeSchema = new Schema<RecipeDocument>(
     title: {
       type: String,
       required: true,
+    },
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+      default: null,
     },
     summary: {
       type: String,
