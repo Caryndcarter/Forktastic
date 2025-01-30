@@ -27,7 +27,7 @@ export default function SavedReview({ recipeId }: SavedReviewProps) {
   console.log(recipeId); 
 
   // Fetch the reviews associated with these IDs
-  const { data, loading, error, refetch } = useQuery(GET_REVIEWS, {
+  const { data, loading, refetch } = useQuery(GET_REVIEWS, {
     variables:  {recipeId} 
   });  
 
@@ -44,7 +44,7 @@ export default function SavedReview({ recipeId }: SavedReviewProps) {
   }
 
   if (loading) return <p>Loading reviews...</p>;
-  if (error) return <p>Error loading reviews.</p>;
+ 
 
   const reviews: Review[] = data?.getReviews || [];
     // If there are no reviews or no data, return null
