@@ -50,6 +50,30 @@ export const GET_SPECIFIC_RECIPE_ID = gql`
   }
 `;
 
+export const GET_REVIEWS = gql`
+  query GetReviews($recipeId: ID!) {
+    getReviews(recipeId: $recipeId) {
+      _id
+      rating
+      comment
+      userName
+    }
+  }
+`;
+
+export const GET_REVIEWS_BY_RECIPE_ID = gql`
+  query GetReviewsByRecipeId($reviewIds: [ID!]!) {
+    getReviewsByRecipeId(reviewIds: $reviewIds) {
+      _id
+      rating
+      comment
+      userName
+    }
+  }
+`;
+
+
+
 export const GET_REVIEWS_FOR_RECIPE = gql`
   query GetReviewsForRecipe($recipeId: ID!) {
     getReviewsForRecipe(recipeId: $recipeId) {

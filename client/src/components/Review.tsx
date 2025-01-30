@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { currentRecipeContext } from "@/App"
 import { useContext} from "react";
+//import RecipeDetails from "../interfaces/recipeDetails.ts";
+
 
 interface ReviewProps {
   recipeId: string | undefined
@@ -21,14 +23,23 @@ interface ReviewData {
 export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
   const [rating, setRating] = useState(existingReview?.rating || 0)
   const [comment, setComment] = useState(existingReview?.comment || "")
-  const { currentRecipeDetails } = useContext(currentRecipeContext);
+  const { currentRecipeDetails, setCurrentRecipeDetails } = useContext(currentRecipeContext);
 
 
   const [addReview] = useMutation(ADD_REVIEW)
   //const [updateReview] = useMutation(UPDATE_REVIEW)
   const [saveReviewToUser] = useMutation(SAVE_REVIEW_TO_USER)
   const [saveReviewToRecipe] = useMutation(SAVE_REVIEW_TO_RECIPE)
-  
+
+  // Function to add the new review to the context
+  const addReviewToContext = (newReview: string) => {
+    // Update currentRecipeDetails directly with the new review
+    setCurrentRecipeDetails({
+      ...currentRecipeDetails, 
+      reviews: [...currentRecipeDetails.reviews || [], newReview], // Add new review
+    });
+  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,6 +79,8 @@ export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
                 reviewId: data.addReview._id,
               },
             });
+
+            addReviewToContext(data.addReview._id);
           }      
       }
       onReviewSubmit()
@@ -75,6 +88,8 @@ export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
       console.error("Error submitting review:", error)
     }
   }
+
+  
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
