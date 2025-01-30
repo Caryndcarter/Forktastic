@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import RecipeDetails from "../interfaces/recipeDetails";
 import askService from "../api/askService";
 import { currentRecipeContext, editingContext } from "@/App";
+import Auth from "@/utils_graphQL/auth";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,6 +25,7 @@ const RecipeMaker = () => {
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [recipe, setRecipe] = useState<RecipeDetails>({
     title: "",
+    author: undefined,
     summary: "",
     readyInMinutes: 0,
     servings: 0,
@@ -34,11 +36,31 @@ const RecipeMaker = () => {
     image: "",
   });
 
+  // If the user is editing an existing recipe, import that recipe's information
   useLayoutEffect(() => {
-    if (isEditing) {
+    // exits if the user isn't editing
+    if (!isEditing) {
+      return;
+    }
+
+    // grab profile information
+    const userProfile = Auth.getProfile();
+
+    // if the user is the author of the recipe, import normally
+    if (userProfile._id == currentRecipeDetails.author) {
       setRecipe(currentRecipeDetails);
-      setIsEditing(false);
-    } else return;
+    }
+
+    // if the user is adapting someone else's recipe, add their username
+    else {
+      setRecipe({
+        ...currentRecipeDetails,
+        title: `${userProfile.userName}'s ${currentRecipeDetails.title}`,
+      });
+    }
+
+    // turn off editing
+    setIsEditing(false);
   }, []);
 
   const handleChange = (field: keyof RecipeDetails, value: any) => {
