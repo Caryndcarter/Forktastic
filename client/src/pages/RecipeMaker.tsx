@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useContext, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecipeDetails from "../interfaces/recipeDetails";
 import askService from "../api/askService";
+import { currentRecipeContext, editingContext } from "@/App";
+import Auth from "@/utils_graphQL/auth";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,6 +15,8 @@ import { SAVE_RECIPE } from "@/utils_graphQL/mutations";
 import Navbar from "../components/Navbar";
 
 const RecipeMaker = () => {
+  const { isEditing, setIsEditing } = useContext(editingContext);
+  const { currentRecipeDetails } = useContext(currentRecipeContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [prompt, setPrompt] = useState<string>("");
@@ -21,6 +25,7 @@ const RecipeMaker = () => {
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [recipe, setRecipe] = useState<RecipeDetails>({
     title: "",
+    author: undefined,
     summary: "",
     readyInMinutes: 0,
     servings: 0,
@@ -30,6 +35,33 @@ const RecipeMaker = () => {
     diets: [],
     image: "",
   });
+
+  // If the user is editing an existing recipe, import that recipe's information
+  useLayoutEffect(() => {
+    // exits if the user isn't editing
+    if (!isEditing) {
+      return;
+    }
+
+    // grab profile information
+    const userProfile = Auth.getProfile();
+
+    // if the user is the author of the recipe, import normally
+    if (userProfile._id == currentRecipeDetails.author) {
+      setRecipe(currentRecipeDetails);
+    }
+
+    // if the user is adapting someone else's recipe, add their username
+    else {
+      setRecipe({
+        ...currentRecipeDetails,
+        title: `${userProfile.userName}'s ${currentRecipeDetails.title}`,
+      });
+    }
+
+    // turn off editing
+    setIsEditing(false);
+  }, []);
 
   const handleChange = (field: keyof RecipeDetails, value: any) => {
     setRecipe((prev) => ({

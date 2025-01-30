@@ -1,11 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
+import { editingContext } from "../App";
 import { useState, useEffect } from "react";
+import CopyRecipeButton from "@/components/CopyButton";
+import EditRecipeButton from "@/components/EditButton";
 
 //new imports
 import { useMutation, useQuery } from "@apollo/client";
-import {ADD_RECIPE, SAVE_RECIPE, REMOVE_RECIPE} from "../utils_graphQL/mutations";
+import {
+  ADD_RECIPE,
+  SAVE_RECIPE,
+  REMOVE_RECIPE,
+} from "../utils_graphQL/mutations";
 import { GET_SPECIFIC_RECIPE_ID } from "../utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
 // import RecipeDetails from "../interfaces/recipeDetails.ts";
@@ -16,10 +23,13 @@ import SavedReview from "@/components/SavedReview";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
-  const { currentRecipeDetails, setCurrentRecipeDetails } = useContext(currentRecipeContext);
+  const { currentRecipeDetails, setCurrentRecipeDetails } =
+    useContext(currentRecipeContext);
+  const { setIsEditing } = useContext(editingContext);
   const [loginCheck, setLoginCheck] = useState(false);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
-  const [isSaved, setIsSaved] = useState(false);
+  const [isSaved, setIsSaved] = useState<boolean>(false);
+  const [isAuthor, setIsAuthor] = useState<boolean>(false);
 
   //mutations and queries
   const [addRecipe] = useMutation(ADD_RECIPE);
@@ -29,7 +39,6 @@ const RecipeShowcase = () => {
     variables: { recipeId: currentRecipeDetails._id },
     skip: skipQuery,
   });
-
 
   useLayoutEffect(() => {
     try {
@@ -56,6 +65,12 @@ const RecipeShowcase = () => {
       setIsSaved(true);
     } else {
       setIsSaved(false);
+    }
+
+    const id = Auth.getProfile()._id;
+
+    if (currentRecipeDetails.author == id) {
+      setIsAuthor(true);
     }
   }, [data]);
 
@@ -107,6 +122,11 @@ const RecipeShowcase = () => {
     }
   };
 
+  const editRecipe = () => {
+    setIsEditing(true);
+    navigate("/recipe-maker");
+  };
+
   // Function to delete recipe
   const deleteCurrentRecipe = async () => {
     //navigate: NavigateFunction
@@ -130,7 +150,7 @@ const RecipeShowcase = () => {
       // refetch the query:
       await refetch();
 
-      navigate('/recipe-book');
+      navigate("/recipe-book");
     } catch (err) {
       console.error("Error deleting recipe:", err);
       alert("Failed to delete recipe.");
@@ -193,8 +213,14 @@ const RecipeShowcase = () => {
               </h4>
             )}
 
-            {/* Average Rating Component */}
-            <AverageRating recipeId={currentRecipeDetails._id} />
+          {/* Average Rating Component */}
+          <AverageRating recipeId={currentRecipeDetails._id} />
+
+          {isAuthor ? (
+            <EditRecipeButton onClick={editRecipe} />
+          ) : (
+            <CopyRecipeButton onClick={editRecipe} />
+          )}
 
           {/* Save Button */}
           {loginCheck ? (
@@ -256,11 +282,11 @@ const RecipeShowcase = () => {
           <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">Steps</h3>
           <ol className="list-decimal list-inside space-y-2">
             {currentRecipeDetails.steps
-                ?.slice(0, -1)
-                .map((step: string, index: number) => (
-                  <li key={index} className="text-gray-800">
-                    <RawHtmlRenderer htmlString={step} />
-                  </li>
+              ?.slice(0, -1)
+              .map((step: string, index: number) => (
+                <li key={index} className="text-gray-800">
+                  <RawHtmlRenderer htmlString={step} />
+                </li>
               ))}
           </ol>
         </div>
@@ -316,9 +342,9 @@ const RecipeShowcase = () => {
             </h4>
           )}
 
-          </div>
         </div>
       </div>
+    </div>
   );
 };
 
