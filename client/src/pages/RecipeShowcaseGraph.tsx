@@ -19,6 +19,7 @@ import Auth from "../utils_graphQL/auth";
 import { Review } from "../components/Review";
 import Navbar from "../components/Navbar";
 import AverageRating from "../components/AverageRating";
+import SavedReview from "@/components/SavedReview";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
@@ -292,27 +293,27 @@ const RecipeShowcase = () => {
 
         {/* Review */}
         {loginCheck ? (
-          isSaved ? (
-            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
-              <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">
-                Your Review
-              </h3>
-              <Review
-                recipeId={currentRecipeDetails._id}
-                existingReview={null} // Replace with actual review data if available
-                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
-              />
-            </div>
+            isSaved ? (
+              <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+                <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
+                <Review
+                  recipeId={currentRecipeDetails._id}
+                  existingReview={null} // Replace with actual review data if available
+                  onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+                />
+              </div>
+            ) : (
+              <div className="text-gray-500 italic mb-6">
+                Save a recipe to write a review.
+              </div>
+            )
           ) : (
             <div className="text-gray-500 italic mb-6">
-              Save a recipe to write a review.
+              Log in to write a review.
             </div>
-          )
-        ) : (
-          <div className="text-gray-500 italic mb-6">
-            Log in to write a review.
-          </div>
-        )}
+          )}
+
+          <SavedReview rating={0} comment={""} />
 
         {/* Recipe Source Links */}
         <div className="mb-8 flex space-x-4">
@@ -340,6 +341,7 @@ const RecipeShowcase = () => {
               </a>
             </h4>
           )}
+
         </div>
       </div>
     </div>
