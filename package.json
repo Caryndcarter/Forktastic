@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm i && npm run seed && npm run build && npm run start:dev",
-    "start": "npm run client:build && npm run server",
+    "start": "npm run server",
     "start:dev": "concurrently \"npm run server:dev\" \"wait-on tcp:3001 && npm run client:dev\"",
     "server": "cd server && npm start",
     "server:dev": "cd server && npm run dev",
@@ -14,8 +14,13 @@
     "client:build": "cd client && npm run build",
     "client:dev": "cd client && npm run dev",
     "build": "cd client && npm run build",
+    "builder": "concurrently \"cd server && npm run build\" \"cd client && npm run build\"",
     "seed": "cd server && npm run seed",
-    "render-build": "npm install && npm run build"
+    "render-build": "npm install && npm run clean:all && npm run install && npm run build",
+    "clean": "rm -rf node_modules package-lock.json",
+    "clean:client": "cd client && rm -rf node_modules package-lock.json",
+    "clean:server": "cd server && rm -rf node_modules package-lock.json",
+    "clean:all": "npm run clean && npm run clean:client && npm run clean:server"
   },
   "keywords": [],
   "author": "",
