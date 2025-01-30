@@ -197,25 +197,27 @@ const RecipeShowcase = () => {
 
             {/* Save Button */}
 
-          {loginCheck ? (
-            <button
-              onClick={() =>
-                isSaved ? deleteCurrentRecipe() : saveCurrentRecipe()
-              }
-              className={`font-semibold py-2 px-4 rounded mb-6 transition-colors duration-300 ${
-                isSaved
-                  ? "bg-red-500 hover:bg-red-600 text-white"
-                  : "bg-[#a84e24] hover:bg-green-600 text-white"
-              }`}
-            >
-              {isSaved ? "Delete Recipe" : "Save Recipe"}
-            </button>
+            {/* Review */}
+            {loginCheck ? (
+            isSaved ? (
+              <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+                <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">Your Review</h3>
+                <Review
+                  recipeId={currentRecipeDetails._id}
+                  existingReview={null} // Replace with actual review data if available
+                  onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+                />
+              </div>
+            ) : (
+              <div className="text-gray-500 italic mb-6">
+                Save a recipe to write a review.
+              </div>
+            )
           ) : (
             <div className="text-gray-500 italic mb-6">
-              Log in to save recipes.
+              Log in to write a review.
             </div>
           )}
-        </div>
 
         {/* Recipe Summary */}
         <div className="mb-8">
