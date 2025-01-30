@@ -45,7 +45,7 @@ const RecipeShowcase = () => {
       const isLoggedIn = Auth.loggedIn();
       // Only try to get profile if logged in
       const profile = isLoggedIn ? Auth.getProfile() : null;
-      console.log("Auth Profile: ", profile);
+      console.log("Auth Profile: ", profile, "\nlogged in: ", isLoggedIn);
       setLoginCheck(isLoggedIn);
       // if logged in, activate the query to check if the recipe is saved
       if (isLoggedIn) {
@@ -67,7 +67,7 @@ const RecipeShowcase = () => {
       setIsSaved(false);
     }
 
-    const id = Auth.getProfile()._id;
+    const id = Auth.getProfile()?._id;
 
     if (currentRecipeDetails.author == id) {
       setIsAuthor(true);

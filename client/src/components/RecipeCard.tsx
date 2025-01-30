@@ -6,6 +6,7 @@ import { currentRecipeContext } from "../App";
 import { useQuery } from "@apollo/client";
 import { GET_RECIPE } from "@/utils_graphQL/queries";
 import { RecipeDetails } from "@/interfaces";
+import Auth from "@/utils_graphQL/auth";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -24,7 +25,18 @@ export default function RecipeCard({
 
   // on submit, trigger the graphQL querry
   const handleSubmit = async () => {
-    setSkipQuery(false);
+    // if logged in, trigger the query
+    if (Auth.loggedIn()) {
+      setSkipQuery(false);
+    }
+
+    // else, skip the query and go with spoonacular search
+    else {
+      const response = await apiService.forignInformationSearch(spoonacularId);
+      setCurrentRecipeDetails(response);
+      console.log(`Current recipe author: ${response.author}`);
+      navigate("/recipe-showcase");
+    }
   };
 
   // this effect will wait for the querry to finish executing, then proceed.
