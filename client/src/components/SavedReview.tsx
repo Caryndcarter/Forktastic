@@ -34,6 +34,9 @@ export default function SavedReview({ recipeId }: SavedReviewProps) {
   useLayoutEffect(() => {
     const isLoggedIn = Auth.loggedIn();
     setLoginCheck(isLoggedIn);
+
+    refetch();
+    
     if (isLoggedIn && reviewIds.length > 0) {
       refetch();
     }
