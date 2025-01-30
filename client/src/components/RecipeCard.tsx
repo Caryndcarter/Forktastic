@@ -39,6 +39,7 @@ export default function RecipeCard({
     if (data?.getRecipe?.recipe) {
       console.log("mongo");
       setCurrentRecipeDetails(data.getRecipe.recipe);
+      console.log(`Current recipe author: ${data.getRecipe.recipe.author}`);
       navigate("/recipe-showcase");
     } else {
       searchSpoonacular();
