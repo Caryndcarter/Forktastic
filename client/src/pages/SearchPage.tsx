@@ -29,9 +29,19 @@ const RecipeSearchPage: React.FC = () => {
     setResults(recipes);
   };
 
+  // stategicly trigger re-searches for responsivness
+  // this code triggers on two scenarios:
+  // 1: before the page first loads
+  // 2: when the filter value is updated
   useLayoutEffect(() => {
-    getRandomRecipes();
-  }, []);
+    // this function should only work when the filter isn't on your screen
+    if (filterVisible) {
+      return;
+    }
+
+    // trigger a search manually, bypassing the debounce
+    handleSearch(query);
+  }, [filterVisible]);
 
   const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
 
@@ -72,6 +82,12 @@ const RecipeSearchPage: React.FC = () => {
 
   const handleSearch = async (queryText: string) => {
     setLoading(true);
+
+    // if the search is empty, get random recipes instead
+    if (!query) {
+      getRandomRecipes();
+    }
+
     const searchParams: any = {
       query: queryText,
     };
