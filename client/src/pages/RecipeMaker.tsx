@@ -24,8 +24,9 @@ const RecipeMaker = () => {
   const [createRecipe] = useMutation(CREATE_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const [recipe, setRecipe] = useState<RecipeDetails>({
+    _id: null,
     title: "",
-    author: undefined,
+    author: null,
     summary: "",
     readyInMinutes: 0,
     servings: 0,
@@ -107,11 +108,13 @@ const RecipeMaker = () => {
         return;
       }
     }
+
     const { data } = await createRecipe({
       variables: {
         recipeInput: {
           title: recipe.title,
           summary: recipe.summary,
+          author: recipe.author,
           readyInMinutes: recipe.readyInMinutes,
           servings: recipe.servings,
           ingredients: recipe.ingredients,
@@ -165,7 +168,7 @@ const RecipeMaker = () => {
       >
         <div className="space-y-2">
           <Label htmlFor="prompt" className="font-bold">
-            Prompt
+            Use AI to generate a recipe instantly!
           </Label>
           <div className="relative">
             <Textarea

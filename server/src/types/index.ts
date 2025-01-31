@@ -4,6 +4,7 @@ import { intolerance, intoleranceValues } from "./intolerance.js";
 import { user, user_context } from "./user_context.js";
 import recipeAuthor from "./recipeAuthor.js";
 import recipe from "./recipe.js";
+import searchInput from "./searchInput.js";
 
 export {
   cuisine,
@@ -16,4 +17,5 @@ export {
   user_context,
   recipe,
   recipeAuthor,
+  searchInput,
 };

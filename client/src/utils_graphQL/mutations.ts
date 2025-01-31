@@ -124,3 +124,12 @@ export const SAVE_REVIEW_TO_RECIPE = gql`
     }
   }
 `;
+
+export const DELETE_REVIEW = gql`
+  mutation deleteReview($reviewId: ID!) {
+    deleteReview(reviewId: $reviewId) {
+      _id
+      userName
+    }
+  }
+`;
