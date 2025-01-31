@@ -103,12 +103,6 @@ npm install
 # JWT Secret Key, Spoonacular API Key, and optionally fill in the port number and/or the OpenAI API
 # Key.
 
-# Step 4 (optional): seed the database:
-cd server/
-npm run build
-npm run seed
-cd ../
-
 # Step 5: start the application:
 npm run build
 npm run start
