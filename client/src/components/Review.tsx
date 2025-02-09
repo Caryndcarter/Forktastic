@@ -5,11 +5,13 @@ import {
   SAVE_REVIEW_TO_USER,
   SAVE_REVIEW_TO_RECIPE,
 } from "../utils_graphQL/mutations";
+import { GET_REVIEWS } from "@/utils_graphQL/queries";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { currentRecipeContext } from "@/App";
 import { useContext } from "react";
+import ReviewDetails from "../interfaces/reviewDetails.ts";
 
 interface ReviewProps {
   recipeId: string | null;
@@ -22,13 +24,27 @@ interface ReviewData {
   comment: string;
 }
 
+interface GetReviewsData {
+  reviews: ReviewDetails[];
+}
+
 export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
   const [rating, setRating] = useState(existingReview?.rating || 0);
   const [comment, setComment] = useState(existingReview?.comment || "");
   const { currentRecipeDetails, setCurrentRecipeDetails } =
     useContext(currentRecipeContext);
 
-  const [addReview] = useMutation(ADD_REVIEW);
+  const [addReview] = useMutation(ADD_REVIEW, {
+    update(cache, { data: { addReview } }) {
+      const existingReviews = cache.readQuery<GetReviewsData>({ query: GET_REVIEWS });
+      cache.writeQuery({
+        query: GET_REVIEWS,
+        data: { reviews: [addReview, ...(existingReviews?.reviews || [])] },
+      });
+    },
+  });
+
+
   //const [updateReview] = useMutation(UPDATE_REVIEW)
   const [saveReviewToUser] = useMutation(SAVE_REVIEW_TO_USER);
   const [saveReviewToRecipe] = useMutation(SAVE_REVIEW_TO_RECIPE);
