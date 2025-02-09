@@ -40,7 +40,7 @@ const RecipeShowcase = () => {
     skip: skipQuery,
   });
 
-  const refetchReviews = async () => {
+  /*const refetchReviews = async () => {
     // Call a GraphQL query or mutation to refetch reviews
     try {
       const { data } = await refetch(); // `refetch()` is already provided by Apollo Client's `useQuery`
@@ -48,7 +48,7 @@ const RecipeShowcase = () => {
     } catch (error) {
       console.error('Error fetching reviews:', error);
     }
-  };
+  };*/
 
   useLayoutEffect(() => {
     try {
