@@ -40,22 +40,12 @@ const RecipeShowcase = () => {
     skip: skipQuery,
   });
 
-  /*const refetchReviews = async () => {
-    // Call a GraphQL query or mutation to refetch reviews
-    try {
-      const { data } = await refetch(); // `refetch()` is already provided by Apollo Client's `useQuery`
-      console.log('Reviews refetched:', data);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  };*/
-
   useLayoutEffect(() => {
     try {
       const isLoggedIn = Auth.loggedIn();
       // Only try to get profile if logged in
-      const profile = isLoggedIn ? Auth.getProfile() : null;
-      console.log("Auth Profile: ", profile, "\nlogged in: ", isLoggedIn);
+      //const profile = isLoggedIn ? Auth.getProfile() : null;
+      //console.log("Auth Profile: ", profile, "\nlogged in: ", isLoggedIn);
       setLoginCheck(isLoggedIn);
       // if logged in, activate the query to check if the recipe is saved
       if (isLoggedIn) {
@@ -143,9 +133,8 @@ const RecipeShowcase = () => {
 
   // Function to delete recipe
   const deleteCurrentRecipe = async () => {
-    //navigate: NavigateFunction
 
-    console.log("currrent Recipe details ID:" + currentRecipeDetails._id);
+    //console.log("currrent Recipe details ID:" + currentRecipeDetails._id);
 
     try {
       const { data } = await removeRecipe({
