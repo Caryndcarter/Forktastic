@@ -1,4 +1,4 @@
-import { useState, useCallback, useLayoutEffect } from "react";
+import { useState, useCallback, useRef, useLayoutEffect } from "react";
 import Recipe from "../interfaces/recipe";
 import RecipeCard from "../components/RecipeCard";
 import FilterForm from "../components/FilterForm";
@@ -15,43 +15,46 @@ export interface filterInfo {
 }
 
 const RecipeSearchPage: React.FC = () => {
-  const [query, setQuery] = useState<string>(""); // Track the search query
+  const queryReference = useRef<HTMLInputElement | null>(null);
   const [results, setResults] = useState<Recipe[]>([]); // Store the search results
-  const [loading, setLoading] = useState<boolean>(false); // Track loading state
+  const [loading, setLoading] = useState<boolean>(true); // Track loading state
   const [filterVisible, setFilterVisible] = useState<boolean>(false); // Track filter form visibility
   const [filterValue, setFilterValue] = useState<filterInfo>({
     intolerances: [],
     includeIngredients: [],
   });
-
-  const getRandomRecipes = async () => {
-    const recipes = await apiService.forignRandomSearch();
-    setResults(recipes);
-  };
+  const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
 
   // stategicly trigger re-searches for responsivness
   // this code triggers on two scenarios:
   // 1: before the page first loads
   // 2: when the filter value is updated
   useLayoutEffect(() => {
-    // this function should only work when the filter isn't on your screen
-    if (filterVisible) {
-      return;
-    }
+    // this code shouldn't trigger when the filter opens
+    if (filterVisible) return;
 
-    // trigger a search manually, bypassing the debounce
-    handleSearch(query);
+    // manually trigger a change event
+    if (queryReference.current) {
+      handleChange({
+        target: queryReference.current,
+      } as React.ChangeEvent<HTMLInputElement>);
+    }
   }, [filterVisible]);
 
-  const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
-
+  // fetch account profile details, then uses them for the
+  // default filter value.
+  //
+  // this code triggers before the page first loads
+  // this code re-triggers when the data changes
   useLayoutEffect(() => {
+    // fetch diets information
     if (data?.getUser.diet) {
       setFilterValue((prev) => ({
         ...prev,
         diet: data.getUser.diet,
       }));
     }
+    // fetch intolerance information
     if (data?.getUser.intolerances) {
       setFilterValue((prev) => ({
         ...prev,
@@ -60,32 +63,16 @@ const RecipeSearchPage: React.FC = () => {
     }
   }, [data]);
 
-  const handleChange = async (e: any) => {
-    const queryText = e.target.value;
-    setQuery(queryText);
-    if (queryText.trim() === "") {
-      setResults([]);
-      return;
-    }
-    debouncedHandleSearch(queryText);
-  };
-
-  const debounce = (mainFunction: any, delay: number) => {
-    let timer: any;
-    return function (...args: any) {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        mainFunction(...args);
-      }, delay);
-    };
-  };
-
+  // this code is the actual search logic.
   const handleSearch = async (queryText: string) => {
     setLoading(true);
 
     // if the search is empty, get random recipes instead
-    if (!query) {
-      getRandomRecipes();
+    if (!queryText) {
+      const recipes = await apiService.forignRandomSearch();
+      setResults(recipes);
+      setLoading(false);
+      return;
     }
 
     const searchParams: any = {
@@ -109,14 +96,31 @@ const RecipeSearchPage: React.FC = () => {
         filterValue.includeIngredients.join(",");
     }
 
-    console.log(searchParams);
-
     const recipes = await apiService.forignRecipeSearch(searchParams);
     setResults(recipes);
     setLoading(false);
   };
 
-  const debouncedHandleSearch = useCallback(debounce(handleSearch, 300), [
+  // this code parses the user's search string and then
+  // uses a debounced search (de-bouncing means it will
+  // only trigger once per delay period)
+  const handleChange = async (e: any) => {
+    const queryText = e.target.value;
+    debouncedHandleSearch(queryText);
+  };
+
+  // debouncing logic
+  const debounce = (mainFunction: any, delay: number) => {
+    let timer: any;
+    return function (...args: any) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        mainFunction(...args);
+      }, delay);
+    };
+  };
+
+  const debouncedHandleSearch = useCallback(debounce(handleSearch, 360), [
     filterValue,
   ]);
 
@@ -136,8 +140,8 @@ const RecipeSearchPage: React.FC = () => {
             type="text"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#ff9e40]"
             placeholder="Search for recipes..."
-            value={query}
             onChange={handleChange}
+            ref={queryReference}
           />
           <button
             className="ml-2 bg-[#ff9e40] text-white px-4 py-2 rounded-md hover:bg-[#e7890c] transition-colors"
