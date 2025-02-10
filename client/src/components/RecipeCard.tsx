@@ -1,8 +1,7 @@
 import Recipe from "../interfaces/recipe";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import apiService from "../api/apiService";
-import { currentRecipeContext } from "../App";
 import { useQuery } from "@apollo/client";
 import { GET_RECIPE } from "@/utils_graphQL/queries";
 import { RecipeDetails } from "@/interfaces";
@@ -15,7 +14,6 @@ interface RecipeCardProps {
 export default function RecipeCard({
   recipe: { _id, spoonacularId, title, image },
 }: RecipeCardProps) {
-  const { setCurrentRecipeDetails } = useContext(currentRecipeContext);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const { data, loading } = useQuery(GET_RECIPE, {
     variables: { mongoID: _id, spoonacularId: spoonacularId },

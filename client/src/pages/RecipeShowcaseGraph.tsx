@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useLayoutEffect } from "react";
-import { currentRecipeContext } from "../App";
 import { editingContext } from "../App";
 import { useState, useEffect } from "react";
 import CopyRecipeButton from "@/components/CopyButton";
@@ -23,8 +22,6 @@ import AverageRating from "../components/AverageRating";
 
 const RecipeShowcase = () => {
   const navigate = useNavigate();
-  const { currentRecipeDetails, setCurrentRecipeDetails } =
-    useContext(currentRecipeContext);
   const { setIsEditing } = useContext(editingContext);
   const [loginCheck, setLoginCheck] = useState(false);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);

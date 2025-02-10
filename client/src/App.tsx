@@ -35,30 +35,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const defaultRecipe: RecipeDetails = {
-  _id: null,
-  title: "",
-  author: null,
-  summary: "",
-  readyInMinutes: 0,
-  servings: 0,
-  ingredients: [],
-  instructions: "",
-  steps: [],
-  diets: [],
-  image: "",
-  sourceUrl: "",
-  spoonacularSourceUrl: "",
-  spoonacularId: 0,
-};
-
-export const currentRecipeContext = createContext({
-  currentRecipeDetails: defaultRecipe,
-  setCurrentRecipeDetails: (recipe: RecipeDetails) => {
-    console.log(recipe);
-  },
-});
-
 export const editingContext = createContext({
   isEditing: false,
   setIsEditing: (editing: boolean) => {
@@ -67,21 +43,14 @@ export const editingContext = createContext({
 });
 
 function App() {
-  const [currentRecipeDetails, setCurrentRecipeDetails] =
-    useState<RecipeDetails>(defaultRecipe);
-
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
-    <currentRecipeContext.Provider
-      value={{ currentRecipeDetails, setCurrentRecipeDetails }}
-    >
-      <editingContext.Provider value={{ isEditing, setIsEditing }}>
-        <ApolloProvider client={client}>
-          <Outlet />
-        </ApolloProvider>
-      </editingContext.Provider>
-    </currentRecipeContext.Provider>
+    <editingContext.Provider value={{ isEditing, setIsEditing }}>
+      <ApolloProvider client={client}>
+        <Outlet />
+      </ApolloProvider>
+    </editingContext.Provider>
   );
 }
 
