@@ -8,7 +8,6 @@ import {
 } from "@apollo/client";
 
 //import Navbar from './components/Navbar';
-import RecipeDetails from "./interfaces/recipeDetails";
 import { createContext, useState } from "react";
 import { setContext } from "@apollo/client/link/context";
 import AuthService from "./utils_graphQL/auth.js";

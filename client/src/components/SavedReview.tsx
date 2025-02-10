@@ -1,9 +1,9 @@
 import { Star } from "lucide-react";
-import { useState, useContext, useLayoutEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { currentRecipeContext } from "@/App";
 import { GET_REVIEWS } from "@/utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
+import localData from "@/utils_graphQL/localStorageService";
 
 interface Review {
   _id: string;
@@ -17,8 +17,8 @@ interface SavedReviewProps {
 }
 
 export default function SavedReview({ recipeId }: SavedReviewProps) {
+  let currentRecipeDetails = localData.getCurrentRecipe();
   const [loginCheck, setLoginCheck] = useState(false);
-  const { currentRecipeDetails } = useContext(currentRecipeContext);
 
   // Extract review IDs from the recipe
   const reviewIds = currentRecipeDetails?.reviews || [];

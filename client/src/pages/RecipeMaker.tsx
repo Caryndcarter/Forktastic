@@ -2,7 +2,7 @@ import { useState, useContext, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecipeDetails from "../interfaces/recipeDetails";
 import askService from "../api/askService";
-import { currentRecipeContext, editingContext } from "@/App";
+import { editingContext } from "@/App";
 import Auth from "@/utils_graphQL/auth";
 
 import { Button } from "@/components/ui/button";
@@ -13,10 +13,11 @@ import { useMutation } from "@apollo/client";
 import { CREATE_RECIPE } from "@/utils_graphQL/mutations";
 import { SAVE_RECIPE } from "@/utils_graphQL/mutations";
 import Navbar from "../components/Navbar";
+import localData from "@/utils_graphQL/localStorageService";
 
 const RecipeMaker = () => {
+  let currentRecipeDetails = localData.getCurrentRecipe();
   const { isEditing, setIsEditing } = useContext(editingContext);
-  const { currentRecipeDetails } = useContext(currentRecipeContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [prompt, setPrompt] = useState<string>("");
