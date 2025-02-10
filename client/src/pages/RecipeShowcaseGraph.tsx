@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useLayoutEffect } from "react";
-import { currentRecipeContext } from "../App";
 import { editingContext } from "../App";
 import { useState, useEffect } from "react";
 import CopyRecipeButton from "@/components/CopyButton";
 import EditRecipeButton from "@/components/EditButton";
+import localData from "@/utils_graphQL/localStorageService";
 
 //new imports
 import { useMutation, useQuery } from "@apollo/client";
@@ -22,9 +22,8 @@ import Navbar from "../components/Navbar";
 import AverageRating from "../components/AverageRating";
 
 const RecipeShowcase = () => {
+  let currentRecipeDetails = localData.getCurrentRecipe();
   const navigate = useNavigate();
-  const { currentRecipeDetails, setCurrentRecipeDetails } =
-    useContext(currentRecipeContext);
   const { setIsEditing } = useContext(editingContext);
   const [loginCheck, setLoginCheck] = useState(false);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
@@ -102,10 +101,12 @@ const RecipeShowcase = () => {
       // Save the recipe ID to the user's savedRecipes array
       if (data?.addRecipe._id) {
         // Update the ID with the one from the backend
-        setCurrentRecipeDetails({
+        currentRecipeDetails = {
           ...currentRecipeDetails,
-          _id: data.addRecipe._id, // Ensure _id is always valid
-        });
+          _id: data.addRecipe._id,
+        };
+        localData.setCurrentRecipe(currentRecipeDetails);
+
         console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
 
         // save this recipe to the user

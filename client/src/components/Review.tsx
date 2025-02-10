@@ -8,8 +8,7 @@ import {
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { currentRecipeContext } from "@/App";
-import { useContext } from "react";
+import localData from "@/utils_graphQL/localStorageService";
 
 interface ReviewProps {
   recipeId: string | null;
@@ -23,10 +22,9 @@ interface ReviewData {
 }
 
 export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
+  let currentRecipeDetails = localData.getCurrentRecipe();
   const [rating, setRating] = useState(existingReview?.rating || 0);
   const [comment, setComment] = useState(existingReview?.comment || "");
-  const { currentRecipeDetails, setCurrentRecipeDetails } =
-    useContext(currentRecipeContext);
 
   const [addReview] = useMutation(ADD_REVIEW);
   //const [updateReview] = useMutation(UPDATE_REVIEW)
@@ -36,7 +34,7 @@ export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
   // Function to add the new review to the context
   const addReviewToContext = (newReview: string) => {
     // Update currentRecipeDetails directly with the new review
-    setCurrentRecipeDetails({
+    localData.setCurrentRecipe({
       ...currentRecipeDetails,
       reviews: [...(currentRecipeDetails.reviews || []), newReview], // Add new review
     });
