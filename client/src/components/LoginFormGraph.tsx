@@ -55,9 +55,20 @@ export default function LoginForm({ setSignIn }: loginFormProps) {
       const { token } = data.login;
       AuthService.login(token);
     } catch (err) {
-      console.error(err);
+      if (err instanceof Error) {
+        if (err.message.includes("Wrong password")) {
+          setErrorMessage("Incorrect password.");
+        } else if (err.message.includes("Wrong email")) {
+          setErrorMessage("Incorrect email.");
+        } else {
+        console.error(err);
+        }
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
     }
   };
+
 
   const checkEmail = () => {
     const inputEmail = formValues.userEmail;
