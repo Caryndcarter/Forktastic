@@ -78,10 +78,9 @@ This is a recipe app that lets users save and create recipes online. This is so 
 
 ## Installation
 
-please visit [our deployed site](https://forktastic.onrender.com/) to access the application. If you want to run the application from your local machine, follow these instructions:
-please visit [our deployed site](https://forktastic.onrender.com/) to access the application. If you want to run the application from your local machine, follow these instructions:
+Please visit [our deployed site](https://forktastic.onrender.com/) to access the application. If you want to run the application from your local machine, follow these instructions:
 
-Ensure you have the Node Package Manager and Postgres installed on your machine. You will need a JWT Secret Key, a Spoonacular API key, and optionally an OpenAI API key.
+Ensure you have the Node Package Manager and MongoDB installed on your machine. You will need a JWT Secret Key, a Spoonacular API key, and an OpenAI API key.
 
 - [Node.js](https://nodejs.org)
 - [MongoDB installation guide](https://www.mongodb.com/docs/manual/installation/)
