@@ -57,9 +57,9 @@ export default function LoginForm({ setSignIn }: loginFormProps) {
     } catch (err) {
       if (err instanceof Error) {
         if (err.message.includes("Wrong password")) {
-          setErrorMessage("Incorrect password.");
+          setErrorMessage("Incorrect email or password.");
         } else if (err.message.includes("Wrong email")) {
-          setErrorMessage("Incorrect email.");
+          setErrorMessage("Incorrect email or password.");
         } else {
         console.error(err);
         }
