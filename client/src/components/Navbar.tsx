@@ -1,5 +1,5 @@
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Home, ChevronDown, User } from "lucide-react"
 import Auth from "../utils_graphQL/auth"
@@ -7,6 +7,7 @@ import Auth from "../utils_graphQL/auth"
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const pages = [
     { name: "Search", path: "/search" },
@@ -16,17 +17,35 @@ const Navbar: React.FC = () => {
 
   const toggleDropdown = () => setIsOpen(!isOpen)
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [isOpen])
+
   return (
     <nav className="fixed top-0 left-0 right-0 bg-[#ff9e40] p-4 shadow-md z-10">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link to="/" className="text-white text-2xl font-bold flex items-center">
-          <Home className="w-6 h-6" />
-        </Link>
-        <div className="flex-1 flex justify-center">
+      <div className="max-w-7xl mx-auto flex justify-between items-center relative">
+        <div className="flex items-center z-10">
+          <Link to="/" className="text-white text-2xl font-bold flex items-center">
+            <Home className="w-6 h-6" />
+          </Link>
+        </div>
+        <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center">
           <span className="text-white text-2xl font-bold">Forktastic</span>
         </div>
-        <div className="flex items-center">
-          <div className="relative mr-4">
+        <div className="flex items-center z-10">
+          <div className="relative mr-4" ref={dropdownRef}>
             <button onClick={toggleDropdown} className="text-white flex items-center focus:outline-none">
               {location.pathname === "/" ? "Home" : location.pathname.slice(1).replace(/-/g, " ")}
               <ChevronDown className="ml-1" />
