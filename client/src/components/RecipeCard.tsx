@@ -1,6 +1,7 @@
 import Recipe from "../interfaces/recipe";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { currentRecipeContext } from "../App";
 import apiService from "../api/apiService";
 import { useQuery } from "@apollo/client";
 import { GET_RECIPE } from "@/utils_graphQL/queries";
@@ -15,6 +16,7 @@ interface RecipeCardProps {
 export default function RecipeCard({
   recipe: { _id, spoonacularId, title, image },
 }: RecipeCardProps) {
+  const { setCurrentRecipeDetails } = useContext(currentRecipeContext);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const { data, loading } = useQuery(GET_RECIPE, {
     variables: { mongoID: _id, spoonacularId: spoonacularId },
@@ -33,6 +35,7 @@ export default function RecipeCard({
     else {
       const response = await apiService.forignInformationSearch(spoonacularId);
       localData.setCurrentRecipe(response);
+      setCurrentRecipeDetails(response);
       console.log(`Current recipe author: ${response.author}`);
       navigate("/recipe-showcase");
     }
@@ -67,6 +70,7 @@ export default function RecipeCard({
 
     // update the context with the recipe, then go to the recipe showcase page.
     localData.setCurrentRecipe(response);
+    setCurrentRecipeDetails(response);
     console.log(`Current recipe author: ${response.author}`);
     navigate("/recipe-showcase");
 

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useLayoutEffect } from "react";
+import { currentRecipeContext } from "../App";
 import { editingContext } from "../App";
 import { useState, useEffect } from "react";
 import CopyRecipeButton from "@/components/CopyButton";
@@ -22,7 +23,9 @@ import Navbar from "../components/Navbar";
 import AverageRating from "../components/AverageRating";
 
 const RecipeShowcase = () => {
-  let currentRecipeDetails = localData.getCurrentRecipe();
+  const currentLocalDetails = localData.getCurrentRecipe();
+  const { currentRecipeDetails, setCurrentRecipeDetails } =
+  useContext(currentRecipeContext);
   const navigate = useNavigate();
   const { setIsEditing } = useContext(editingContext);
   const [loginCheck, setLoginCheck] = useState(false);
@@ -71,10 +74,10 @@ const RecipeShowcase = () => {
       id = Auth.getProfile()?._id;
     }
 
-    if (currentRecipeDetails.author == id && loginCheck) {
+    if (currentLocalDetails.author == id && loginCheck) {
       setIsAuthor(true);
     }
-  }, [data, currentRecipeDetails.author]);
+  }, [data, loginCheck, currentLocalDetails.author]);
 
   // Function to save recipe
   const saveCurrentRecipe = async () => {
@@ -101,13 +104,13 @@ const RecipeShowcase = () => {
       // Save the recipe ID to the user's savedRecipes array
       if (data?.addRecipe._id) {
         // Update the ID with the one from the backend
-        currentRecipeDetails = {
+        setCurrentRecipeDetails({
           ...currentRecipeDetails,
-          _id: data.addRecipe._id,
-        };
+          _id: data.addRecipe._id, // Ensure _id is always valid
+        });
         localData.setCurrentRecipe(currentRecipeDetails);
 
-        console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
+        console.log(`Current Recipe author: ${currentLocalDetails.author}`);
 
         // save this recipe to the user
         await saveRecipe({
@@ -136,7 +139,7 @@ const RecipeShowcase = () => {
   const deleteCurrentRecipe = async () => {
     //navigate: NavigateFunction
 
-    console.log("currrent Recipe details ID:" + currentRecipeDetails._id);
+    //console.log("currrent Recipe details ID:" + currentRecipeDetails._id);
 
     try {
       const { data } = await removeRecipe({
