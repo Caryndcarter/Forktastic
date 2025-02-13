@@ -5,6 +5,7 @@ import { editingContext } from "../App";
 import { useState, useEffect } from "react";
 import CopyRecipeButton from "@/components/CopyButton";
 import EditRecipeButton from "@/components/EditButton";
+import localData from "@/utils_graphQL/localStorageService";
 
 //new imports
 import { useMutation, useQuery } from "@apollo/client";
@@ -22,10 +23,20 @@ import Navbar from "../components/Navbar";
 import AverageRating from "../components/AverageRating";
 
 const RecipeShowcase = () => {
-  const navigate = useNavigate();
+  //const currentRecipeDetails = localData.getCurrentRecipe();
   const { currentRecipeDetails, setCurrentRecipeDetails } =
-    useContext(currentRecipeContext);
+  useContext(currentRecipeContext);
+  const navigate = useNavigate();
   const { setIsEditing } = useContext(editingContext);
+
+  // Local storage fallback
+  useEffect(() => {
+    const storedRecipeDetails = localData.getCurrentRecipe();
+    if (storedRecipeDetails) {
+      setCurrentRecipeDetails(storedRecipeDetails);
+    }
+  }, [setCurrentRecipeDetails]);
+
   const [loginCheck, setLoginCheck] = useState(false);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -75,7 +86,7 @@ const RecipeShowcase = () => {
     if (currentRecipeDetails.author == id && loginCheck) {
       setIsAuthor(true);
     }
-  }, [data, currentRecipeDetails.author]);
+  }, [data, loginCheck, currentRecipeDetails.author]);
 
   // Function to save recipe
   const saveCurrentRecipe = async () => {
@@ -106,6 +117,8 @@ const RecipeShowcase = () => {
           ...currentRecipeDetails,
           _id: data.addRecipe._id, // Ensure _id is always valid
         });
+        localData.setCurrentRecipe(currentRecipeDetails);
+
         console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
 
         // save this recipe to the user
@@ -135,7 +148,7 @@ const RecipeShowcase = () => {
   const deleteCurrentRecipe = async () => {
     //navigate: NavigateFunction
 
-    console.log("currrent Recipe details ID:" + currentRecipeDetails._id);
+    //console.log("currrent Recipe details ID:" + currentRecipeDetails._id);
 
     try {
       const { data } = await removeRecipe({

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@apollo/client";
 import {
   ADD_REVIEW,
@@ -8,9 +8,11 @@ import {
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+//import localData from "@/utils_graphQL/localStorageService";
+import ReviewDetails from "../interfaces/reviewDetails.ts";
 import { currentRecipeContext } from "@/App";
 import { useContext } from "react";
-
+import { GET_REVIEWS } from "@/utils_graphQL/queries";
 interface ReviewProps {
   recipeId: string | null;
   existingReview: ReviewData | null;
@@ -22,21 +24,38 @@ interface ReviewData {
   comment: string;
 }
 
+interface GetReviewsData {
+  reviews: ReviewDetails[];
+}
+
+
 export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
+  //const currentRecipeDetails = localData.getCurrentRecipe();
   const [rating, setRating] = useState(existingReview?.rating || 0);
   const [comment, setComment] = useState(existingReview?.comment || "");
+
   const { currentRecipeDetails, setCurrentRecipeDetails } =
     useContext(currentRecipeContext);
+  const [submitted, setSubmitted] = useState(false);
 
-  const [addReview] = useMutation(ADD_REVIEW);
-  //const [updateReview] = useMutation(UPDATE_REVIEW)
+
+  const [addReview] = useMutation(ADD_REVIEW, {
+    update(cache, { data: { addReview } }) {
+      const existingReviews = cache.readQuery<GetReviewsData>({ query: GET_REVIEWS });
+      cache.writeQuery({
+        query: GET_REVIEWS,
+        data: { reviews: [addReview, ...(existingReviews?.reviews || [])] },
+      });
+    },
+  });
   const [saveReviewToUser] = useMutation(SAVE_REVIEW_TO_USER);
   const [saveReviewToRecipe] = useMutation(SAVE_REVIEW_TO_RECIPE);
 
   // Function to add the new review to the context
   const addReviewToContext = (newReview: string) => {
     // Update currentRecipeDetails directly with the new review
-    setCurrentRecipeDetails({
+    //localData.setCurrentRecipe({
+      setCurrentRecipeDetails({
       ...currentRecipeDetails,
       reviews: [...(currentRecipeDetails.reviews || []), newReview], // Add new review
     });
@@ -52,8 +71,8 @@ export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
         const recipeId = currentRecipeDetails._id;
         const reviewInput = { recipeId, rating, comment };
 
-        console.log("new review: ", reviewInput);
-        console.log("recipeId: ", recipeId);
+        //console.log("new review: ", reviewInput);
+        //console.log("recipeId: ", recipeId);
         // Save the review to the review collection
         const { data } = await addReview({
           variables: {
@@ -81,11 +100,21 @@ export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
           addReviewToContext(data.addReview._id);
         }
       }
+      setSubmitted(true);
       onReviewSubmit();
     } catch (error) {
       console.error("Error submitting review:", error);
     }
   };
+
+    // Reset form fields once review is submitted
+    useEffect(() => {
+      if (submitted) {
+        setComment(""); 
+        setRating(0);
+        setSubmitted(false); 
+      }
+    }, [submitted]);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

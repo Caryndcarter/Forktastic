@@ -1,9 +1,10 @@
 import { Star } from "lucide-react";
-import { useState, useContext, useLayoutEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { currentRecipeContext } from "@/App";
 import { GET_REVIEWS } from "@/utils_graphQL/queries";
 import Auth from "../utils_graphQL/auth";
+import { currentRecipeContext } from "@/App";
+//import localData from "@/utils_graphQL/localStorageService";
 
 interface Review {
   _id: string;
@@ -17,28 +18,31 @@ interface SavedReviewProps {
 }
 
 export default function SavedReview({ recipeId }: SavedReviewProps) {
+  //let currentRecipeDetails = localData.getCurrentRecipe();
   const [loginCheck, setLoginCheck] = useState(false);
   const { currentRecipeDetails } = useContext(currentRecipeContext);
-
-  // Extract review IDs from the recipe
-  const reviewIds = currentRecipeDetails?.reviews || [];
-  console.log(recipeId);
 
   // Fetch the reviews associated with these IDs
   const { data, loading, refetch } = useQuery(GET_REVIEWS, {
     variables: { recipeId },
   });
 
-  useLayoutEffect(() => {
+   // Refetch reviews when a new review is submitted
+   useEffect(() => {
+    if (recipeId) {
+      refetch(); 
+    }
+  }, [recipeId, refetch]);
+
+  useEffect(() => {
+    const reviewIds = currentRecipeDetails?.reviews || [];
     const isLoggedIn = Auth.loggedIn();
     setLoginCheck(isLoggedIn);
 
-    refetch();
-
     if (isLoggedIn && reviewIds.length > 0) {
-      refetch();
+      refetch(); // Refetch when there are reviews
     }
-  }, []);
+  }, [currentRecipeDetails, refetch]);
 
   if (!loginCheck) {
     return null;
@@ -47,7 +51,6 @@ export default function SavedReview({ recipeId }: SavedReviewProps) {
   if (loading) return <p>Loading reviews...</p>;
 
   const reviews: Review[] = data?.getReviews || [];
-  // If there are no reviews or no data, return null
   if (!reviews.length) {
     return null;
   }
