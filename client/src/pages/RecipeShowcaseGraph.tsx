@@ -23,11 +23,20 @@ import Navbar from "../components/Navbar";
 import AverageRating from "../components/AverageRating";
 
 const RecipeShowcase = () => {
-  const currentLocalDetails = localData.getCurrentRecipe();
+  //const currentRecipeDetails = localData.getCurrentRecipe();
   const { currentRecipeDetails, setCurrentRecipeDetails } =
   useContext(currentRecipeContext);
   const navigate = useNavigate();
   const { setIsEditing } = useContext(editingContext);
+
+  // Local storage fallback
+  useEffect(() => {
+    const storedRecipeDetails = localData.getCurrentRecipe();
+    if (storedRecipeDetails) {
+      setCurrentRecipeDetails(storedRecipeDetails);
+    }
+  }, [setCurrentRecipeDetails]);
+
   const [loginCheck, setLoginCheck] = useState(false);
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState<boolean>(false);
@@ -74,10 +83,10 @@ const RecipeShowcase = () => {
       id = Auth.getProfile()?._id;
     }
 
-    if (currentLocalDetails.author == id && loginCheck) {
+    if (currentRecipeDetails.author == id && loginCheck) {
       setIsAuthor(true);
     }
-  }, [data, loginCheck, currentLocalDetails.author]);
+  }, [data, loginCheck, currentRecipeDetails.author]);
 
   // Function to save recipe
   const saveCurrentRecipe = async () => {
@@ -110,7 +119,7 @@ const RecipeShowcase = () => {
         });
         localData.setCurrentRecipe(currentRecipeDetails);
 
-        console.log(`Current Recipe author: ${currentLocalDetails.author}`);
+        console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
 
         // save this recipe to the user
         await saveRecipe({
