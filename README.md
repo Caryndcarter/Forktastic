@@ -16,7 +16,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 ## Usage
 
 1. View, Save, and Review Recipies
-<img src="assets/RecipeView.gif"/>
+   <img src="assets/RecipeView.gif"/>
 
 <br/>
 <br/>
@@ -26,7 +26,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 2. Change Account Information
-<img src="assets/AccountUpdate.gif"/>
+   <img src="assets/AccountUpdate.gif"/>
 
 <br/>
 <br/>
@@ -36,7 +36,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 3. Search for Recipes
-<img src="assets/RecipeSearch.gif"/>
+   <img src="assets/RecipeSearch.gif"/>
 
 <br/>
 <br/>
@@ -46,7 +46,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 4. Edit and Creating Recipes
-<img src="assets/RecipeEdit.gif"/>
+   <img src="assets/RecipeEdit.gif"/>
 
 <br/>
 <br/>
@@ -56,7 +56,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 5. AI Custom Recipies
-<img src="assets/AIRecipe.gif"/>
+   <img src="assets/AIRecipe.gif"/>
 
 <br/>
 <br/>
@@ -66,8 +66,7 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 6. Deleting a Recipe
-<img src="assets/RecipeDelete.gif"/>
-
+   <img src="assets/RecipeDelete.gif"/>
 
 <br/>
 <br/>
@@ -79,9 +78,8 @@ This is a recipe app that lets users save and create recipes online. This is so 
 ## Installation
 
 please visit [our deployed site](https://forktastic.onrender.com/) to access the application. If you want to run the application from your local machine, follow these instructions:
-please visit [our deployed site](https://forktastic.onrender.com/) to access the application. If you want to run the application from your local machine, follow these instructions:
 
-Ensure you have the Node Package Manager and Postgres installed on your machine. You will need a JWT Secret Key, a Spoonacular API key, and optionally an OpenAI API key.
+Ensure you have the Node Package Manager and MongoDB installed on your machine. You will need a JWT Secret Key, a Spoonacular API key, and optionally an OpenAI API key.
 
 - [Node.js](https://nodejs.org)
 - [MongoDB installation guide](https://www.mongodb.com/docs/manual/installation/)
@@ -92,30 +90,35 @@ Ensure you have the Node Package Manager and Postgres installed on your machine.
 ```shell
 # Step 1: clone this repository, and go to the root directory
 git clone https://github.com/Dan-Swarts/Forktacular.git
-cd Forktacular
+cd Forktastic
 
-# Step 2: Ensure you have node installed, then use the Node Package Manager to install dependencies:
+# Step 2: Ensure you have node installed, then use the Node
+# Package Manager to install dependencies:
 node -v
 # Example output: v20.17.0
 npm install
 
-# Step 3: remove the '.example' from .env.example. Fill in the .env file with your Postgres password,
-# JWT Secret Key, Spoonacular API Key, and optionally fill in the port number and/or the OpenAI API
-# Key.
+# Step 3: Ensure you have MongoDB installed on your machine.
+# If needed, followed the MongoDB installation guide shown above.
 
-# Step 4: start the application:
-npm run build
-npm run start
+# Step 4: remove the '.example' from .env.EXAMPLE. Fill in the
+# .env file with the valid MongoDB URI for the installation in
+# step 3, (the default is mongodb://127.0.0.1:27017/) JWT Secret
+# Key, Spoonacular API Key, and optionally fill in the port
+# number and/or the OpenAI API Key.
 
-# step 5: acess the application through your web browser
+# Step 5: start the application:
+npm run build && npm run start
+
+# step 6: acess the application through your web browser
 # http://localhost:3001/
 ```
 
 ## Contributing
 
 > [!IMPORTANT]
-> Whether you have feedback on features, have encountered any bugs, or have suggestions for enhancements, we're eager to hear from you. Your insights help us make the react-portfolio library more robust and user-friendly.
+> Whether you have feedback on features, have encountered any bugs, or have suggestions for enhancements, we're eager to hear from you. Your insights help us make the Forktastic library more robust and user-friendly.
 
-Please feel free to contribute by [submitting an issue](https://github.com) or [joining the discussions](https://github.com). Each contribution helps us grow and improve.
+Please feel free to contribute by [joining the discussions](https://github.com/Caryndcarter/Forktastic/discussions). Each contribution helps us grow and improve.
 
 We appreciate your support and look forward to making our product even better with your help!
