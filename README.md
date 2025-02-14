@@ -38,7 +38,8 @@ This project is built using a state-of-the-art stack to ensure scalability, perf
 <br/>
 
 2. Change Account Information
-   <img src="assets/AccountUpdate.gif"/>
+
+<img src="assets/AccountUpdate.gif"/>
 
 <br/>
 <br/>
@@ -48,7 +49,8 @@ This project is built using a state-of-the-art stack to ensure scalability, perf
 <br/>
 
 3. Search for Recipes
-   <img src="assets/RecipeSearch.gif"/>
+
+<img src="assets/RecipeSearch.gif"/>
 
 <br/>
 <br/>
@@ -58,7 +60,8 @@ This project is built using a state-of-the-art stack to ensure scalability, perf
 <br/>
 
 4. Edit and Creating Recipes
-   <img src="assets/RecipeEdit.gif"/>
+
+<img src="assets/RecipeEdit.gif"/>
 
 <br/>
 <br/>
@@ -68,7 +71,8 @@ This project is built using a state-of-the-art stack to ensure scalability, perf
 <br/>
 
 5. AI Custom Recipies
-   <img src="assets/AIRecipe.gif"/>
+
+<img src="assets/AIRecipe.gif"/>
 
 <br/>
 <br/>
@@ -78,7 +82,8 @@ This project is built using a state-of-the-art stack to ensure scalability, perf
 <br/>
 
 6. Deleting a Recipe
-   <img src="assets/RecipeDelete.gif"/>
+
+<img src="assets/RecipeDelete.gif"/>
 
 <br/>
 <br/>
