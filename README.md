@@ -1,11 +1,22 @@
 <!-- prettier-ignore -->
-# Forktastic
+# Welcome to Forktastic! 🍽️
 
 ![OpenAI](https://img.shields.io/badge/ChatGPT-Integration-%2316A180?logo=openai) ![MongoDB](https://img.shields.io/badge/MongoDB-%23429E47?logo=mongoDB&logoColor=white) ![Mongoose](https://img.shields.io/badge/Mongoose-%23880000?logo=Mongoose&logoColor=white) ![GraphQL](https://img.shields.io/badge/GraphQL-%23F25CC0?logo=graphql) ![React](https://img.shields.io/badge/React-%2361DAFB?logo=react&logoColor=white) ![Express](https://img.shields.io/badge/Express-%23F0D951?logo=express&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-%232D79C7?logo=typescript&logoColor=white)
 
 ## Description
 
-This is a recipe app that lets users save and create recipes online. This is so that users can take a more modern approach to the recipe books you would have at home while being able to take up less space.
+Forktastic is your AI-powered recipe companion, designed to help you discover, save, customize, and create delicious recipes with ease. Whether you're exploring new dishes from our vast Spoonacular API, fine-tuning your favorite meals, or generating entirely new recipes using AI, Forktastic has you covered.
+
+## 🚀 Tech Stack
+
+This project is built using a state-of-the-art stack to ensure scalability, performance, and developer-friendly features:
+
+- **Frontend:** React, TypeScript, Tailwind CSS
+- **Backend:** Express.js, GraphQL, Mongoose, MongoDB
+- **AI Integration:** OpenAI (ChatGPT) for intelligent recipe generation
+- **External API:** Spoonacular API for fetching recipes
+- **Authentication:** JSON Web Tokens (JWT)
+- **Deployment:** Github Actions, Cloud hosting
 
 ## 📁 Table of Contents
 
@@ -16,7 +27,8 @@ This is a recipe app that lets users save and create recipes online. This is so 
 ## Usage
 
 1. View, Save, and Review Recipies
-   <img src="assets/RecipeView.gif"/>
+
+<img src="assets/RecipeView.gif"/>
 
 <br/>
 <br/>
@@ -26,7 +38,8 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 2. Change Account Information
-   <img src="assets/AccountUpdate.gif"/>
+
+<img src="assets/AccountUpdate.gif"/>
 
 <br/>
 <br/>
@@ -36,7 +49,8 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 3. Search for Recipes
-   <img src="assets/RecipeSearch.gif"/>
+
+<img src="assets/RecipeSearch.gif"/>
 
 <br/>
 <br/>
@@ -46,7 +60,8 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 4. Edit and Creating Recipes
-   <img src="assets/RecipeEdit.gif"/>
+
+<img src="assets/RecipeEdit.gif"/>
 
 <br/>
 <br/>
@@ -56,7 +71,8 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 5. AI Custom Recipies
-   <img src="assets/AIRecipe.gif"/>
+
+<img src="assets/AIRecipe.gif"/>
 
 <br/>
 <br/>
@@ -66,7 +82,8 @@ This is a recipe app that lets users save and create recipes online. This is so 
 <br/>
 
 6. Deleting a Recipe
-   <img src="assets/RecipeDelete.gif"/>
+
+<img src="assets/RecipeDelete.gif"/>
 
 <br/>
 <br/>
