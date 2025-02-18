@@ -36,7 +36,7 @@ export default function RecipeCard({
       const response = await apiService.forignInformationSearch(spoonacularId);
       localData.setCurrentRecipe(response);
       setCurrentRecipeDetails(response);
-      console.log(`Current recipe author: ${response.author}`);
+      //console.log(`Current recipe author: ${response.author}`);
       navigate("/recipe-showcase");
     }
   };
@@ -58,20 +58,20 @@ export default function RecipeCard({
     // if a valid response is obtained from the query, use that as the
     // recipe to showcase.
     if (data?.getRecipe?.recipe) {
-      console.log("the recipe was found in our database.");
+      //console.log("the recipe was found in our database.");
       response = data.getRecipe.recipe;
     }
 
     // otherwise, make a spoonacular API call to find the recipe
     else {
-      console.log("the recipe was retrieved from spoonacular.");
+      //console.log("the recipe was retrieved from spoonacular.");
       response = await apiService.forignInformationSearch(spoonacularId);
     }
 
     // update the context with the recipe, then go to the recipe showcase page.
     localData.setCurrentRecipe(response);
     setCurrentRecipeDetails(response);
-    console.log(`Current recipe author: ${response.author}`);
+    //console.log(`Current recipe author: ${response.author}`);
     navigate("/recipe-showcase");
 
     return;

@@ -64,7 +64,7 @@ export default function AccountShowCase({
       ...prev,
       [e.target.id]: e.target.value,
     }));
-    console.log(formValues);
+    //console.log(formValues);
   };
 
   const handleAccountUpdate = (e: any) => {
@@ -84,12 +84,12 @@ export default function AccountShowCase({
     event.target.value = "";
 
     if (formValues.intolerances.includes(selectedIntolerance)) {
-      console.log("This intolerence is already in the user settings");
+      //console.log("This intolerence is already in the user settings");
       return;
     }
 
     if (selectedIntolerance === "") {
-      console.log("Please select a dropdown");
+      //console.log("Please select an option from the dropdown");
       return;
     }
 

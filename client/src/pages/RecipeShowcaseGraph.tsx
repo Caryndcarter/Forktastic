@@ -55,8 +55,8 @@ const RecipeShowcase = () => {
     try {
       const isLoggedIn = Auth.loggedIn();
       // Only try to get profile if logged in
-      const profile = isLoggedIn ? Auth.getProfile() : null;
-      console.log("Auth Profile: ", profile, "\nlogged in: ", isLoggedIn);
+      //const profile = isLoggedIn ? Auth.getProfile() : null;
+      //console.log("Auth Profile: ", profile, "\nlogged in: ", isLoggedIn);
       setLoginCheck(isLoggedIn);
       // if logged in, activate the query to check if the recipe is saved
       if (isLoggedIn) {
@@ -119,7 +119,7 @@ const RecipeShowcase = () => {
         });
         localData.setCurrentRecipe(currentRecipeDetails);
 
-        console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
+        //console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
 
         // save this recipe to the user
         await saveRecipe({
@@ -157,6 +157,7 @@ const RecipeShowcase = () => {
         },
       });
 
+  
       if (data) {
         console.log(
           "Recipe successfully deleted with ID: ",
