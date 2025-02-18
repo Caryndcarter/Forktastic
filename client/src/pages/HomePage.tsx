@@ -40,7 +40,7 @@ const HomePage = () => {
           <br />
           <br />
           <br />
-          <h2 className="text-3xl font-bold text-[#a84e24] mb-4">Login to view all your recipes!</h2>
+          <h2 className="text-3xl font-bold text-[#a84e24] mb-4 text-center ">Login to view all your recipes!</h2>
 
           <div className="pt-20 px-4">
             <h1 className="text-4xl font-bold text-[#a84e24] mb-8 text-center">Sample Recipes</h1>
