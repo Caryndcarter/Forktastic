@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState} from "react";
 import { filterInfo } from "../pages/SearchPage";
 
 interface filterFormProps {
@@ -13,6 +13,7 @@ export default function FilterForm({
   setFilterVisible,
 }: filterFormProps) {
   const [selectedIngredient, setSelectedIngredient] = useState<string>("");
+
 
   const handleFilterUpdate = (e: any) => {
     e.preventDefault();
@@ -107,7 +108,7 @@ export default function FilterForm({
           <option disabled selected>
             {filterValue.diet ? filterValue.diet : "Select a diet"}
           </option>
-          <option value="">None</option>
+          <option value="None">None</option>
           <option value="Gluten Free">Gluten Free</option>
           <option value="Ketogenic">Ketogenic</option>
           <option value="Vegetarian">Vegetarian</option>
