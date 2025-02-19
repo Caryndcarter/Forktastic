@@ -64,7 +64,7 @@ export default function AccountShowCase({
       ...prev,
       [e.target.id]: e.target.value,
     }));
-    console.log(formValues);
+    //console.log(formValues);
   };
 
   const handleAccountUpdate = (e: any) => {
