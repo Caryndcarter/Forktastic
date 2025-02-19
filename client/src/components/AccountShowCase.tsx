@@ -64,11 +64,13 @@ export default function AccountShowCase({
       ...prev,
       [e.target.id]: e.target.value,
     }));
-    //console.log(formValues);
+    console.log(formValues);
   };
 
   const handleAccountUpdate = (e: any) => {
     e.preventDefault();
+    console.log("Updating diet with value:", formValues.diet);
+    
     updateAccount({
       variables: {
         diet: formValues.diet,
@@ -140,7 +142,7 @@ export default function AccountShowCase({
             <option value="" disabled>
               Select a diet
             </option>
-            <option value="">None</option>
+            <option value="None">None</option>
             <option value="Gluten Free">Gluten Free</option>
             <option value="Ketogenic">Ketogenic</option>
             <option value="Vegetarian">Vegetarian</option>
