@@ -16,7 +16,7 @@ import Navbar from "../components/Navbar";
 import localData from "@/utils_graphQL/localStorageService";
 
 const RecipeMaker = () => {
-  let currentRecipeDetails = localData.getCurrentRecipe();
+  const currentRecipeDetails = localData.getCurrentRecipe();
   const { isEditing, setIsEditing } = useContext(editingContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
@@ -128,7 +128,7 @@ const RecipeMaker = () => {
     });
 
     if (data?.createRecipe) {
-      console.log(data.createRecipe._id);
+      //console.log(data.createRecipe._id);
       await saveRecipe({
         variables: {
           recipeId: data.createRecipe._id,

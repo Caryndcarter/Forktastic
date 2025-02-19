@@ -69,6 +69,8 @@ export default function AccountShowCase({
 
   const handleAccountUpdate = (e: any) => {
     e.preventDefault();
+    console.log("Updating diet with value:", formValues.diet);
+    
     updateAccount({
       variables: {
         diet: formValues.diet,
@@ -84,12 +86,12 @@ export default function AccountShowCase({
     event.target.value = "";
 
     if (formValues.intolerances.includes(selectedIntolerance)) {
-      console.log("This intolerence is already in the user settings");
+      //console.log("This intolerence is already in the user settings");
       return;
     }
 
     if (selectedIntolerance === "") {
-      console.log("Please select a dropdown");
+      //console.log("Please select an option from the dropdown");
       return;
     }
 
@@ -140,7 +142,7 @@ export default function AccountShowCase({
             <option value="" disabled>
               Select a diet
             </option>
-            <option value="">None</option>
+            <option value="None">None</option>
             <option value="Gluten Free">Gluten Free</option>
             <option value="Ketogenic">Ketogenic</option>
             <option value="Vegetarian">Vegetarian</option>

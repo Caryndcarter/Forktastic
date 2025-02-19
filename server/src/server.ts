@@ -14,7 +14,7 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { typeDefs, resolvers } from "./schemas_graphQL/index.js";
 //import { GraphQLError } from "graphql";
  
-//Authentication Middleware - commenting out for now
+//Authentication Middleware
 import { authenticateToken as graphQLAuthMiddleware } from "./middleware/auth_graphQL.js";
 
 dotenv.config();
@@ -69,21 +69,15 @@ const startServers = async () => {
     res.sendFile(path.join(__dirname, "../../client/dist/index.html"));
   });
 
-  // Moving here for now: MongoDB Connection Error Handling
+  // MongoDB Connection Error Handling
   db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
-  // Start Express Server with PostgreSQL
-  //sequelize
-    //.sync({ force: forceDatabaseRefresh })
-    //.then(() => {
-      app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-        console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
-      });
-    //})
-    ///.catch((error) => {
-      //console.error("Unable to connect to the database:", error);
-    //});
+
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`GraphQL endpoint: http://localhost:${PORT}/graphql`);
+  });
+   
 };
 
 startServers();

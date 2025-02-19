@@ -16,7 +16,7 @@ export default function FilterForm({
 
   const handleFilterUpdate = (e: any) => {
     e.preventDefault();
-    console.log(filterValue);
+    //console.log(filterValue);
     setFilterVisible(false);
   };
 
@@ -33,12 +33,12 @@ export default function FilterForm({
     event.target.value = "";
 
     if (filterValue.intolerances.includes(selectedIntolerance)) {
-      console.log("This intolerence is already in the user settings");
+      //console.log("This intolerence is already in the user settings");
       return;
     }
 
     if (selectedIntolerance === "") {
-      console.log("Please select a dropdown");
+      //console.log("Please select a dropdown");
       return;
     }
 
@@ -57,12 +57,12 @@ export default function FilterForm({
     e.preventDefault();
 
     if (filterValue.includeIngredients.includes(selectedIngredient)) {
-      console.log("This ingredient is already in the user settings");
+      //console.log("This ingredient is already in the user settings");
       return;
     }
 
     if (selectedIngredient === "") {
-      console.log("Please enter an ingredient.");
+      //console.log("Please enter an ingredient.");
       return;
     }
 

@@ -61,7 +61,8 @@ export default function LoginForm({ setSignIn }: loginFormProps) {
         } else if (err.message.includes("Wrong email")) {
           setErrorMessage("Incorrect email or password.");
         } else {
-        console.error(err);
+          setErrorMessage("An unexpected error occurred.");
+        //console.error(err);
         }
       } else {
         setErrorMessage("An unexpected error occurred.");

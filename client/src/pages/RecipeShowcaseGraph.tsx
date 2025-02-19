@@ -119,7 +119,7 @@ const RecipeShowcase = () => {
         });
         localData.setCurrentRecipe(currentRecipeDetails);
 
-        console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
+        //console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
 
         // save this recipe to the user
         await saveRecipe({
@@ -157,6 +157,7 @@ const RecipeShowcase = () => {
         },
       });
 
+  
       if (data) {
         console.log(
           "Recipe successfully deleted with ID: ",
