@@ -206,6 +206,7 @@ export default function SignUpForm({ setSignIn }: loginFormProps) {
             </div> */}
         <button
           type="submit"
+          id="sign-up-submit"
           className="w-full bg-[#ff9e40] text-white py-2 rounded hover:bg-[#e7890c]"
         >
           Sign Up
@@ -213,6 +214,7 @@ export default function SignUpForm({ setSignIn }: loginFormProps) {
         <p className="text-red-500 font-medium mt-2 text-sm">{errorMessage}</p>
       </form>
       <button
+        id="naviate-sign-in"
         className="mt-4 text-[#ff9e40] hover:underline focus:outline-none"
         onClick={() => setSignIn(true)}
       >
