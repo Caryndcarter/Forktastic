@@ -33,19 +33,22 @@ const Navbar: React.FC = () => {
     checkLoginStatus()
 
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
       }
-    }
+    };
 
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [isOpen])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-[#ff9e40] p-4 shadow-md z-10">
@@ -65,8 +68,14 @@ const Navbar: React.FC = () => {
         </div>
         <div className="flex items-center z-10">
           <div className="relative mr-4" ref={dropdownRef}>
-            <button onClick={toggleDropdown} className="text-white flex items-center focus:outline-none">
-              {location.pathname === "/" ? "Home" : location.pathname.slice(1).replace(/-/g, " ")}
+            <button
+              onClick={toggleDropdown}
+              id="toggle-dropdown-navbar"
+              className="text-white flex items-center focus:outline-none"
+            >
+              {location.pathname === "/"
+                ? "Home"
+                : location.pathname.slice(1).replace(/-/g, " ")}
               <ChevronDown className="ml-1" />
             </button>
             {isOpen && (
@@ -75,6 +84,7 @@ const Navbar: React.FC = () => {
                   <Link
                     key={page.path}
                     to={page.path}
+                    id={`dropdown-${page.path.replace("/", "")}-link`}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     onClick={() => setIsOpen(false)}
                   >
@@ -84,14 +94,18 @@ const Navbar: React.FC = () => {
               </div>
             )}
           </div>
-          <Link to="/user-info" className="text-white flex items-center focus:outline-none">
+          <Link
+            to="/user-info"
+            id="account-nav-button"
+            className="text-white flex items-center focus:outline-none"
+          >
             <User className="mr-2" />
             {loggedIn ? "Account" : "Sign In"}
           </Link>
         </div>
       </div>
     </nav>
-  )
-}
+  );
+};
 
 export default Navbar
