@@ -73,7 +73,6 @@ export const GET_REVIEWS_BY_RECIPE_ID = gql`
 `;
 
 
-
 export const GET_REVIEWS_FOR_RECIPE = gql`
   query GetReviewsForRecipe($recipeId: ID!) {
     getReviewsForRecipe(recipeId: $recipeId) {

@@ -25,7 +25,7 @@ import AverageRating from "../components/AverageRating";
 const RecipeShowcase = () => {
   //const currentRecipeDetails = localData.getCurrentRecipe();
   const { currentRecipeDetails, setCurrentRecipeDetails } =
-  useContext(currentRecipeContext);
+    useContext(currentRecipeContext);
   const navigate = useNavigate();
   const { setIsEditing } = useContext(editingContext);
 
@@ -119,7 +119,7 @@ const RecipeShowcase = () => {
         });
         localData.setCurrentRecipe(currentRecipeDetails);
 
-        console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
+        //console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
 
         // save this recipe to the user
         await saveRecipe({
@@ -258,7 +258,10 @@ const RecipeShowcase = () => {
               {isSaved ? "Delete Recipe" : "Save Recipe"}
             </button>
           ) : (
-            <div className="text-gray-500 italic mb-6">
+            <div
+              id="save-button-placeholder"
+              className="text-gray-500 italic mb-6"
+            >
               Log in to save recipes.
             </div>
           )}
@@ -286,7 +289,10 @@ const RecipeShowcase = () => {
             </div>
           )
         ) : (
-          <div className="text-gray-500 italic mb-6">
+          <div
+            id="review-button-placeholder"
+            className="text-gray-500 italic mb-6"
+          >
             Log in to write a review.
           </div>
         )}

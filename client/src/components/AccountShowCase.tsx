@@ -36,10 +36,10 @@ export default function AccountShowCase({
       const { data: refreshedData } = await refetch();
 
       if (refreshedData?.getUser) {
-        setFormValues(prev => ({
+        setFormValues((prev) => ({
           ...prev,
           diet: refreshedData.getUser.diet || "",
-          intolerances: refreshedData.getUser.intolerances || []
+          intolerances: refreshedData.getUser.intolerances || [],
         }));
       }
     };
@@ -52,8 +52,6 @@ export default function AccountShowCase({
     refetch();
   }, []);
 
-
-
   const handleLogOut = () => {
     authService.logout();
     setLoginCheck(false);
@@ -64,11 +62,13 @@ export default function AccountShowCase({
       ...prev,
       [e.target.id]: e.target.value,
     }));
-    console.log(formValues);
+    //console.log(formValues);
   };
 
   const handleAccountUpdate = (e: any) => {
     e.preventDefault();
+    console.log("Updating diet with value:", formValues.diet);
+
     updateAccount({
       variables: {
         diet: formValues.diet,
@@ -84,12 +84,12 @@ export default function AccountShowCase({
     event.target.value = "";
 
     if (formValues.intolerances.includes(selectedIntolerance)) {
-      console.log("This intolerence is already in the user settings");
+      //console.log("This intolerence is already in the user settings");
       return;
     }
 
     if (selectedIntolerance === "") {
-      console.log("Please select a dropdown");
+      //console.log("Please select an option from the dropdown");
       return;
     }
 
@@ -132,7 +132,7 @@ export default function AccountShowCase({
             Diet
           </label>
           <select
-            id="diet"
+            id="diet-select"
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
             onChange={handleChange}
             value={formValues.diet}
@@ -140,7 +140,7 @@ export default function AccountShowCase({
             <option value="" disabled>
               Select a diet
             </option>
-            <option value="">None</option>
+            <option value="None">None</option>
             <option value="Gluten Free">Gluten Free</option>
             <option value="Ketogenic">Ketogenic</option>
             <option value="Vegetarian">Vegetarian</option>
@@ -165,7 +165,7 @@ export default function AccountShowCase({
 
           <div className="flex items-center space-x-2">
             <select
-              id="intolerance"
+              id="intolerances-select"
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
               onChange={(event: any) => {
                 addIntolerance(event);
@@ -226,6 +226,7 @@ export default function AccountShowCase({
         <div className="flex items-center justify-between">
           <button
             type="submit"
+            id="update-preferences-button"
             className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
           >
             Update Preferences
@@ -236,6 +237,7 @@ export default function AccountShowCase({
       <div className="mt-6">
         <button
           onClick={handleLogOut}
+          id="log-out-button"
           className="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
         >
           Log out
