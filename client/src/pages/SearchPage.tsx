@@ -5,7 +5,6 @@ import FilterForm from "../components/FilterForm";
 import apiService from "../api/apiService";
 import { useQuery } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
-import Navbar from "@/components/Navbar";
 
 export interface filterInfo {
   diet?: string;
@@ -130,8 +129,6 @@ const RecipeSearchPage: React.FC = () => {
         filterVisible ? "filter-blur" : ""
       }`}
     >
-      <Navbar />
-
       {/* Main Content */}
       <div className="pt-20 px-4">
         {/* Search Bar and Filter Button */}

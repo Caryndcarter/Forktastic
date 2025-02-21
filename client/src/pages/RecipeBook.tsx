@@ -7,10 +7,8 @@ import { useState, useLayoutEffect, useEffect } from "react";
 
 import { useQuery } from "@apollo/client";
 import { GET_SAVED_RECIPES } from "@/utils_graphQL/queries";
-import Navbar from "@/components/Navbar";
 
 export default function RecipeBook() {
-
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const { loading, refetch } = useQuery(GET_SAVED_RECIPES); // Remove data from destructuring since we're not using it directly
 
@@ -23,9 +21,7 @@ export default function RecipeBook() {
 
       if (refreshedData?.getRecipes?.length) {
         setRecipes(refreshedData.getRecipes);
-        
       } else {
-        
         try {
           const spoonRecipes = await apiService.forignRandomSearch();
           setRecipes(spoonRecipes);
@@ -45,8 +41,6 @@ export default function RecipeBook() {
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-[#fef3d0]">
-      <Navbar />
-
       {/* Content */}
       <div className="pt-20 px-4">
         <h1 className="text-4xl font-bold text-[#a84e24] mb-8 text-center">
