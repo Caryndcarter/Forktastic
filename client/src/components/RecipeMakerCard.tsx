@@ -20,7 +20,7 @@ const RecipeMakerCard = () => {
       <CardContent className="grid grid-cols-2 gap-4">
         <div className="flex flex-col justify-between">
           <h3 className="text-xl font-semibold text-[#a84e24]">Description</h3>
-          <p className="text-gray-700">Craft your own unique recipes, add ingredients, instructions, and save them to your personal recipe book.</p>
+          <p className="text-gray-700">Craft your own unique recipes, and save them to your personal recipe book. Even use AI!</p>
         </div>
         <div className="flex flex-col justify-between pt-4">
           <Button
