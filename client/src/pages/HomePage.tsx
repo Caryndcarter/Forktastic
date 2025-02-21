@@ -4,7 +4,6 @@ import RecipeCard from "../components/RecipeCard";
 import type Recipe from "../interfaces/recipe";
 import { authService } from "../api/authentication";
 import apiService from "../api/apiService";
-import Navbar from "@/components/Navbar";
 import SearchCard from "../components/SearchCard";
 import RecipeBookCard from "../components/RecipeBookCard";
 import RecipeMakerCard from "../components/RecipeMakerCard";
@@ -31,8 +30,6 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-[#fef3d0]">
-      <Navbar />
-
       {/* Main Content */}
       {!loginCheck ? (
         <div className="login-notice">
@@ -40,7 +37,9 @@ const HomePage = () => {
           <br />
           <br />
           <br />
-          <h2 className="text-3xl font-bold text-[#a84e24] mb-4 text-center ">Login to Save, Edit and Create Recipes!</h2>
+          <h2 className="text-3xl font-bold text-[#a84e24] mb-4 text-center ">
+            Login to Save, Edit and Create Recipes!
+          </h2>
 
           <div className="pt-20 px-4">
             <h1 className="text-4xl font-bold text-[#a84e24] mb-8 text-center">

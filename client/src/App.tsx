@@ -7,6 +7,8 @@ import {
   createHttpLink,
 } from "@apollo/client";
 
+import Navbar from "./components/Navbar.js";
+
 //import Navbar from './components/Navbar';
 import { createContext, useState } from "react";
 import { setContext } from "@apollo/client/link/context";
@@ -69,19 +71,20 @@ export const editingContext = createContext({
 
 function App() {
   const [currentRecipeDetails, setCurrentRecipeDetails] =
-  useState<RecipeDetails>(defaultRecipe);
+    useState<RecipeDetails>(defaultRecipe);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
     <currentRecipeContext.Provider
-    value={{ currentRecipeDetails, setCurrentRecipeDetails }}
+      value={{ currentRecipeDetails, setCurrentRecipeDetails }}
     >
-    <editingContext.Provider value={{ isEditing, setIsEditing }}>
-      <ApolloProvider client={client}>
-        <ScrollToTop />
-        <Outlet />
-      </ApolloProvider>
-    </editingContext.Provider>
+      <editingContext.Provider value={{ isEditing, setIsEditing }}>
+        <ApolloProvider client={client}>
+          <ScrollToTop />
+          <Navbar />
+          <Outlet />
+        </ApolloProvider>
+      </editingContext.Provider>
     </currentRecipeContext.Provider>
   );
 }
