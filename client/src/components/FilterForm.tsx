@@ -50,7 +50,7 @@ export default function FilterForm({
 
     setFilterValue((previousValues: filterInfo) => ({
       ...previousValues,
-      intolerance: updatedIntolerances,
+      intolerances: updatedIntolerances,
     }));
   };
 
@@ -87,7 +87,7 @@ export default function FilterForm({
     // Update the formValues state
     setFilterValue((previousValues: filterInfo) => ({
       ...previousValues,
-      intolerance: updatedIntolerances,
+      intolerances: updatedIntolerances,
     }));
   };
 
