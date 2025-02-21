@@ -1,13 +1,12 @@
 import { foodQueryResults } from "./searchPage/expectedSearchResults";
 
-const PORT = 3001;
 const EMAIL = "test@example.com"; // ensure this is a valid login
 const PASSWORD = "test"; // ensure this is a valid login
 
 describe("Basic test runthough", () => {
   it("doesn't cause any bugs", () => {
     // visit the page
-    cy.visit(`http://localhost:${PORT}`);
+    cy.visit("/");
 
     // testing search page without logging in:
     cy.get("#toggle-dropdown-navbar").click();
@@ -94,7 +93,7 @@ describe("Basic test runthough", () => {
   });
 
   // it("Lets you log in", () => {
-  //   // cy.visit(`http://localhost:${PORT}`);
+  //   // cy.visit('/');
 
   //   // login
   //   cy.get("#account-nav-button").click();

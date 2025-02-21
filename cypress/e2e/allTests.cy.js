@@ -1,4 +1,11 @@
-import searchPageTests from "./searchPage/index";
+import homePageTests from "./homePage";
+import searchPageTests from "./searchPage";
+import showcasePageTests from "./showcasePage";
 
-searchPageTests.runBasicSearches();
-searchPageTests.runFilterSearches();
+const runAllTests = () => {
+  homePageTests();
+  searchPageTests();
+  showcasePageTests();
+};
+
+runAllTests();

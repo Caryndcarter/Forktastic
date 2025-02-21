@@ -1,12 +1,10 @@
 import { foodQueryResults } from "./expectedSearchResults";
 
-const PORT = 3001;
-
 export function runBasicSearches() {
   describe("Filter tests", () => {
     it("updates the search to reflect vegetarian filter", () => {
       // go to the search page
-      cy.visit(`http://localhost:${PORT}`);
+      cy.visit("/");
       cy.get("#toggle-dropdown-navbar").click();
       cy.get("#dropdown-search-link").click();
 
@@ -21,3 +19,5 @@ export function runBasicSearches() {
     });
   });
 }
+
+runBasicSearches();

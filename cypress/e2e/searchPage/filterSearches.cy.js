@@ -1,12 +1,10 @@
 import { foodVeggetarianResults } from "./expectedSearchResults";
 
-const PORT = 3001;
-
 export function runFilterSearches() {
   describe("Filter tests", () => {
     it("updates the search to reflect vegetarian filter", () => {
       // go to the search page
-      cy.visit(`http://localhost:${PORT}`);
+      cy.visit("/");
       cy.get("#toggle-dropdown-navbar").click();
       cy.get("#dropdown-search-link").click();
 
@@ -28,7 +26,7 @@ export function runFilterSearches() {
 
     it("adds vegetarian filter to the search", () => {
       //Go to the search page
-      cy.visit(`http://localhost:${PORT}`);
+      cy.visit("/");
       cy.get("#toggle-dropdown-navbar").click();
       cy.get("#dropdown-search-link").click();
 
@@ -47,3 +45,5 @@ export function runFilterSearches() {
     });
   });
 }
+
+runFilterSearches();
