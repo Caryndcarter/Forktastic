@@ -62,7 +62,7 @@ export default function LoginForm({ setSignIn }: loginFormProps) {
           setErrorMessage("Incorrect email or password.");
         } else {
           setErrorMessage("An unexpected error occurred.");
-        //console.error(err);
+          //console.error(err);
         }
       } else {
         setErrorMessage("An unexpected error occurred.");
@@ -128,15 +128,22 @@ export default function LoginForm({ setSignIn }: loginFormProps) {
 
         <button
           type="submit"
+          id="sign-in-submit"
           className="w-full bg-[#ff9e40] text-white py-2 rounded hover:bg-[#e7890c]"
         >
           Sign In
         </button>
 
-        <p className="text-red-500 font-medium mt-2 text-sm">{errorMessage}</p>
+        <p
+          id="login-error-message"
+          className="text-red-500 font-medium mt-2 text-sm"
+        >
+          {errorMessage}
+        </p>
       </form>
 
       <button
+        id="navigate-sign-up"
         className="mt-4 text-[#ff9e40] hover:underline focus:outline-none"
         onClick={() => setSignIn(false)}
       >

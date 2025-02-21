@@ -1,4 +1,5 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
+
 import { filterInfo } from "../pages/SearchPage";
 
 interface filterFormProps {
@@ -15,17 +16,19 @@ export default function FilterForm({
   const [selectedIngredient, setSelectedIngredient] = useState<string>("");
   const [submitted, setSubmitted] = useState(false);
 
-
   const handleFilterUpdate = (e: any) => {
     e.preventDefault();
     //console.log(filterValue);
     setFilterVisible(false);
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (event: any) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    console.log(`Name: ${name}\nValue: ${value}`);
     setFilterValue({
       ...filterValue,
-      [e.target.id]: e.target.value,
+      [name]: value,
     });
   };
 
@@ -135,7 +138,8 @@ export default function FilterForm({
           Diet
         </label>
         <select
-          id="diet"
+          name="diet"
+          id="diet-select"
           className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
           onChange={handleChange}
         >
@@ -167,7 +171,8 @@ export default function FilterForm({
 
         <div className="flex items-center space-x-2">
           <select
-            id="intolerance"
+            name="intolerances"
+            id="intolerances-select"
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
             onChange={(event: any) => {
               addIntolerance(event);
@@ -234,7 +239,8 @@ export default function FilterForm({
         </label>
 
         <select
-          id="cuisine"
+          name="cuisine"
+          id="cuisine-select"
           className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
           onChange={handleChange}
         >
@@ -283,7 +289,8 @@ export default function FilterForm({
         <div className="flex items-center space-x-2">
           <input
             type="text"
-            id="intolerance"
+            name="includeIngredients"
+            id="ingredients-select"
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
             placeholder="Enter an ingredient"
             onChange={(e: any) => {
@@ -347,6 +354,7 @@ export default function FilterForm({
       <div className="flex items-center justify-between">
         <button
           type="submit"
+          id="submit-search-filters"
           className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
         >
           Update Filters
