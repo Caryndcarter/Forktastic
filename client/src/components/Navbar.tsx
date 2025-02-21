@@ -6,18 +6,27 @@ import Auth from "../utils_graphQL/auth"
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
   const location = useLocation()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const pages = [
-    { name: "Search", path: "/search" },
-    { name: "Recipe Book", path: "/recipe-book" },
-    { name: "Recipe Maker", path: "/recipe-maker" },
-  ]
+  const pages = loggedIn
+    ? [
+        { name: "Search", path: "/search" },
+        { name: "Recipe Book", path: "/recipe-book" },
+        { name: "Recipe Maker", path: "/recipe-maker" },
+      ]
+    : [{ name: "Search", path: "/search" }]
 
   const toggleDropdown = () => setIsOpen(!isOpen)
 
   useEffect(() => {
+    const checkLoginStatus = async () => {
+      const status = await Auth.loggedIn()
+      setLoggedIn(status)
+    }
+    checkLoginStatus()
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false)
@@ -67,7 +76,7 @@ const Navbar: React.FC = () => {
           </div>
           <Link to="/user-info" className="text-white flex items-center focus:outline-none">
             <User className="mr-2" />
-            {Auth.loggedIn() ? "Account" : "Sign In"}
+            {loggedIn ? "Account" : "Sign In"}
           </Link>
         </div>
       </div>
