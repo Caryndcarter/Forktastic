@@ -1,8 +1,8 @@
-import { foodQueryResults } from "./expectedSearchResults";
+import { foodQueryResults } from "./../testingAssets/expectedSearchResults";
 
 export function runBasicSearches() {
-  describe("Filter tests", () => {
-    it("updates the search to reflect vegetarian filter", () => {
+  describe("Searches give the right output", () => {
+    it("type 'food' into search bar", () => {
       // go to the search page
       cy.visit("/");
       cy.get("#toggle-dropdown-navbar").click();

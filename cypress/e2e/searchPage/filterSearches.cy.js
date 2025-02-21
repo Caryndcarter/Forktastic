@@ -1,4 +1,4 @@
-import { foodVeggetarianResults } from "./expectedSearchResults";
+import { foodVeggetarianResults } from "./../testingAssets/expectedSearchResults";
 
 export function runFilterSearches() {
   describe("Filter tests", () => {

@@ -226,6 +226,7 @@ export default function AccountShowCase({
         <div className="flex items-center justify-between">
           <button
             type="submit"
+            id="update-preferences-button"
             className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
           >
             Update Preferences

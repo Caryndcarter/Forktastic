@@ -211,7 +211,12 @@ export default function SignUpForm({ setSignIn }: loginFormProps) {
         >
           Sign Up
         </button>
-        <p className="text-red-500 font-medium mt-2 text-sm">{errorMessage}</p>
+        <p
+          id="sign-up-error-message"
+          className="text-red-500 font-medium mt-2 text-sm"
+        >
+          {errorMessage}
+        </p>
       </form>
       <button
         id="naviate-sign-in"
