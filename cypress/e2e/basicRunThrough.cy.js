@@ -1,6 +1,6 @@
-import foodQueryResults from "./foodQueryResults";
+import { foodQueryResults } from "./searchPage/expectedSearchResults";
 
-const PORT = 3001; // ensure this port is correct for your testing
+const PORT = 3001;
 const EMAIL = "test@example.com"; // ensure this is a valid login
 const PASSWORD = "test"; // ensure this is a valid login
 
@@ -9,9 +9,7 @@ describe("Basic test runthough", () => {
     // visit the page
     cy.visit(`http://localhost:${PORT}`);
 
-    /* 
-      testing search page without logging in:
-    */
+    // testing search page without logging in:
     cy.get("#toggle-dropdown-navbar").click();
     cy.get("#dropdown-search-link").click();
     cy.get("#search-input").type("food");
@@ -22,34 +20,17 @@ describe("Basic test runthough", () => {
       cy.wrap($element).should("have.text", foodQueryResults[index]);
     });
 
-    /* 
-      testing search filters:
-    */
-
-    // update diet:
+    // testing search filters:
     cy.get("#filter-toggle-button").click();
     cy.get("#diet-select").select("Vegetarian");
     cy.get("#submit-search-filters").click();
-
-    // check that the diet value persists:
-    // cy.get("#filter-toggle-button").click();
-    // cy.get("#diet-select").should("have.value", "Vegetarian");
-    // cy.get("#close-filter").click();
 
     // update intolerances:
     cy.get("#filter-toggle-button").click();
     cy.get("#intolerances-select").select("Dairy");
     cy.get("#submit-search-filters").click();
 
-    // check that the intolerance value persists:
-    // cy.get("#filter-toggle-button").click();
-    // cy.get("#intolerances-select").should("have.value", "Dairy");
-    // cy.get("#close-filter").click();
-
-    /* 
-      testing showcase page without logging in:
-    */
-
+    // testing showcase page without logging in:
     // click on the first recipe:
     cy.get("#search-results button").first().click();
     cy.get("#save-button-placeholder").should(
@@ -61,10 +42,7 @@ describe("Basic test runthough", () => {
       "Log in to write a review."
     );
 
-    /* 
-      testing the login and signup page
-    */
-
+    // testing the login page
     // login using false credentials
     cy.get("#account-nav-button").click();
     cy.get("#userEmail").type("wrong@wrong.com");
@@ -91,14 +69,28 @@ describe("Basic test runthough", () => {
     cy.get("#account-nav-button").click();
     cy.get("#log-out-button").click();
 
-    // sign up:
+    // testing the signup page:
     cy.get("#navigate-sign-up").click();
     cy.get("#userName").click().type("sign-up-test");
     cy.get("#userEmail").click().type("signUpTest@example.com");
     cy.get("#userPassword").click().type("test");
     cy.get("#confirmPassword").click().type("test");
     // cy.get("#sign-up-submit").click();
-    // // this is commented out because there's no way to delete your account
+    // this is commented out because there's no way to delete your account
+
+    /* 
+      Testing the account preferences
+    */
+    // login
+    cy.get("#userEmail").clear().type(EMAIL);
+    cy.get("#userPassword").clear().type(PASSWORD);
+    cy.get("#sign-in-submit").click();
+    cy.get("#account-nav-button").click();
+
+    cy.get("#diet-select").select("Gluten Free");
+    cy.get("#intolerances-select").select("Egg");
+
+    // change account preferences:
   });
 
   // it("Lets you log in", () => {

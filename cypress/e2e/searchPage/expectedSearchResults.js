@@ -11,4 +11,17 @@ const foodQueryResults = [
   "Tomato, Cucumber & Onion Salad with Feta Cheese: Real Convenience Food",
 ];
 
-export default foodQueryResults;
+const foodVeggetarianResults = [
+  "Miniature Fruit Tarts",
+  "Zucchini Pineapple Muffins",
+  "Orange Honey Madeleines",
+  "Broccoli Cheddar Soup",
+  "Eggless Ginger & Mango Bread",
+  "Mango & Goat Cheese Quesadillas",
+  "Ginger Sesame Dressing",
+  "Simple Kale Salad",
+  "Kale Bruschetta",
+  "Roasted Butternut Squash Bisque",
+];
+
+export { foodQueryResults, foodVeggetarianResults };

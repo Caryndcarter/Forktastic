@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "npx cypress open",
+    "test": "npx cypress run --spec cypress/e2e/allTests.cy.js",
+    "test:dev": "npx cypress open",
     "dev": "npm i && npm run seed && npm run build && npm run start:dev",
     "start": "npm run server",
     "start:dev": "concurrently \"npm run server:dev\" \"wait-on tcp:3001 && npm run client:dev\"",
