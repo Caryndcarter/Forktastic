@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState, useEffect} from "react";
 import { filterInfo } from "../pages/SearchPage";
 
 interface filterFormProps {
@@ -13,6 +13,7 @@ export default function FilterForm({
   setFilterVisible,
 }: filterFormProps) {
   const [selectedIngredient, setSelectedIngredient] = useState<string>("");
+  const [submitted, setSubmitted] = useState(false);
 
 
   const handleFilterUpdate = (e: any) => {
@@ -76,6 +77,10 @@ export default function FilterForm({
       ...previousValues,
       includeIngredients: updatedIngredients,
     }));
+
+    setSelectedIngredient(""); 
+    setSubmitted(true); 
+
   };
 
   const removeIntolerance = (intolerance: string) => {
@@ -91,8 +96,37 @@ export default function FilterForm({
     }));
   };
 
+  const removeIngredient = (ingredient: string) => {
+    // Filter out the specified ingredient
+    const updatedIngredients = filterValue.includeIngredients.filter(
+      (item) => item !== ingredient
+    );
+  
+    // Update the filterValue state
+    setFilterValue((previousValues: filterInfo) => ({
+      ...previousValues,
+      includeIngredients: updatedIngredients,
+    }));
+  };
+
+  //attempting to make the setSelectedIngredient reset after hitting the plus button, needs work
+  useEffect(() => {
+      if (submitted) {
+        //console.log("Clearing selected ingredient");
+        setSelectedIngredient(""); 
+        setSubmitted(false); 
+      }
+    }, [submitted]); 
+  
+
+
   return (
     <form onSubmit={handleFilterUpdate} className="space-y-6">
+      <section className="Filters-info">
+        <p className="text-sm text-gray-500">
+          Filters are set from your Account Preferences, but you can change them here to experiment.
+        </p>
+      </section>
       <section className="Diet-section">
         <label
           className="block text-sm font-medium text-gray-700 mb-1"
@@ -251,7 +285,7 @@ export default function FilterForm({
             type="text"
             id="intolerance"
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
-            placeholder="Enter an intolerance"
+            placeholder="Enter an ingredient"
             onChange={(e: any) => {
               setSelectedIngredient(e.target.value);
             }}
@@ -286,7 +320,7 @@ export default function FilterForm({
                 <span className="text-gray-800">{item}</span>
                 <button
                   onClick={() => {
-                    removeIntolerance(item);
+                    removeIngredient(item);
                   }}
                   className="text-gray-400 hover:text-red-500 focus:outline-none focus:text-red-500 transition-colors duration-200"
                   aria-label={`Remove ${item}`}
