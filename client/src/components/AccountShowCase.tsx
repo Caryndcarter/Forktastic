@@ -83,10 +83,12 @@ export default function AccountShowCase({
   const handleDeleteUser = async () => {
     try {
       const { data } = await deleteUser();
-      if (data?.deleteAccount?.success) {
-        alert("Your account has been successfully deleted.");
-        handleLogOut(); // Log out the user
-        navigate("/"); // Redirect to home or login page
+
+      if (data?.deleteUser?._id) {
+        handleLogOut(); 
+        navigate("/"); 
+      } else {
+        alert("Failed to delete account."); 
       }
     } catch (error) {
       console.error("Error deleting account:", error);
