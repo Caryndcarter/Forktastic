@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
 import { useMutation } from "@apollo/client";
 import { UPDATE_ACCOUNT_PREFERENCES } from "@/utils_graphQL/mutations";
+import { DELETE_USER } from "@/utils_graphQL/mutations"; 
 
 interface accountShowCaseProps {
   setLoginCheck: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,6 +28,7 @@ export default function AccountShowCase({
 
   const { loading, refetch } = useQuery(GET_ACCOUNT_PREFERENCES);
   const [updateAccount] = useMutation(UPDATE_ACCOUNT_PREFERENCES);
+  const [deleteUser] = useMutation(DELETE_USER);
 
   useEffect(() => {
     const loadPreferences = async () => {
@@ -76,6 +78,20 @@ export default function AccountShowCase({
       },
     });
     navigate("/");
+  };
+
+  const handleDeleteUser = async () => {
+    try {
+      const { data } = await deleteUser();
+      if (data?.deleteAccount?.success) {
+        alert("Your account has been successfully deleted.");
+        handleLogOut(); // Log out the user
+        navigate("/"); // Redirect to home or login page
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("There was an issue deleting your account. Please try again.");
+    }
   };
 
   const addIntolerance = (event: any) => {
@@ -243,6 +259,17 @@ export default function AccountShowCase({
           Log out
         </button>
       </div>
+
+      <div className="mt-6">
+          <button
+            onClick={handleDeleteUser}
+            id="delete-account-button"
+            className="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
+          >
+            Delete Account
+          </button>
+      </div>
+
     </div>
   );
 }

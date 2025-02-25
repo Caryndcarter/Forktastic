@@ -134,10 +134,12 @@ export const DELETE_REVIEW = gql`
   }
 `;
 
-
 export const DELETE_USER = gql`
   mutation deleteUser {
-    deleteUser
+    deleteUser {
+      _id
+      userEmail
+    }
   }
 `;
 
