@@ -23,6 +23,10 @@ const typeDefs = `
     deleteReview(reviewId: ID!): User!
   }
 
+  type Mutation {
+    deleteUser: User!
+  }
+
   type User {
     _id: ID!
     userName: String!

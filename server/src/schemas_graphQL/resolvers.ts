@@ -14,9 +14,9 @@ import mongoose from "mongoose";
 const resolvers = {
   Query: {
     getUser: async (_: any, _args: any, context: any): Promise<any> => {
-      if (context.user) {
+     if (context.user) {
         return User.findOne({ _id: context.user._id });
-      }
+      } 
       throw new AuthenticationError("could not authenticate user.");
     },
 
@@ -582,10 +582,10 @@ const resolvers = {
       console.log("Error saving review ID to user:", err);
       throw new GraphQLError("Error saving review ID to recipe.");
     }
-  },
+    },
 
   // delete a review from the review collection and off of the arrays on the user and the recipes
-  deleteReview: async (
+    deleteReview: async (
     _parent: any,
     { reviewId }: { reviewId: string },
     context: any
@@ -634,9 +634,27 @@ const resolvers = {
       console.log("Error deleting review:", err);
       throw new GraphQLError("Error deleting review.");
     }
+    },
+
+    deleteUser: async (_: any, _args: any, context: any): Promise<any> => {
+      if (!context.user) {
+        throw new AuthenticationError("You must be logged in to delete your account.");
+      }
+
+      const deletedUser = await User.findByIdAndDelete(context.user._id);
+      if (!deletedUser) {
+        throw new Error("User not found or already deleted.");
+      }
+
+      return {
+        _id: deletedUser._id,
+        userEmail: deletedUser.userEmail,
+      }
+     },
+
+    
   },
 
-  },
-};
+}; 
 
 export default resolvers;
