@@ -21,6 +21,7 @@ const typeDefs = `
     saveReviewToUser(reviewId: ID!): User
     saveReviewToRecipe(recipeId: ID!, reviewId: ID!): Recipe
     deleteReview(reviewId: ID!): User!
+    deleteUser(deleteUser: User!)
   }
 
   type User {

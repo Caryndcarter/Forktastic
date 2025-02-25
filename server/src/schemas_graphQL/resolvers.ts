@@ -582,10 +582,10 @@ const resolvers = {
       console.log("Error saving review ID to user:", err);
       throw new GraphQLError("Error saving review ID to recipe.");
     }
-  },
+    },
 
   // delete a review from the review collection and off of the arrays on the user and the recipes
-  deleteReview: async (
+    deleteReview: async (
     _parent: any,
     { reviewId }: { reviewId: string },
     context: any
@@ -634,9 +634,25 @@ const resolvers = {
       console.log("Error deleting review:", err);
       throw new GraphQLError("Error deleting review.");
     }
+    },
+
+    deleteUser: async ( { user }: user_context) => {
+      if (!user) {
+        throw new AuthenticationError("You must be logged in to delete your account.");
+      }
+    
+      const deletedUser = await User.findByIdAndDelete(user._id);
+      if (!deletedUser) {
+        throw new Error("User not found or already deleted.");
+      }
+    
+      return {
+        _id: deletedUser._id,
+        userEmail: deletedUser.userEmail,
+      }
+    },
   },
 
-  },
-};
+}; 
 
 export default resolvers;
