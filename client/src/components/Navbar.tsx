@@ -11,13 +11,11 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const pages = loggedIn
-    ? [
+  const pages = [
         { name: "Search", path: "/search" },
         { name: "Recipe Book", path: "/recipe-book" },
         { name: "Recipe Maker", path: "/recipe-maker" },
       ]
-    : [{ name: "Search", path: "/search" }]
 
   const toggleDropdown = () => setIsOpen(!isOpen)
 

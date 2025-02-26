@@ -23,6 +23,7 @@ const RecipeMaker = () => {
   const [AILoading, setAILoading] = useState<boolean>(false);
   const [createRecipe] = useMutation(CREATE_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
+  const isLoggedIn = Auth.loggedIn()
   const [recipe, setRecipe] = useState<RecipeDetails>({
     _id: null,
     title: "",
@@ -156,6 +157,7 @@ const RecipeMaker = () => {
     }));
     setAILoading(false);
   };
+
 
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24 px-6">
@@ -375,12 +377,25 @@ const RecipeMaker = () => {
         </div>
 
         <p className="text-red-500 font-medium mt-2 text-sm">{errorMessage}</p>
-        <button
-          type="submit"
-          className="w-full bg-[#a84e24] text-white font-bold p-2 rounded"
-        >
-          Create Recipe
-        </button>
+        {isLoggedIn ? (
+          <button
+            type="submit"
+            className="w-full bg-[#a84e24] text-white font-bold p-2 rounded hover:bg-[#8e4220] transition-colors"
+          >
+            Create Recipe
+          </button>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-center text-gray-700 font-medium">Log in to create this recipe</p>
+            <button
+              type="button"
+              onClick={() => navigate("/login")} // Assuming you have a login route
+              className="w-full bg-[#ff9e40] text-white font-bold p-2 rounded hover:bg-[#e7890c] transition-colors"
+            >
+              Log In
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );
