@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { filterInfo } from "../pages/SearchPage";
+import { filterInfo } from "./SearchPage";
 
 interface filterFormProps {
   filterValue: filterInfo;
@@ -81,9 +81,8 @@ export default function FilterForm({
       includeIngredients: updatedIngredients,
     }));
 
-    setSelectedIngredient(""); 
-    setSubmitted(true); 
-
+    setSelectedIngredient("");
+    setSubmitted(true);
   };
 
   const removeIntolerance = (intolerance: string) => {
@@ -104,7 +103,7 @@ export default function FilterForm({
     const updatedIngredients = filterValue.includeIngredients.filter(
       (item) => item !== ingredient
     );
-  
+
     // Update the filterValue state
     setFilterValue((previousValues: filterInfo) => ({
       ...previousValues,
@@ -114,20 +113,19 @@ export default function FilterForm({
 
   //attempting to make the setSelectedIngredient reset after hitting the plus button, needs work
   useEffect(() => {
-      if (submitted) {
-        //console.log("Clearing selected ingredient");
-        setSelectedIngredient(""); 
-        setSubmitted(false); 
-      }
-    }, [submitted]); 
-  
-
+    if (submitted) {
+      //console.log("Clearing selected ingredient");
+      setSelectedIngredient("");
+      setSubmitted(false);
+    }
+  }, [submitted]);
 
   return (
     <form onSubmit={handleFilterUpdate} className="space-y-6">
       <section className="Filters-info">
         <p className="text-sm text-gray-500">
-          Filters are set from your Account Preferences, but you can change them here to experiment.
+          Filters are set from your Account Preferences, but you can change them
+          here to experiment.
         </p>
       </section>
       <section className="Diet-section">
