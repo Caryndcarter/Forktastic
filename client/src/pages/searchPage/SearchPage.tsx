@@ -1,10 +1,10 @@
 import { useState, useCallback, useRef, useLayoutEffect } from "react";
-import Recipe from "../interfaces/recipe";
-import RecipeCard from "../components/RecipeCard";
-import FilterForm from "../components/FilterForm";
-import apiService from "../api/apiService";
+import Recipe from "@/interfaces/recipe";
+import FilterForm from "./FilterForm";
+import apiService from "@/api/apiService";
 import { useQuery } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
+import Results from "./Results";
 
 export interface filterInfo {
   diet?: string;
@@ -13,7 +13,7 @@ export interface filterInfo {
   includeIngredients: string[];
 }
 
-const RecipeSearchPage: React.FC = () => {
+const SearchPage: React.FC = () => {
   const queryReference = useRef<HTMLInputElement | null>(null);
   const [results, setResults] = useState<Recipe[]>([]); // Store the search results
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
@@ -27,7 +27,7 @@ const RecipeSearchPage: React.FC = () => {
   // stategicly trigger re-searches for responsivness
   // this code triggers on two scenarios:
   // 1: before the page first loads
-  // 2: when the filter value is updated
+  // 2: when the filter value is changed
   useLayoutEffect(() => {
     // this code shouldn't trigger when the filter opens
     if (filterVisible) return;
@@ -151,20 +151,7 @@ const RecipeSearchPage: React.FC = () => {
         </div>
 
         {/* Search Results */}
-        <div
-          id="search-results"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-        >
-          {loading ? (
-            <p>Loading...</p>
-          ) : !results ? (
-            <p>Something went wrong...</p>
-          ) : results.length === 0 ? (
-            <p>No results found...</p>
-          ) : (
-            results.map((recipe) => <RecipeCard recipe={recipe} />)
-          )}
-        </div>
+        <Results results={results} loading={loading} />
       </div>
 
       {/* Filter Form Modal */}
@@ -193,4 +180,4 @@ const RecipeSearchPage: React.FC = () => {
   );
 };
 
-export default RecipeSearchPage;
+export default SearchPage;
