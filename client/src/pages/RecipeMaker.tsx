@@ -389,7 +389,7 @@ const RecipeMaker = () => {
             <p className="text-center text-gray-700 font-medium">Log in to create this recipe</p>
             <button
               type="button"
-              onClick={() => navigate("/login")} // Assuming you have a login route
+              onClick={() => navigate("/user-info")} 
               className="w-full bg-[#ff9e40] text-white font-bold p-2 rounded hover:bg-[#e7890c] transition-colors"
             >
               Log In
