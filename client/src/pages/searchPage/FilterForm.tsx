@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { filterInfo } from "../pages/SearchPage";
+import { useState, useEffect } from "react";
+
+import { filterInfo } from "./SearchPage";
 
 interface filterFormProps {
   filterValue: filterInfo;
@@ -13,17 +14,21 @@ export default function FilterForm({
   setFilterVisible,
 }: filterFormProps) {
   const [selectedIngredient, setSelectedIngredient] = useState<string>("");
+  const [submitted, setSubmitted] = useState(false);
 
   const handleFilterUpdate = (e: any) => {
     e.preventDefault();
-    console.log(filterValue);
+    //console.log(filterValue);
     setFilterVisible(false);
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (event: any) => {
+    event.preventDefault();
+    const { name, value } = event.target;
+    console.log(`Name: ${name}\nValue: ${value}`);
     setFilterValue({
       ...filterValue,
-      [e.target.id]: e.target.value,
+      [name]: value,
     });
   };
 
@@ -33,12 +38,12 @@ export default function FilterForm({
     event.target.value = "";
 
     if (filterValue.intolerances.includes(selectedIntolerance)) {
-      console.log("This intolerence is already in the user settings");
+      //console.log("This intolerence is already in the user settings");
       return;
     }
 
     if (selectedIntolerance === "") {
-      console.log("Please select a dropdown");
+      //console.log("Please select a dropdown");
       return;
     }
 
@@ -49,7 +54,7 @@ export default function FilterForm({
 
     setFilterValue((previousValues: filterInfo) => ({
       ...previousValues,
-      intolerance: updatedIntolerances,
+      intolerances: updatedIntolerances,
     }));
   };
 
@@ -57,12 +62,12 @@ export default function FilterForm({
     e.preventDefault();
 
     if (filterValue.includeIngredients.includes(selectedIngredient)) {
-      console.log("This ingredient is already in the user settings");
+      //console.log("This ingredient is already in the user settings");
       return;
     }
 
     if (selectedIngredient === "") {
-      console.log("Please enter an ingredient.");
+      //console.log("Please enter an ingredient.");
       return;
     }
 
@@ -75,6 +80,9 @@ export default function FilterForm({
       ...previousValues,
       includeIngredients: updatedIngredients,
     }));
+
+    setSelectedIngredient("");
+    setSubmitted(true);
   };
 
   const removeIntolerance = (intolerance: string) => {
@@ -86,12 +94,40 @@ export default function FilterForm({
     // Update the formValues state
     setFilterValue((previousValues: filterInfo) => ({
       ...previousValues,
-      intolerance: updatedIntolerances,
+      intolerances: updatedIntolerances,
     }));
   };
 
+  const removeIngredient = (ingredient: string) => {
+    // Filter out the specified ingredient
+    const updatedIngredients = filterValue.includeIngredients.filter(
+      (item) => item !== ingredient
+    );
+
+    // Update the filterValue state
+    setFilterValue((previousValues: filterInfo) => ({
+      ...previousValues,
+      includeIngredients: updatedIngredients,
+    }));
+  };
+
+  //attempting to make the setSelectedIngredient reset after hitting the plus button, needs work
+  useEffect(() => {
+    if (submitted) {
+      //console.log("Clearing selected ingredient");
+      setSelectedIngredient("");
+      setSubmitted(false);
+    }
+  }, [submitted]);
+
   return (
     <form onSubmit={handleFilterUpdate} className="space-y-6">
+      <section className="Filters-info">
+        <p className="text-sm text-gray-500">
+          Filters are set from your Account Preferences, but you can change them
+          here to experiment.
+        </p>
+      </section>
       <section className="Diet-section">
         <label
           className="block text-sm font-medium text-gray-700 mb-1"
@@ -100,14 +136,15 @@ export default function FilterForm({
           Diet
         </label>
         <select
-          id="diet"
+          name="diet"
+          id="diet-select"
           className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
           onChange={handleChange}
         >
           <option disabled selected>
             {filterValue.diet ? filterValue.diet : "Select a diet"}
           </option>
-          <option value="">None</option>
+          <option value="None">None</option>
           <option value="Gluten Free">Gluten Free</option>
           <option value="Ketogenic">Ketogenic</option>
           <option value="Vegetarian">Vegetarian</option>
@@ -132,7 +169,8 @@ export default function FilterForm({
 
         <div className="flex items-center space-x-2">
           <select
-            id="intolerance"
+            name="intolerances"
+            id="intolerances-select"
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
             onChange={(event: any) => {
               addIntolerance(event);
@@ -199,7 +237,8 @@ export default function FilterForm({
         </label>
 
         <select
-          id="cuisine"
+          name="cuisine"
+          id="cuisine-select"
           className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
           onChange={handleChange}
         >
@@ -248,9 +287,10 @@ export default function FilterForm({
         <div className="flex items-center space-x-2">
           <input
             type="text"
-            id="intolerance"
+            name="includeIngredients"
+            id="ingredients-select"
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
-            placeholder="Enter an intolerance"
+            placeholder="Enter an ingredient"
             onChange={(e: any) => {
               setSelectedIngredient(e.target.value);
             }}
@@ -285,7 +325,7 @@ export default function FilterForm({
                 <span className="text-gray-800">{item}</span>
                 <button
                   onClick={() => {
-                    removeIntolerance(item);
+                    removeIngredient(item);
                   }}
                   className="text-gray-400 hover:text-red-500 focus:outline-none focus:text-red-500 transition-colors duration-200"
                   aria-label={`Remove ${item}`}
@@ -312,6 +352,7 @@ export default function FilterForm({
       <div className="flex items-center justify-between">
         <button
           type="submit"
+          id="submit-search-filters"
           className="w-full bg-orange-500 text-white py-2 px-4 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 transition duration-150 ease-in-out"
         >
           Update Filters

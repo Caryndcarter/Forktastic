@@ -19,13 +19,12 @@ import Auth from "../utils_graphQL/auth";
 //import RecipeDetails from "../interfaces/recipeDetails.ts";
 import { Review } from "../components/Review";
 import SavedReview from "../components/SavedReview";
-import Navbar from "../components/Navbar";
 import AverageRating from "../components/AverageRating";
 
 const RecipeShowcase = () => {
   //const currentRecipeDetails = localData.getCurrentRecipe();
   const { currentRecipeDetails, setCurrentRecipeDetails } =
-  useContext(currentRecipeContext);
+    useContext(currentRecipeContext);
   const navigate = useNavigate();
   const { setIsEditing } = useContext(editingContext);
 
@@ -119,7 +118,7 @@ const RecipeShowcase = () => {
         });
         localData.setCurrentRecipe(currentRecipeDetails);
 
-        console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
+        //console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
 
         // save this recipe to the user
         await saveRecipe({
@@ -183,7 +182,6 @@ const RecipeShowcase = () => {
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24">
       {" "}
-      <Navbar />
       {/* Recipe Details */}
       <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
         {/* Recipe Image */}
@@ -258,7 +256,10 @@ const RecipeShowcase = () => {
               {isSaved ? "Delete Recipe" : "Save Recipe"}
             </button>
           ) : (
-            <div className="text-gray-500 italic mb-6">
+            <div
+              id="save-button-placeholder"
+              className="text-gray-500 italic mb-6"
+            >
               Log in to save recipes.
             </div>
           )}
@@ -286,7 +287,10 @@ const RecipeShowcase = () => {
             </div>
           )
         ) : (
-          <div className="text-gray-500 italic mb-6">
+          <div
+            id="review-button-placeholder"
+            className="text-gray-500 italic mb-6"
+          >
             Log in to write a review.
           </div>
         )}

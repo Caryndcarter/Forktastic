@@ -1,4 +1,5 @@
 type diet =
+  | "None"
   | "Gluten Free"
   | "Ketogenic"
   | "Vegetarian"
@@ -12,6 +13,7 @@ type diet =
   | "Whole30";
 
 const dietValues = [
+  "None",
   "Gluten Free",
   "Ketogenic",
   "Vegetarian",

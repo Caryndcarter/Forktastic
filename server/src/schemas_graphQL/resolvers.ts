@@ -14,9 +14,9 @@ import mongoose from "mongoose";
 const resolvers = {
   Query: {
     getUser: async (_: any, _args: any, context: any): Promise<any> => {
-      if (context.user) {
+     if (context.user) {
         return User.findOne({ _id: context.user._id });
-      }
+      } 
       throw new AuthenticationError("could not authenticate user.");
     },
 
@@ -29,8 +29,8 @@ const resolvers = {
         return null;
       }
 
-      console.log("Received recipeId:", recipeId);
-      console.log("Context user:", context.user);
+      //console.log("Received recipeId:", recipeId);
+      //console.log("Context user:", context.user);
 
       if (!context.user) {
         throw new AuthenticationError("User not authenticated.");
@@ -120,7 +120,7 @@ const resolvers = {
 
       const { mongoID, spoonacularId } = args;
 
-      console.log(mongoID, spoonacularId);
+      //console.log(mongoID, spoonacularId);
 
       let recipe: recipe | null = null;
 
@@ -197,7 +197,7 @@ const resolvers = {
       }
 
       const token = signToken(user.userName, user.userPassword, user._id);
-      console.log(`User ${user.userName} sucessfully signed up`);
+      //console.log(`User ${user.userName} sucessfully signed up`);
       return { token, user };
     },
 
@@ -207,7 +207,7 @@ const resolvers = {
       args: { userEmail: string; userPassword: string }
     ): Promise<any> => {
       const { userEmail, userPassword } = args;
-      console.log(userEmail);
+      //console.log(userEmail);
       const user = await User.findOne({ userEmail: userEmail });
 
       if (!user) {
@@ -253,7 +253,7 @@ const resolvers = {
       }
 
       await user.save();
-      console.log(`${user.userName}'s new preferences are saved`);
+      //console.log(`${user.userName}'s new preferences are saved`);
       return {
         id: user._id,
         diet: user.diet || null,
@@ -296,7 +296,7 @@ const resolvers = {
         }
 
         if (duplicate) {
-          console.log("duplicate found.");
+          //console.log("duplicate found.");
           return duplicate;
         }
 
@@ -335,15 +335,15 @@ const resolvers = {
       },
       context: user_context
     ) => {
-      const userID = context.user._id;
-      const authorID = recipeInput.author;
+      //const userID = context.user._id;
+      //const authorID = recipeInput.author;
 
-      console.log("User's id: " + userID + " type of: " + typeof userID);
-      console.log("Author's id: " + authorID + " type of: " + typeof authorID);
+      //console.log("User's id: " + userID + " type of: " + typeof userID);
+      //console.log("Author's id: " + authorID + " type of: " + typeof authorID);
 
       try {
         if (context.user._id == recipeInput.author) {
-          console.log("editing my own recipe");
+          //console.log("editing my own recipe");
           const updatedRecipe = await Recipe.findOneAndUpdate(
             { author: context.user._id },
             recipeInput,
@@ -387,7 +387,7 @@ const resolvers = {
       }
 
       try {
-        console.log("Attempting to update user with recipe:", recipeId);
+        //console.log("Attempting to update user with recipe:", recipeId);
 
         // Check if the recipe exists in the Recipe collection
         const existingRecipe = await Recipe.findById(recipeId);
@@ -402,7 +402,7 @@ const resolvers = {
           { new: true, runValidators: true }
         );
 
-        console.log("Updated user:", updatedUser);
+        //console.log("Updated user:", updatedUser);
 
         if (!updatedUser) {
           console.log("User not found or update failed.");
@@ -424,7 +424,7 @@ const resolvers = {
       { recipeId }: { recipeId: string },
       context: any
     ) => {
-      console.log("Attempting to remove recipe:", recipeId);
+      //console.log("Attempting to remove recipe:", recipeId);
 
       if (!context.user) {
         throw new GraphQLError("You must be logged in!");
@@ -432,7 +432,7 @@ const resolvers = {
 
       // Convert recipeId to ObjectId to ensure correct matching
       const objectId = new mongoose.Types.ObjectId(recipeId);
-      console.log("Converted to ObjectId:", objectId);
+      //console.log("Converted to ObjectId:", objectId);
 
       try {
         const updatedUser = await User.findByIdAndUpdate(
@@ -441,7 +441,7 @@ const resolvers = {
           { new: true, runValidators: true }
         );
 
-        console.log("Saved recipes after:", updatedUser?.savedRecipes);
+        //console.log("Saved recipes after:", updatedUser?.savedRecipes);
 
         if (!updatedUser) {
           throw new GraphQLError("Couldn't find user with this id!");
@@ -483,7 +483,7 @@ const resolvers = {
           userName: user.userName,
         });
 
-        console.log(newReview); //
+        //console.log(newReview); //
         // // Save the review to the database
         const savedReview = await newReview.save();
 
@@ -510,7 +510,7 @@ const resolvers = {
       }
 
       try {
-        console.log("Attempting to update user with review:", reviewId);
+        //console.log("Attempting to update user with review:", reviewId);
 
         // Check if the recipe exists in the Recipe collection
         const existingReview = await Review.findById(reviewId);
@@ -525,7 +525,7 @@ const resolvers = {
           { new: true, runValidators: true }
         );
 
-        console.log("Updated user:", updatedUser);
+       // console.log("Updated user:", updatedUser);
 
         if (!updatedUser) {
           console.log("User not found or update failed.");
@@ -551,7 +551,7 @@ const resolvers = {
     ) => {
       try {
         const { recipeId, reviewId } = args;
-        console.log("Attempting to update recipe with review:", reviewId);
+        //console.log("Attempting to update recipe with review:", reviewId);
 
         // Check if the recipe exists in the Recipe collection
         const existingReview = await Review.findById(reviewId);
@@ -568,7 +568,7 @@ const resolvers = {
           { new: true, runValidators: true }
         );
 
-        console.log("Updated recipe:", updatedRecipe);
+        //console.log("Updated recipe:", updatedRecipe);
 
         if (!updatedRecipe) {
           console.log("Recipe not found or update failed.");
@@ -582,15 +582,15 @@ const resolvers = {
       console.log("Error saving review ID to user:", err);
       throw new GraphQLError("Error saving review ID to recipe.");
     }
-  },
+    },
 
   // delete a review from the review collection and off of the arrays on the user and the recipes
-  deleteReview: async (
+    deleteReview: async (
     _parent: any,
     { reviewId }: { reviewId: string },
     context: any
   ) => {
-    console.log("Attempting to delete review:", reviewId);
+    //console.log("Attempting to delete review:", reviewId);
 
     if (!context.user) {
       throw new GraphQLError("You must be logged in!");
@@ -600,7 +600,7 @@ const resolvers = {
 
     // Convert recipeId to ObjectId to ensure correct matching
     const objectId = new mongoose.Types.ObjectId(reviewId);
-    console.log("Converted to ObjectId:", objectId);
+    //console.log("Converted to ObjectId:", objectId);
 
     const deletedReview = await Review.findByIdAndDelete(objectId);
     
@@ -608,7 +608,7 @@ const resolvers = {
       throw new GraphQLError("Review not found.");
     }
 
-    console.log("Deleted Review:", deletedReview);
+   //console.log("Deleted Review:", deletedReview);
 
     await Recipe.findOneAndUpdate(
       { reviews: objectId },
@@ -617,7 +617,7 @@ const resolvers = {
     );
 
 
-    console.log("Removed review from recipe.");
+    //console.log("Removed review from recipe.");
 
       const updatedUser = await User.findByIdAndUpdate(
         context.user._id,
@@ -634,9 +634,27 @@ const resolvers = {
       console.log("Error deleting review:", err);
       throw new GraphQLError("Error deleting review.");
     }
+    },
+
+    deleteUser: async (_: any, _args: any, context: any): Promise<any> => {
+      if (!context.user) {
+        throw new AuthenticationError("You must be logged in to delete your account.");
+      }
+
+      const deletedUser = await User.findByIdAndDelete(context.user._id);
+      if (!deletedUser) {
+        throw new Error("User not found or already deleted.");
+      }
+
+      return {
+        _id: deletedUser._id,
+        userEmail: deletedUser.userEmail,
+      }
+     },
+
+    
   },
 
-  },
-};
+}; 
 
 export default resolvers;

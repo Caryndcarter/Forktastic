@@ -12,11 +12,10 @@ import { Sparkles, Loader2 } from "lucide-react";
 import { useMutation } from "@apollo/client";
 import { CREATE_RECIPE } from "@/utils_graphQL/mutations";
 import { SAVE_RECIPE } from "@/utils_graphQL/mutations";
-import Navbar from "../components/Navbar";
 import localData from "@/utils_graphQL/localStorageService";
 
 const RecipeMaker = () => {
-  let currentRecipeDetails = localData.getCurrentRecipe();
+  const currentRecipeDetails = localData.getCurrentRecipe();
   const { isEditing, setIsEditing } = useContext(editingContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
@@ -24,6 +23,7 @@ const RecipeMaker = () => {
   const [AILoading, setAILoading] = useState<boolean>(false);
   const [createRecipe] = useMutation(CREATE_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
+  const isLoggedIn = Auth.loggedIn()
   const [recipe, setRecipe] = useState<RecipeDetails>({
     _id: null,
     title: "",
@@ -128,7 +128,7 @@ const RecipeMaker = () => {
     });
 
     if (data?.createRecipe) {
-      console.log(data.createRecipe._id);
+      //console.log(data.createRecipe._id);
       await saveRecipe({
         variables: {
           recipeId: data.createRecipe._id,
@@ -158,9 +158,9 @@ const RecipeMaker = () => {
     setAILoading(false);
   };
 
+
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24 px-6">
-      <Navbar />
       <h1 className="text-3xl font-bold text-center mb-8">Create a Recipe</h1>
 
       <form
@@ -377,12 +377,25 @@ const RecipeMaker = () => {
         </div>
 
         <p className="text-red-500 font-medium mt-2 text-sm">{errorMessage}</p>
-        <button
-          type="submit"
-          className="w-full bg-[#a84e24] text-white font-bold p-2 rounded"
-        >
-          Create Recipe
-        </button>
+        {isLoggedIn ? (
+          <button
+            type="submit"
+            className="w-full bg-[#a84e24] text-white font-bold p-2 rounded hover:bg-[#8e4220] transition-colors"
+          >
+            Create Recipe
+          </button>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-center text-gray-700 font-medium">Log in to create this recipe</p>
+            <button
+              type="button"
+              onClick={() => navigate("/user-info")} 
+              className="w-full bg-[#ff9e40] text-white font-bold p-2 rounded hover:bg-[#e7890c] transition-colors"
+            >
+              Log In
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );

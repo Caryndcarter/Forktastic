@@ -7,11 +7,14 @@ import {
   createHttpLink,
 } from "@apollo/client";
 
+import Navbar from "./components/Navbar.js";
+
 //import Navbar from './components/Navbar';
 import { createContext, useState } from "react";
 import { setContext } from "@apollo/client/link/context";
 import AuthService from "./utils_graphQL/auth.js";
 import RecipeDetails from "./interfaces/recipeDetails";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Apollo Client setup
 const httpLink = createHttpLink({
@@ -68,18 +71,20 @@ export const editingContext = createContext({
 
 function App() {
   const [currentRecipeDetails, setCurrentRecipeDetails] =
-  useState<RecipeDetails>(defaultRecipe);
+    useState<RecipeDetails>(defaultRecipe);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   return (
     <currentRecipeContext.Provider
-    value={{ currentRecipeDetails, setCurrentRecipeDetails }}
+      value={{ currentRecipeDetails, setCurrentRecipeDetails }}
     >
-    <editingContext.Provider value={{ isEditing, setIsEditing }}>
-      <ApolloProvider client={client}>
-        <Outlet />
-      </ApolloProvider>
-    </editingContext.Provider>
+      <editingContext.Provider value={{ isEditing, setIsEditing }}>
+        <ApolloProvider client={client}>
+          <ScrollToTop />
+          <Navbar />
+          <Outlet />
+        </ApolloProvider>
+      </editingContext.Provider>
     </currentRecipeContext.Provider>
   );
 }
