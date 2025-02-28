@@ -65,12 +65,12 @@ export default function AccountShowCase({
       ...prev,
       diet: e.target.value,
     }));
-    console.log(formValues);
+    //console.log(formValues);
   };
 
   const handleAccountUpdate = (e: any) => {
     e.preventDefault();
-    console.log("Updating diet with value:", formValues.diet);
+    //console.log("Updating diet with value:", formValues.diet);
 
     updateAccount({
       variables: {
