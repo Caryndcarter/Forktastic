@@ -1,0 +1,17 @@
+/* Hide mobile navbar by default */
+#mobile-navbar {
+  display: none;
+}
+
+/* Show mobile navbar and hide desktop navbar on small screens */
+@media (max-width: 768px) {
+  #desktop-navbar {
+    display: none;
+  }
+  #mobile-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+}
