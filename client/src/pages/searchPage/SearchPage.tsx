@@ -5,6 +5,7 @@ import apiService from "@/api/apiService";
 import { useQuery } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
 import Results from "./Results";
+import localStorageService from "@/utils_graphQL/localStorageService";
 
 export interface filterInfo {
   diet?: string;
@@ -23,6 +24,14 @@ const SearchPage: React.FC = () => {
     includeIngredients: [],
   });
   const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
+
+  useLayoutEffect(() => {
+    const query = localStorageService.getQuery();
+    console.log(query);
+    if (queryReference.current) {
+      queryReference.current.value = query;
+    }
+  }, []);
 
   // stategicly trigger re-searches for responsivness
   // this code triggers on two scenarios:
