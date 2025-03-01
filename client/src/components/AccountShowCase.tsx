@@ -34,7 +34,7 @@ export default function AccountShowCase({
     const loadPreferences = async () => {
       if (loading) return;
 
-      // Force refetch to get latest data
+      // Refetch to get latest data
       const { data: refreshedData } = await refetch();
 
       if (refreshedData?.getUser) {
@@ -60,16 +60,17 @@ export default function AccountShowCase({
   };
 
   const handleChange = (e: any) => {
+    //console.log(e);
     setFormValues((prev) => ({
       ...prev,
-      [e.target.id]: e.target.value,
+      diet: e.target.value,
     }));
     //console.log(formValues);
   };
 
   const handleAccountUpdate = (e: any) => {
     e.preventDefault();
-    console.log("Updating diet with value:", formValues.diet);
+    //console.log("Updating diet with value:", formValues.diet);
 
     updateAccount({
       variables: {
