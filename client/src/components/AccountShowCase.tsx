@@ -62,7 +62,7 @@ export default function AccountShowCase({
   const handleChange = (e: any) => {
     setFormValues((prev) => ({
       ...prev,
-      [e.target.id]: e.target.value,
+      diet: e.target.value,
     }));
     //console.log(formValues);
   };
