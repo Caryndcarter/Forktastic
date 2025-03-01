@@ -78,7 +78,7 @@ const HomePage = () => {
       className="flex items-center gap-2 bg-white hover:bg-gray-100 text-[#a84e24] border-[#a84e24] hover:text-[#a84e24] transition-all"
     >
       <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-      {isLoading ? "Refreshing..." : "Refresh Recipes"}
+      {isLoading ? "Generating..." : "Generate New Recipes"}
     </Button>
   )
 
