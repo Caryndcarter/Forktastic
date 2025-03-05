@@ -40,7 +40,7 @@ const RecipeShowcase = () => {
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isAuthor, setIsAuthor] = useState<boolean>(false);
-  const [reviewAdded, setReviewAdded] = useState(false);
+  const [reviewCount, setReviewCount] = useState(0);
 
   //mutations and queries
   const [addRecipe] = useMutation(ADD_RECIPE);
@@ -232,7 +232,7 @@ const RecipeShowcase = () => {
           {/* Average Rating Component */}
           <AverageRating 
             recipeId={currentRecipeDetails._id} 
-            triggerRefetch={reviewAdded}
+            triggerRefetch={reviewCount}
           />
 
           {loginCheck ? (
@@ -283,7 +283,7 @@ const RecipeShowcase = () => {
                 recipeId={currentRecipeDetails._id}
                 existingReview={null} // Replace with actual review data if available
                 onReviewSubmit={() => refetch()}
-                onReviewAdded={() => setReviewAdded(prev => !prev)}
+                onReviewAdded={() => setReviewCount(prev => prev + 1)}
               />
             </div>
           ) : (
