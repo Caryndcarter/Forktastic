@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
 import { editingContext } from "../App";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CopyRecipeButton from "@/components/CopyButton";
 import EditRecipeButton from "@/components/EditButton";
 import localData from "@/utils_graphQL/localStorageService";
@@ -51,8 +51,7 @@ const RecipeShowcase = () => {
     skip: skipQuery,
   });
 
-  // Check login status on mount and when recipe changes
-  useEffect(() => {
+  useLayoutEffect(() => {
     try {
       const isLoggedIn = Auth.loggedIn();
       // Only try to get profile if logged in
@@ -70,27 +69,8 @@ const RecipeShowcase = () => {
     }
   }, []);
 
-  // Check login status on mount and when recipe changes
-  useEffect(() => {
-    try {
-      const isLoggedIn = Auth.loggedIn();
-      setLoginCheck(isLoggedIn);
-      // if logged in, activate the query to check if the recipe is saved
-      if (isLoggedIn && currentRecipeDetails._id) {
-        setSkipQuery(false);
-        // Force a refetch when recipe ID changes
-        refetch();
-      } else {
-        setSkipQuery(true);
-      }
-    } catch (error) {
-      console.log("Auth error:", error);
-      setLoginCheck(false);
-      setSkipQuery(true);
-    }
-  }, [currentRecipeDetails._id, refetch]);
-
   // This effect determines if the recipe is saved by checking the database.
+  // This is updated whenever the query refetches.
   useEffect(() => {
     if (data?.getSpecificRecipeId) {
       setIsSaved(true);
