@@ -100,7 +100,10 @@ export function Review({ existingReview, onReviewSubmit, onReviewAdded }: Review
 
           addReviewToContext(data.addReview._id);
           // Trigger refetch of reviews
-          onReviewAdded?.();
+          if (onReviewAdded) {
+            //console.log("Triggering review refetch");
+            onReviewAdded();
+          }
         }
       }
       setSubmitted(true);

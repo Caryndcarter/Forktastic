@@ -5,10 +5,10 @@ import { Star } from "lucide-react";
 
 interface AverageRatingProps {
   recipeId: string | null;
-  triggerRefetch?: boolean;
+  triggerRefetch?: number;
 }
 
-const AverageRating = ({ recipeId, triggerRefetch = false }: AverageRatingProps) => {
+const AverageRating = ({ recipeId, triggerRefetch = 0 }: AverageRatingProps) => {
   const [averageRating, setAverageRating] = useState<number | null>(null);
 
   // Fetch reviews for this recipe
@@ -16,11 +16,9 @@ const AverageRating = ({ recipeId, triggerRefetch = false }: AverageRatingProps)
     variables: { recipeId },
   });
 
-
+  // Effect to handle refetching when triggerRefetch changes
   useEffect(() => {
-    if (triggerRefetch) {
-      refetch();
-    }
+    refetch();
   }, [triggerRefetch, refetch]);
 
   useEffect(() => {

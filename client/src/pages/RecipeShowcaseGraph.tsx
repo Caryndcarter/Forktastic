@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { useContext, useLayoutEffect } from "react";
+import { useContext, useEffect } from "react";
 import { currentRecipeContext } from "../App";
 import { editingContext } from "../App";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CopyRecipeButton from "@/components/CopyButton";
 import EditRecipeButton from "@/components/EditButton";
 import localData from "@/utils_graphQL/localStorageService";
@@ -40,7 +40,7 @@ const RecipeShowcase = () => {
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isAuthor, setIsAuthor] = useState<boolean>(false);
-  const [reviewAdded, setReviewAdded] = useState(false);
+  const [reviewCount, setReviewCount] = useState(0);
 
   //mutations and queries
   const [addRecipe] = useMutation(ADD_RECIPE);
@@ -51,7 +51,8 @@ const RecipeShowcase = () => {
     skip: skipQuery,
   });
 
-  useLayoutEffect(() => {
+  // Check login status on mount and when recipe changes
+  useEffect(() => {
     try {
       const isLoggedIn = Auth.loggedIn();
       // Only try to get profile if logged in
@@ -69,8 +70,27 @@ const RecipeShowcase = () => {
     }
   }, []);
 
+  // Check login status on mount and when recipe changes
+  useEffect(() => {
+    try {
+      const isLoggedIn = Auth.loggedIn();
+      setLoginCheck(isLoggedIn);
+      // if logged in, activate the query to check if the recipe is saved
+      if (isLoggedIn && currentRecipeDetails._id) {
+        setSkipQuery(false);
+        // Force a refetch when recipe ID changes
+        refetch();
+      } else {
+        setSkipQuery(true);
+      }
+    } catch (error) {
+      console.log("Auth error:", error);
+      setLoginCheck(false);
+      setSkipQuery(true);
+    }
+  }, [currentRecipeDetails._id, refetch]);
+
   // This effect determines if the recipe is saved by checking the database.
-  // This is updated whenever the query refetches.
   useEffect(() => {
     if (data?.getSpecificRecipeId) {
       setIsSaved(true);
@@ -232,7 +252,7 @@ const RecipeShowcase = () => {
           {/* Average Rating Component */}
           <AverageRating 
             recipeId={currentRecipeDetails._id} 
-            triggerRefetch={reviewAdded}
+            triggerRefetch={reviewCount}
           />
 
           {loginCheck ? (
@@ -283,7 +303,7 @@ const RecipeShowcase = () => {
                 recipeId={currentRecipeDetails._id}
                 existingReview={null} // Replace with actual review data if available
                 onReviewSubmit={() => refetch()}
-                onReviewAdded={() => setReviewAdded(prev => !prev)}
+                onReviewAdded={() => setReviewCount(prev => prev + 1)}
               />
             </div>
           ) : (
