@@ -17,6 +17,7 @@ interface ReviewProps {
   recipeId: string | null;
   existingReview: ReviewData | null;
   onReviewSubmit: () => void;
+  onReviewAdded?: () => void;
 }
 
 interface ReviewData {
@@ -29,7 +30,7 @@ interface GetReviewsData {
 }
 
 
-export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
+export function Review({ existingReview, onReviewSubmit, onReviewAdded }: ReviewProps) {
   //const currentRecipeDetails = localData.getCurrentRecipe();
   const [rating, setRating] = useState(existingReview?.rating || 0);
   const [comment, setComment] = useState(existingReview?.comment || "");
@@ -98,6 +99,8 @@ export function Review({ existingReview, onReviewSubmit }: ReviewProps) {
           });
 
           addReviewToContext(data.addReview._id);
+          // Trigger refetch of reviews
+          onReviewAdded?.();
         }
       }
       setSubmitted(true);
