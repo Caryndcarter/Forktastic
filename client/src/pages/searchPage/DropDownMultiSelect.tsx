@@ -95,7 +95,7 @@ export default function DropDownMultiSelect({
                 onChange={(event: any) => {
                   updateSelection(item, event.target.value);
                 }}
-                className=" bg-white border border-gray-200 rounded-lg p-3 shadow-sm m-2"
+                className=" bg-white border border-gray-200 rounded-lg p-3 shadow-sm m-2 w-full"
               >
                 <option selected value={item}>
                   {item}
