@@ -35,6 +35,18 @@ export default function DropDownMultiSelect({
     setSelected(updatedSelection);
   };
 
+  const updateSelection = (current: string, target: string) => {
+    if (!target) {
+      return;
+    }
+
+    if (selected.includes(target)) {
+      return;
+    }
+    const filteredSelection = selected.filter((item) => item !== current);
+    setSelected([...filteredSelection, target]);
+  };
+
   return (
     <>
       <label
@@ -75,9 +87,40 @@ export default function DropDownMultiSelect({
             <li
               key={`${item}-${name}`}
               id={`${lowerCaseName}-${item}`}
-              className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-3 shadow-sm m-2"
+              className="flex items-center justify-between"
             >
-              <span className="text-gray-800">{item}</span>
+              <select
+                name={`${item}-${lowerCaseName}`}
+                id={`${item}-${lowerCaseName}`}
+                onChange={(event: any) => {
+                  updateSelection(item, event.target.value);
+                }}
+                className=" bg-white border border-gray-200 rounded-lg p-3 shadow-sm m-2"
+              >
+                <option selected value={item}>
+                  {item}
+                </option>
+
+                {/* all option components*/}
+                {options.map((option) => {
+                  return (
+                    <option value={option} id={`${option}-option`}>
+                      {option}
+                    </option>
+                  );
+                })}
+                <span className="text-gray-800">{item}</span>
+                <button
+                  onClick={() => {
+                    removeSelection(item);
+                  }}
+                  className="text-gray-400 hover:text-red-500 focus:outline-none focus:text-red-500 transition-colors duration-200"
+                  aria-label={`remove ${item}`}
+                  id={`remove-${item}`}
+                >
+                  <Trash2 />
+                </button>
+              </select>
               <button
                 onClick={() => {
                   removeSelection(item);
