@@ -29,5 +29,5 @@ jobs:
             cache: 'npm'
 
       - run: | 
-          npm --prefix cdk run install
+          npm --prefix cdk install
           npm --prefix cdk run cdk deploy --require-approval never
