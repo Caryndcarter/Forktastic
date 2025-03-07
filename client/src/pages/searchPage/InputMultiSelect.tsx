@@ -16,7 +16,6 @@ export default function InputMultiSelect({
   const [selected, setSelected] = useState<string[]>(initialSelection);
 
   const addSelection = (target: string) => {
-    console.log(target);
     if (!target) {
       return;
     }
@@ -24,18 +23,7 @@ export default function InputMultiSelect({
     if (selected.includes(target)) {
       return;
     }
-    console.log(`Adding this to the selection: ${target}`);
-    setSelected((previousValues) => {
-      if (previousValues.includes(target)) {
-        return previousValues; // Don't add duplicates
-      }
-      console.log(`Adding this to the selection: ${target}`);
-      return [...previousValues, target]; // Append new item correctly
-    });
-
-    setTimeout(() => {
-      console.log(selected.length);
-    }, 100);
+    setSelected((previousValues: string[]) => [...previousValues, target]);
   };
 
   const removeSelection = (target: string) => {
