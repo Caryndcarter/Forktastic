@@ -1,0 +1,12 @@
+name: Deploy To AWS using CDK
+
+on:
+  push:
+    tags: cdk-*
+
+jobs:
+  ci:
+    name: Deploy To AWS using CDK
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
