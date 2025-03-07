@@ -16,6 +16,7 @@ export default function InputMultiSelect({
   const [selected, setSelected] = useState<string[]>(initialSelection);
 
   const addSelection = (target: string) => {
+    console.log(target);
     if (!target) {
       return;
     }
@@ -23,8 +24,18 @@ export default function InputMultiSelect({
     if (selected.includes(target)) {
       return;
     }
+    console.log(`Adding this to the selection: ${target}`);
+    setSelected((previousValues) => {
+      if (previousValues.includes(target)) {
+        return previousValues; // Don't add duplicates
+      }
+      console.log(`Adding this to the selection: ${target}`);
+      return [...previousValues, target]; // Append new item correctly
+    });
 
-    setSelected((previousValues: string[]) => [...previousValues, target]);
+    setTimeout(() => {
+      console.log(selected.length);
+    }, 100);
   };
 
   const removeSelection = (target: string) => {
@@ -40,6 +51,7 @@ export default function InputMultiSelect({
     }
 
     if (event.key === "Enter") {
+      event.preventDefault();
       addSelection(event.target.value);
       event.target.value = "";
     }
@@ -62,8 +74,11 @@ export default function InputMultiSelect({
           id={`${lowerCaseName}-select`}
           className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm rounded-md"
           placeholder={placeholder}
+          onBlur={(event: any) => {
+            addSelection(event.target.value);
+            event.target.value = "";
+          }}
           onKeyDown={inputListener}
-          onBlur={(event: any) => addSelection(event.target.value)}
         />
       </div>
 
