@@ -1,7 +1,9 @@
 import { filterInfo } from "./SearchPage";
-import DropDownSelection from "./DropDownSelection";
-import DropDownMultiSelect from "./DropDownMultiSelect";
-import InputMultiSelect from "./InputMultiSelect";
+import {
+  DropDownMultiSelect,
+  DropDownSelection,
+  InputMultiSelect,
+} from "@/components/forms";
 
 interface filterFormProps {
   filterValue: filterInfo;
