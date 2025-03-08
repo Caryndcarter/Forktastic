@@ -1,6 +1,3 @@
-
-import type React from "react"
-
 import { useState, useCallback, useRef, useLayoutEffect } from "react"
 import type Recipe from "@/interfaces/recipe"
 import FilterForm from "./FilterForm"
@@ -9,6 +6,7 @@ import { useQuery } from "@apollo/client"
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries"
 import Results from "./Results"
 import localStorageService from "@/utils_graphQL/localStorageService"
+import { ActiveFilters } from "./ActiveFilters"
 
 export interface filterInfo {
   diet?: string
@@ -141,6 +139,7 @@ const SearchPage: React.FC = () => {
         </div>
 
         {/* Active Filters Display */}
+        <ActiveFilters filterValue={filterValue} />
 
         {/* Search Results */}
         <Results results={results} loading={loading} />
