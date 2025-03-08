@@ -144,7 +144,7 @@ export default function FilterForm({
             <DropDownSelection
               name="Cuisine"
               placeholder={
-                filterValue.diet ? filterValue.diet : "Select a Cuisine"
+                filterValue.cuisine ? filterValue.cuisine : "Select a Cuisine"
               }
               options={cuisineOptions}
             ></DropDownSelection>
