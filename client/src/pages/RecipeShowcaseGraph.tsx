@@ -271,7 +271,7 @@ const RecipeShowcase = () => {
         {/* Review */}
         {loginCheck ? (
           isSaved ? (
-            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-8 mb-8 border border-gray-200">
               <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">
                 Save a Review
               </h3>
@@ -297,7 +297,7 @@ const RecipeShowcase = () => {
 
         {/* Recipe Summary */}
         <div className="mb-8">
-          <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">
+          <h3 className="text-2xl font-semibold text-[#a84e24] mb-8 ">
             Summary
           </h3>
           {/* Render the instructions as HTML */}
