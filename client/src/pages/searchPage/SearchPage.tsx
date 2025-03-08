@@ -5,6 +5,7 @@ import apiService from "@/api/apiService";
 import { useQuery } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
 import Results from "./Results";
+import localStorageService from "@/utils_graphQL/localStorageService";
 
 export interface filterInfo {
   diet?: string;
@@ -24,27 +25,16 @@ const SearchPage: React.FC = () => {
   });
   const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
 
-  // stategicly trigger re-searches for responsivness
-  // this code triggers on two scenarios:
-  // 1: before the page first loads
-  // 2: when the filter value is changed
+  // retrieve query
   useLayoutEffect(() => {
-    // this code shouldn't trigger when the filter opens
-    if (filterVisible) return;
-
-    // manually trigger a change event
+    const query = localStorageService.getQuery();
+    console.log(query);
     if (queryReference.current) {
-      handleChange({
-        target: queryReference.current,
-      } as React.ChangeEvent<HTMLInputElement>);
+      queryReference.current.value = query;
     }
-  }, [filterVisible]);
+  }, []);
 
-  // fetch account profile details, then uses them for the
-  // default filter value.
-  //
-  // this code triggers before the page first loads
-  // this code re-triggers when the data changes
+  // fetch account profile details
   useLayoutEffect(() => {
     // fetch diets information
     if (data?.getUser.diet) {
@@ -62,14 +52,20 @@ const SearchPage: React.FC = () => {
     }
   }, [data]);
 
-  // this code is the actual search logic.
+  // manually trigger the search
+  useLayoutEffect(() => {
+    if (queryReference.current) {
+      handleChange({
+        target: queryReference.current,
+      } as React.ChangeEvent<HTMLInputElement>);
+    }
+  }, [filterValue]);
+
   const handleSearch = async (queryText: string) => {
     setLoading(true);
 
-    // if the search is empty, get random recipes instead
     if (!queryText) {
-      const recipes = await apiService.forignRandomSearch();
-      setResults(recipes);
+      setResults([]);
       setLoading(false);
       return;
     }
@@ -100,9 +96,7 @@ const SearchPage: React.FC = () => {
     setLoading(false);
   };
 
-  // this code parses the user's search string and then
-  // uses a debounced search (de-bouncing means it will
-  // only trigger once per delay period)
+  // uses a debounced search
   const handleChange = async (e: any) => {
     const queryText = e.target.value;
     debouncedHandleSearch(queryText);
@@ -130,7 +124,7 @@ const SearchPage: React.FC = () => {
       }`}
     >
       {/* Main Content */}
-      <div className="pt-20 px-4">
+      <main className="pt-20 px-4">
         {/* Search Bar and Filter Button */}
         <div className="flex items-center mb-4">
           <input
@@ -152,30 +146,16 @@ const SearchPage: React.FC = () => {
 
         {/* Search Results */}
         <Results results={results} loading={loading} />
-      </div>
 
-      {/* Filter Form Modal */}
-      {filterVisible && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-          <div
-            id="filter-form"
-            className="bg-white p-4 rounded-lg shadow-lg relative"
-          >
-            <button
-              id="close-filter"
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-              onClick={() => setFilterVisible(false)} // Hide filter form
-            >
-              ×
-            </button>
-            <FilterForm
-              filterValue={filterValue}
-              setFilterValue={setFilterValue}
-              setFilterVisible={setFilterVisible}
-            ></FilterForm>
-          </div>
-        </div>
-      )}
+        {/* Filter Form Modal */}
+        {filterVisible && (
+          <FilterForm
+            filterValue={filterValue}
+            setFilterValue={setFilterValue}
+            setFilterVisible={setFilterVisible}
+          ></FilterForm>
+        )}
+      </main>
     </div>
   );
 };

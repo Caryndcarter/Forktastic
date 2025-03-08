@@ -62,7 +62,7 @@ export default function AccountShowCase({ setLoginCheck }: accountShowCaseProps)
     setFormValues((prev) => ({
       ...prev,
       [e.target.id]: e.target.value,
-    }))
+    }));
     //console.log(formValues);
   }
 

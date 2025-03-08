@@ -151,8 +151,8 @@ const resolvers = {
         const recipeReviews = await Recipe.findById(objectId)
         .populate({
           path: 'reviews',
-          model: 'Review',  // Name of your Review model
-          select: 'rating comment userName' // Specify the fields you want
+          model: 'Review',  
+          select: 'rating comment userName' 
         });
           
         if (!recipeReviews) {
@@ -176,6 +176,26 @@ const resolvers = {
       } catch (error) {
         console.error("Error fetching reviews:", error);
         throw new Error("Failed to fetch reviews");
+      }
+    },
+
+    getReviewsForRecipe: async (_: any, { recipeId }: { recipeId: string }): Promise<any> => {
+      try {
+        const objectId = new mongoose.Types.ObjectId(recipeId);
+        const recipe = await Recipe.findById(objectId).populate({
+          path: 'reviews',
+          model: 'Review',
+          select: '_id rating comment userName'
+        });
+
+        if (!recipe) {
+          throw new GraphQLError("Recipe not found");
+        }
+
+        return recipe.reviews;
+      } catch (err) {
+        console.error("Error fetching reviews for recipe:", err);
+        throw new GraphQLError("Failed to fetch reviews for recipe");
       }
     },
   },
