@@ -1,38 +1,42 @@
-import { useState, useCallback, useRef, useLayoutEffect } from "react";
-import Recipe from "@/interfaces/recipe";
-import FilterForm from "./FilterForm";
-import apiService from "@/api/apiService";
-import { useQuery } from "@apollo/client";
-import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
-import Results from "./Results";
-import localStorageService from "@/utils_graphQL/localStorageService";
+
+import type React from "react"
+
+import { useState, useCallback, useRef, useLayoutEffect } from "react"
+import type Recipe from "@/interfaces/recipe"
+import FilterForm from "./FilterForm"
+import apiService from "@/api/apiService"
+import { useQuery } from "@apollo/client"
+import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries"
+import Results from "./Results"
+import localStorageService from "@/utils_graphQL/localStorageService"
+import { ActiveFilters } from "@/pages/searchPage/ActiveFilters"
 
 export interface filterInfo {
-  diet?: string;
-  cuisine?: string;
-  intolerances: string[];
-  includeIngredients: string[];
+  diet?: string
+  cuisine?: string
+  intolerances: string[]
+  includeIngredients: string[]
 }
 
 const SearchPage: React.FC = () => {
-  const queryReference = useRef<HTMLInputElement | null>(null);
-  const [results, setResults] = useState<Recipe[]>([]); // Store the search results
-  const [loading, setLoading] = useState<boolean>(true); // Track loading state
-  const [filterVisible, setFilterVisible] = useState<boolean>(false); // Track filter form visibility
+  const queryReference = useRef<HTMLInputElement | null>(null)
+  const [results, setResults] = useState<Recipe[]>([]) // Store the search results
+  const [loading, setLoading] = useState<boolean>(true) // Track loading state
+  const [filterVisible, setFilterVisible] = useState<boolean>(false) // Track filter form visibility
   const [filterValue, setFilterValue] = useState<filterInfo>({
     intolerances: [],
     includeIngredients: [],
-  });
-  const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
+  })
+  const { data } = useQuery(GET_ACCOUNT_PREFERENCES)
 
   // retrieve query
   useLayoutEffect(() => {
-    const query = localStorageService.getQuery();
-    console.log(query);
+    const query = localStorageService.getQuery()
+    console.log(query)
     if (queryReference.current) {
-      queryReference.current.value = query;
+      queryReference.current.value = query
     }
-  }, []);
+  }, [])
 
   // fetch account profile details
   useLayoutEffect(() => {
@@ -41,88 +45,100 @@ const SearchPage: React.FC = () => {
       setFilterValue((prev) => ({
         ...prev,
         diet: data.getUser.diet,
-      }));
+      }))
     }
     // fetch intolerance information
     if (data?.getUser.intolerances) {
       setFilterValue((prev) => ({
         ...prev,
         intolerances: data.getUser.intolerances,
-      }));
+      }))
     }
-  }, [data]);
+  }, [data])
 
   // manually trigger the search
   useLayoutEffect(() => {
     if (queryReference.current) {
       handleChange({
         target: queryReference.current,
-      } as React.ChangeEvent<HTMLInputElement>);
+      } as React.ChangeEvent<HTMLInputElement>)
     }
-  }, [filterValue]);
+  }, [filterValue])
 
   const handleSearch = async (queryText: string) => {
-    setLoading(true);
+    setLoading(true)
 
     if (!queryText) {
-      setResults([]);
-      setLoading(false);
-      return;
+      setResults([])
+      setLoading(false)
+      return
     }
 
     const searchParams: any = {
       query: queryText,
-    };
+    }
 
     if (filterValue.cuisine) {
-      searchParams.cuisine = filterValue.cuisine;
+      searchParams.cuisine = filterValue.cuisine
     }
 
     if (filterValue.diet) {
-      searchParams.diet = filterValue.diet;
+      searchParams.diet = filterValue.diet
     }
 
     if (filterValue.intolerances.length > 0) {
-      searchParams.intolerance = filterValue.intolerances;
+      searchParams.intolerance = filterValue.intolerances
     }
 
     if (filterValue.includeIngredients.length > 0) {
-      searchParams.includeIngredients =
-        filterValue.includeIngredients.join(",");
+      searchParams.includeIngredients = filterValue.includeIngredients.join(",")
     }
 
-    const recipes = await apiService.forignRecipeSearch(searchParams);
-    setResults(recipes);
-    setLoading(false);
-  };
+    const recipes = await apiService.forignRecipeSearch(searchParams)
+    setResults(recipes)
+    setLoading(false)
+  }
 
   // uses a debounced search
   const handleChange = async (e: any) => {
-    const queryText = e.target.value;
-    debouncedHandleSearch(queryText);
-  };
+    const queryText = e.target.value
+    debouncedHandleSearch(queryText)
+  }
 
   // debouncing logic
   const debounce = (mainFunction: any, delay: number) => {
-    let timer: any;
-    return function (...args: any) {
-      clearTimeout(timer);
+    let timer: any
+    return (...args: any) => {
+      clearTimeout(timer)
       timer = setTimeout(() => {
-        mainFunction(...args);
-      }, delay);
-    };
-  };
+        mainFunction(...args)
+      }, delay)
+    }
+  }
 
-  const debouncedHandleSearch = useCallback(debounce(handleSearch, 360), [
-    filterValue,
-  ]);
+  const debouncedHandleSearch = useCallback(debounce(handleSearch, 360), [filterValue])
+
+  // Handle removing a filter
+  const handleRemoveFilter = (type: string, value: string) => {
+    if (type === "diet") {
+      setFilterValue((prev) => ({ ...prev, diet: undefined }))
+    } else if (type === "cuisine") {
+      setFilterValue((prev) => ({ ...prev, cuisine: undefined }))
+    } else if (type === "intolerance") {
+      setFilterValue((prev) => ({
+        ...prev,
+        intolerances: prev.intolerances.filter((item) => item !== value),
+      }))
+    } else if (type === "ingredient") {
+      setFilterValue((prev) => ({
+        ...prev,
+        includeIngredients: prev.includeIngredients.filter((item) => item !== value),
+      }))
+    }
+  }
 
   return (
-    <div
-      className={`min-h-screen bg-[#fef3d0] ${
-        filterVisible ? "filter-blur" : ""
-      }`}
-    >
+    <div className={`min-h-screen bg-[#fef3d0] ${filterVisible ? "filter-blur" : ""}`}>
       {/* Main Content */}
       <main className="pt-20 px-4">
         {/* Search Bar and Filter Button */}
@@ -144,6 +160,9 @@ const SearchPage: React.FC = () => {
           </button>
         </div>
 
+        {/* Active Filters Display */}
+        <ActiveFilters filterValue={filterValue} onRemove={handleRemoveFilter} />
+
         {/* Search Results */}
         <Results results={results} loading={loading} />
 
@@ -157,7 +176,8 @@ const SearchPage: React.FC = () => {
         )}
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default SearchPage;
+export default SearchPage
+
