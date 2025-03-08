@@ -39,7 +39,7 @@ class spoonacularService {
 
   async findRandomRecipes() {
     try {
-      const searchURL = `${this.baseURL}/recipes/random?number=10&apiKey=${this.apiKey}`;
+      const searchURL = `${this.baseURL}/recipes/random?number=12&apiKey=${this.apiKey}`;
       const response = await fetch(searchURL);
 
       // error occured
