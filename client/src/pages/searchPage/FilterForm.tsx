@@ -5,6 +5,65 @@ import {
   InputMultiSelect,
 } from "@/components/forms";
 
+const dietOptions = [
+  "Gluten Free",
+  "Ketogenic",
+  "Vegetarian",
+  "Lacto-Vegetarian",
+  "Ovo-Vegetarian",
+  "Vegan",
+  "Pescetarian",
+  "Paleo",
+  "Primal",
+  "Low FODMAP",
+  "Whole30",
+];
+
+const intoleranceOptions = [
+  "Dairy",
+  "Egg",
+  "Gluten",
+  "Grain",
+  "Peanut",
+  "Seafood",
+  "Sesame",
+  "Shellfish",
+  "Soy",
+  "Sulfite",
+  "Tree Nut",
+  "Wheat",
+];
+
+const cuisineOptions = [
+  "African",
+  "Asian",
+  "American",
+  "British",
+  "Cajun",
+  "Caribbean",
+  "Chinese",
+  "Eastern European",
+  "European",
+  "French",
+  "German",
+  "Greek",
+  "Indian",
+  "Irish",
+  "Italian",
+  "Japanese",
+  "Jewish",
+  "Korean",
+  "Latin American",
+  "Mediterranean",
+  "Mexican",
+  "Middle Eastern",
+  "Nordic",
+  "Southern",
+  "Spanish",
+  "Thai",
+  "Vietnamese",
+];
+
 interface filterFormProps {
   filterValue: filterInfo;
   setFilterValue: any;
@@ -72,38 +131,13 @@ export default function FilterForm({
               name="Diet"
               placeholder="Select a diet"
               initialSelection={filterValue.diet}
-              options={[
-                "Gluten Free",
-                "Ketogenic",
-                "Vegetarian",
-                "Lacto-Vegetarian",
-                "Ovo-Vegetarian",
-                "Vegan",
-                "Pescetarian",
-                "Paleo",
-                "Primal",
-                "Low FODMAP",
-                "Whole30",
-              ]}
+              options={dietOptions}
             ></DropDownSelection>
 
             <DropDownMultiSelect
               name="Intolerance"
               placeholder="Select your Intolerances"
-              options={[
-                "Dairy",
-                "Egg",
-                "Gluten",
-                "Grain",
-                "Peanut",
-                "Seafood",
-                "Sesame",
-                "Shellfish",
-                "Soy",
-                "Sulfite",
-                "Tree Nut",
-                "Wheat",
-              ]}
+              options={intoleranceOptions}
               initialSelection={filterValue.intolerances}
             ></DropDownMultiSelect>
 
@@ -112,35 +146,7 @@ export default function FilterForm({
               placeholder={
                 filterValue.diet ? filterValue.diet : "Select a Cuisine"
               }
-              options={[
-                "African",
-                "Asian",
-                "American",
-                "British",
-                "Cajun",
-                "Caribbean",
-                "Chinese",
-                "Eastern European",
-                "European",
-                "French",
-                "German",
-                "Greek",
-                "Indian",
-                "Irish",
-                "Italian",
-                "Japanese",
-                "Jewish",
-                "Korean",
-                "Latin American",
-                "Mediterranean",
-                "Mexican",
-                "Middle Eastern",
-                "Nordic",
-                "Southern",
-                "Spanish",
-                "Thai",
-                "Vietnamese",
-              ]}
+              options={cuisineOptions}
             ></DropDownSelection>
 
             <InputMultiSelect
