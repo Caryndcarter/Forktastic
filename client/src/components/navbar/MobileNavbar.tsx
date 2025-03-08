@@ -17,7 +17,7 @@ export default function MobileNavbar({ pages, loggedIn }: MobileNavbarProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const searchListener = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const searchListener = (event: any) => {
     // this will only trigger when hitting "enter"
     if (event.key !== "Enter") {
       return;
