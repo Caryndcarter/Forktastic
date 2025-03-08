@@ -36,15 +36,20 @@ export default function DropDownMultiSelect({
   };
 
   const updateSelection = (current: string, target: string) => {
-    if (!target) {
-      return;
-    }
-
     if (selected.includes(target)) {
       return;
     }
-    const filteredSelection = selected.filter((item) => item !== current);
-    setSelected([...filteredSelection, target]);
+
+    if (!target) {
+      const filteredSelection = selected.filter((item) => item !== current);
+      setSelected(filteredSelection);
+      return;
+    }
+
+    const updatedSelection = selected.map((item) =>
+      item === current ? target : item
+    );
+    setSelected(updatedSelection);
   };
 
   return (

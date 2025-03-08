@@ -32,15 +32,32 @@ export default function InputMultiSelect({
     setSelected(updatedSelection);
   };
 
-  const inputListener = (event: any) => {
-    if (event.key === "Esc") {
+  const updateSelection = (current: string, target: string) => {
+    if (selected.includes(target)) {
+      return;
+    }
+
+    if (!target) {
+      const filteredSelection = selected.filter((item) => item !== current);
+      setSelected(filteredSelection);
+      return;
+    }
+
+    const updatedSelection = selected.map((item) =>
+      item === current ? target : item
+    );
+    setSelected(updatedSelection);
+  };
+
+  const inputListener = (event: any, func: any, args: any[]) => {
+    if (event.key === "Escape") {
       event.target.value = "";
       return;
     }
 
     if (event.key === "Enter") {
       event.preventDefault();
-      addSelection(event.target.value);
+      func(...args);
       event.target.value = "";
     }
     return;
@@ -66,7 +83,9 @@ export default function InputMultiSelect({
             addSelection(event.target.value);
             event.target.value = "";
           }}
-          onKeyDown={inputListener}
+          onKeyDown={(event: any) => {
+            inputListener(event, addSelection, [event.target.value]);
+          }}
         />
       </div>
 
@@ -75,9 +94,25 @@ export default function InputMultiSelect({
           return (
             <li
               key={`${item}-${name}`}
+              id={`${lowerCaseName}-${item}`}
               className="flex items-center justify-between bg-white border border-gray-200 rounded-lg p-3 shadow-sm m-2"
             >
-              <span className="text-gray-800">{item}</span>
+              <input
+                name={`${item}-${lowerCaseName}`}
+                id={`${item}-${lowerCaseName}`}
+                type="text"
+                className="text-gray-800"
+                defaultValue={item}
+                onBlur={(event: any) => {
+                  updateSelection(item, event.target.value);
+                }}
+                onKeyDown={(event: any) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    updateSelection(item, event.target.value);
+                  }
+                }}
+              />
               <button
                 onClick={() => {
                   removeSelection(item);
