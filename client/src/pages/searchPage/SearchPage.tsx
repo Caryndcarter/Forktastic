@@ -9,7 +9,6 @@ import { useQuery } from "@apollo/client"
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries"
 import Results from "./Results"
 import localStorageService from "@/utils_graphQL/localStorageService"
-import { ActiveFilters } from "@/pages/searchPage/ActiveFilters"
 
 export interface filterInfo {
   diet?: string
@@ -118,25 +117,6 @@ const SearchPage: React.FC = () => {
 
   const debouncedHandleSearch = useCallback(debounce(handleSearch, 360), [filterValue])
 
-  // Handle removing a filter
-  const handleRemoveFilter = (type: string, value: string) => {
-    if (type === "diet") {
-      setFilterValue((prev) => ({ ...prev, diet: undefined }))
-    } else if (type === "cuisine") {
-      setFilterValue((prev) => ({ ...prev, cuisine: undefined }))
-    } else if (type === "intolerance") {
-      setFilterValue((prev) => ({
-        ...prev,
-        intolerances: prev.intolerances.filter((item) => item !== value),
-      }))
-    } else if (type === "ingredient") {
-      setFilterValue((prev) => ({
-        ...prev,
-        includeIngredients: prev.includeIngredients.filter((item) => item !== value),
-      }))
-    }
-  }
-
   return (
     <div className={`min-h-screen bg-[#fef3d0] ${filterVisible ? "filter-blur" : ""}`}>
       {/* Main Content */}
@@ -161,7 +141,6 @@ const SearchPage: React.FC = () => {
         </div>
 
         {/* Active Filters Display */}
-        <ActiveFilters filterValue={filterValue} onRemove={handleRemoveFilter} />
 
         {/* Search Results */}
         <Results results={results} loading={loading} />
