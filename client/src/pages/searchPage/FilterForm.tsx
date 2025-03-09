@@ -99,7 +99,10 @@ export default function FilterForm({
     console.log(updatedFilter);
 
     if (JSON.stringify(updatedFilter) !== JSON.stringify(filterValue)) {
-      setFilterValue(updatedFilter as filterInfo);
+      setFilterValue((prevFilters: filterInfo) => ({
+        ...prevFilters,
+        ...(updatedFilter as filterInfo),
+      }));
     }
     setFilterVisible(false);
   };
