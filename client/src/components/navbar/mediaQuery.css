@@ -4,8 +4,11 @@
 }
 
 /* Show mobile navbar and hide desktop navbar on small screens */
-@media (max-width: 600px) {
+@media (max-width: 639px) {
   #desktop-navbar {
+    display: none;
+  }
+  #desktop-spacer {
     display: none;
   }
   #mobile-navbar {
