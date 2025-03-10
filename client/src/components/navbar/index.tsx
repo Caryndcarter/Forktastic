@@ -17,22 +17,22 @@ const pages: page[] = [
   {
     name: "Home",
     href: "/",
-    icon: "something",
+    icon: "home",
   },
   {
     name: "Recipe Book",
     href: "/recipe-book",
-    icon: "something",
+    icon: "bookOpen",
   },
   {
     name: "Recipe Maker",
     href: "/recipe-maker",
-    icon: "something",
+    icon: "bookPlus",
   },
   {
-    name: "Account",
+    name: "Account Settings",
     href: "/user-info",
-    icon: "something",
+    icon: "userCog",
   },
 ];
 
