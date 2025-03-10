@@ -86,19 +86,34 @@ export default function DesktopNavbar({ pages }: DesktopNavbarProps) {
             variant="ghost"
             size="icon"
             onClick={handleBack}
-            className="text-white hover:bg-white/20 mx-4"
+            className="text-white hover:bg-white/20 flex flex-col items-center mx-4"
           >
-            <ArrowLeft className="h-6 w-6" />
-            <span className="sr-only">Go back</span>
+            <ArrowLeft className="h-5 w-5" />
+            <span className="text-xs mt-1">Go back</span>
           </Button>
 
-          <input
-            id="search-bar"
-            type="search"
-            placeholder="Search for a Recipe"
-            className="pl-8 rounded-md mx-4"
-            onKeyDown={searchListener}
-          />
+          {location.pathname === "/search" ? (
+            <Link
+              key="/search"
+              to="/search"
+              id="nav-search-link"
+              className={`text-white p-2 rounded-md hover:bg-white/20 flex flex-col items-center mx-4 ${
+                location.pathname === "/search" ? "bg-white/20" : ""
+              }`}
+              title="Search Page"
+            >
+              <Search />
+              <span className="text-xs mt-1">Search Page</span>
+            </Link>
+          ) : (
+            <input
+              id="search-bar"
+              type="search"
+              placeholder="Search for a Recipe"
+              className="pl-8 rounded-md mx-4"
+              onKeyDown={searchListener}
+            />
+          )}
 
           {/* row of page links/icons */}
           {pages.map((page) => (
@@ -117,7 +132,7 @@ export default function DesktopNavbar({ pages }: DesktopNavbarProps) {
           ))}
         </div>
       </nav>
-      <div id="desktop-spacer" className="h-14"></div>
+      <div id="desktop-spacer" className="h-16"></div>
     </>
   );
 }
