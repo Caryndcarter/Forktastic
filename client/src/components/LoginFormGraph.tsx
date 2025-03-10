@@ -130,7 +130,7 @@ export default function LoginForm({ setSignIn }: loginFormProps) {
           type="submit"
           id="sign-in-submit"
           className="w-full bg-[#ff9e40] text-white py-2 rounded hover:bg-[#e7890c]"
-        >
+        > 
           Sign In
         </button>
 
