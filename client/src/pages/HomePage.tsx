@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react"
+import { Link } from "react-router-dom"
 import "../index.css"
 import RecipeCard from "../components/RecipeCard"
 import type Recipe from "../interfaces/recipe"
@@ -101,7 +102,7 @@ const HomePage = () => {
           <br />
           <br />
           <h2 className="text-3xl font-bold text-[#a84e24] mb-4 text-center ">
-            Login to Save, Edit and Create Recipes!
+            <Link to="/user-info" className="hover:underline">Login</Link> to Save, Edit and Create Recipes!
           </h2>
 
           <div className="pt-20 px-4">
