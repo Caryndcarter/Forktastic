@@ -1,136 +1,124 @@
-import { useState, useCallback, useRef, useLayoutEffect } from "react";
-import Recipe from "@/interfaces/recipe";
-import FilterForm from "./FilterForm";
-import apiService from "@/api/apiService";
-import { useQuery } from "@apollo/client";
-import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
-import Results from "./Results";
+import { useState, useCallback, useRef, useLayoutEffect } from "react"
+import type Recipe from "@/interfaces/recipe"
+import FilterForm from "./FilterForm"
+import apiService from "@/api/apiService"
+import { useQuery } from "@apollo/client"
+import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries"
+import Results from "./Results"
+import localStorageService from "@/utils_graphQL/localStorageService"
+import { ActiveFilters } from "./ActiveFilters"
 
 export interface filterInfo {
-  diet?: string;
-  cuisine?: string;
-  intolerances: string[];
-  includeIngredients: string[];
+  diet?: string
+  cuisine?: string
+  intolerances: string[]
+  includeIngredients: string[]
 }
 
 const SearchPage: React.FC = () => {
-  const queryReference = useRef<HTMLInputElement | null>(null);
-  const [results, setResults] = useState<Recipe[]>([]); // Store the search results
-  const [loading, setLoading] = useState<boolean>(true); // Track loading state
-  const [filterVisible, setFilterVisible] = useState<boolean>(false); // Track filter form visibility
+  const queryReference = useRef<HTMLInputElement | null>(null)
+  const [results, setResults] = useState<Recipe[]>([]) // Store the search results
+  const [loading, setLoading] = useState<boolean>(true) // Track loading state
+  const [filterVisible, setFilterVisible] = useState<boolean>(false) // Track filter form visibility
   const [filterValue, setFilterValue] = useState<filterInfo>({
     intolerances: [],
     includeIngredients: [],
-  });
-  const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
+  })
+  const { data } = useQuery(GET_ACCOUNT_PREFERENCES)
 
-  // stategicly trigger re-searches for responsivness
-  // this code triggers on two scenarios:
-  // 1: before the page first loads
-  // 2: when the filter value is changed
+  // retrieve query
   useLayoutEffect(() => {
-    // this code shouldn't trigger when the filter opens
-    if (filterVisible) return;
-
-    // manually trigger a change event
+    const query = localStorageService.getQuery()
+    console.log(query)
     if (queryReference.current) {
-      handleChange({
-        target: queryReference.current,
-      } as React.ChangeEvent<HTMLInputElement>);
+      queryReference.current.value = query
     }
-  }, [filterVisible]);
+  }, [])
 
-  // fetch account profile details, then uses them for the
-  // default filter value.
-  //
-  // this code triggers before the page first loads
-  // this code re-triggers when the data changes
+  // fetch account profile details
   useLayoutEffect(() => {
     // fetch diets information
     if (data?.getUser.diet) {
       setFilterValue((prev) => ({
         ...prev,
         diet: data.getUser.diet,
-      }));
+      }))
     }
     // fetch intolerance information
     if (data?.getUser.intolerances) {
       setFilterValue((prev) => ({
         ...prev,
         intolerances: data.getUser.intolerances,
-      }));
+      }))
     }
-  }, [data]);
+  }, [data])
 
-  // this code is the actual search logic.
+  // manually trigger the search
+  useLayoutEffect(() => {
+    if (queryReference.current) {
+      handleChange({
+        target: queryReference.current,
+      } as React.ChangeEvent<HTMLInputElement>)
+    }
+  }, [filterValue])
+
   const handleSearch = async (queryText: string) => {
-    setLoading(true);
+    setLoading(true)
 
-    // if the search is empty, get random recipes instead
     if (!queryText) {
-      const recipes = await apiService.forignRandomSearch();
-      setResults(recipes);
-      setLoading(false);
-      return;
+      setResults([])
+      setLoading(false)
+      return
     }
 
     const searchParams: any = {
       query: queryText,
-    };
+    }
 
     if (filterValue.cuisine) {
-      searchParams.cuisine = filterValue.cuisine;
+      searchParams.cuisine = filterValue.cuisine
     }
 
     if (filterValue.diet) {
-      searchParams.diet = filterValue.diet;
+      searchParams.diet = filterValue.diet
     }
 
     if (filterValue.intolerances.length > 0) {
-      searchParams.intolerance = filterValue.intolerances;
+      searchParams.intolerance = filterValue.intolerances
     }
 
     if (filterValue.includeIngredients.length > 0) {
-      searchParams.includeIngredients =
-        filterValue.includeIngredients.join(",");
+      searchParams.includeIngredients = filterValue.includeIngredients.join(",")
     }
 
-    const recipes = await apiService.forignRecipeSearch(searchParams);
-    setResults(recipes);
-    setLoading(false);
-  };
+    const recipes = await apiService.forignRecipeSearch(searchParams)
+    setResults(recipes)
+    setLoading(false)
+  }
 
-  // this code parses the user's search string and then
-  // uses a debounced search (de-bouncing means it will
-  // only trigger once per delay period)
+  // uses a debounced search
   const handleChange = async (e: any) => {
-    const queryText = e.target.value;
-    debouncedHandleSearch(queryText);
-  };
+    const queryText = e.target.value
+    debouncedHandleSearch(queryText)
+  }
 
   // debouncing logic
   const debounce = (mainFunction: any, delay: number) => {
-    let timer: any;
-    return function (...args: any) {
-      clearTimeout(timer);
+    let timer: any
+    return (...args: any) => {
+      clearTimeout(timer)
       timer = setTimeout(() => {
-        mainFunction(...args);
-      }, delay);
-    };
-  };
+        mainFunction(...args)
+      }, delay)
+    }
+  }
 
-  const debouncedHandleSearch = useCallback(debounce(handleSearch, 360), [
-    filterValue,
-  ]);
+  const debouncedHandleSearch = useCallback(debounce(handleSearch, 360), [filterValue])
 
   return (
-    <div
-      className={`min-h-screen bg-[#fef3d0] ${
-        filterVisible ? "filter-blur" : ""
-      }`}
-    >
+    <div className={`min-h-screen bg-[#fef3d0] ${filterVisible ? "filter-blur" : ""}`}>
       {/* Main Content */}
-      <div className="pt-20 px-4">
+      <main className="pt-20 px-4">
         {/* Search Bar and Filter Button */}
         <div className="flex items-center mb-4">
           <input
@@ -150,34 +138,24 @@ const SearchPage: React.FC = () => {
           </button>
         </div>
 
+        {/* Active Filters Display */}
+        <ActiveFilters filterValue={filterValue} />
+
         {/* Search Results */}
         <Results results={results} loading={loading} />
-      </div>
 
-      {/* Filter Form Modal */}
-      {filterVisible && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-          <div
-            id="filter-form"
-            className="bg-white p-4 rounded-lg shadow-lg relative"
-          >
-            <button
-              id="close-filter"
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-              onClick={() => setFilterVisible(false)} // Hide filter form
-            >
-              ×
-            </button>
-            <FilterForm
-              filterValue={filterValue}
-              setFilterValue={setFilterValue}
-              setFilterVisible={setFilterVisible}
-            ></FilterForm>
-          </div>
-        </div>
-      )}
+        {/* Filter Form Modal */}
+        {filterVisible && (
+          <FilterForm
+            filterValue={filterValue}
+            setFilterValue={setFilterValue}
+            setFilterVisible={setFilterVisible}
+          ></FilterForm>
+        )}
+      </main>
     </div>
-  );
-};
+  )
+}
 
-export default SearchPage;
+export default SearchPage
+
