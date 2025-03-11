@@ -212,7 +212,7 @@ const RecipeMaker = () => {
       {/* Show a notification if there was saved data loaded */}
       {(recipe.title || recipe.summary || recipe.ingredients[0] !== "") && (
         <div className="w-full max-w-3xl mx-auto mb-4 p-4 bg-[#ffe8b3] border border-[#e7890c] rounded-lg flex justify-between items-center">
-          <p className="text-[#a84e24] font-medium">Your previously saved recipe form has been loaded.</p>
+          <p className="text-[#a84e24] font-medium">Your progress has been saved.</p>
           <button
             onClick={clearSavedFormData}
             className="text-sm bg-[#ff9e40] text-white px-3 py-1 rounded hover:bg-[#e7890c] transition-colors"
