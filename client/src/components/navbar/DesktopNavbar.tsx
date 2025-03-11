@@ -133,7 +133,7 @@ export default function DesktopNavbar({ pages }: DesktopNavbarProps) {
           ))}
         </div>
       </nav>
-      <div id="desktop-spacer" className="h-16"></div>
+      <div id="desktop-spacer" className="h-20"></div>
     </>
   );
 }
