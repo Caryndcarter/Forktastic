@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
 import { editingContext } from "../App";
@@ -264,7 +264,7 @@ const RecipeShowcase = () => {
               id="save-button-placeholder"
               className="text-gray-500 italic mb-6"
             >
-              Log in to save recipes.
+              <Link to="/user-info" className="hover:underline">Log in</Link> to save recipes.
             </div>
           )}
         </div>
@@ -296,7 +296,7 @@ const RecipeShowcase = () => {
             id="review-button-placeholder"
             className="text-gray-500 italic mb-6"
           >
-            Log in to write a review.
+            <Link to="/user-info" className="hover:underline">Log in</Link> to write a review.
           </div>
         )}
 
