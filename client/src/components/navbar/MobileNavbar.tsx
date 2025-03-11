@@ -83,7 +83,7 @@ export default function MobileNavbar({ pages, loggedIn }: MobileNavbarProps) {
 
       <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-2">
         <Utensils className="h-5 w-5 text-white" />
-        <span className="text-white text-2xl font-bold">Forktastic</span>
+        <span className="text-white text-2xl font-bold">Forkalicious</span>
       </div>
 
       {/* Account button */}
