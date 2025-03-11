@@ -1,11 +1,11 @@
 <!-- prettier-ignore -->
-# Welcome to Forktastic! 🍽️
+# Welcome to Forkalicious! 🍽️
 
 ![OpenAI](https://img.shields.io/badge/ChatGPT-Integration-%2316A180?logo=openai) ![MongoDB](https://img.shields.io/badge/MongoDB-%23429E47?logo=mongoDB&logoColor=white) ![Mongoose](https://img.shields.io/badge/Mongoose-%23880000?logo=Mongoose&logoColor=white) ![GraphQL](https://img.shields.io/badge/GraphQL-%23F25CC0?logo=graphql) ![React](https://img.shields.io/badge/React-%2361DAFB?logo=react&logoColor=white) ![Express](https://img.shields.io/badge/Express-%23F0D951?logo=express&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-%232D79C7?logo=typescript&logoColor=white)
 
 ## Description
 
-Forktastic is your AI-powered recipe companion, designed to help you discover, save, customize, and create delicious recipes with ease. Whether you're exploring new dishes from our vast Spoonacular API, fine-tuning your favorite meals, or generating entirely new recipes using AI, Forktastic has you covered.
+Forkalicious is your AI-powered recipe companion, designed to help you discover, save, customize, and create delicious recipes with ease. Whether you're exploring new dishes from our vast Spoonacular API, fine-tuning your favorite meals, or generating entirely new recipes using AI, Forkalicious has you covered.
 
 ## 🚀 Tech Stack
 
@@ -107,7 +107,7 @@ Ensure you have the Node Package Manager and MongoDB installed on your machine. 
 ```shell
 # Step 1: clone this repository, and go to the root directory
 git clone https://github.com/Dan-Swarts/Forktacular.git
-cd Forktastic
+cd Forkalicious
 
 # Step 2: Ensure you have node installed, then use the Node
 # Package Manager to install dependencies:
@@ -134,8 +134,8 @@ npm run build && npm run start
 ## Contributing
 
 > [!IMPORTANT]
-> Whether you have feedback on features, have encountered any bugs, or have suggestions for enhancements, we're eager to hear from you. Your insights help us make the Forktastic library more robust and user-friendly.
+> Whether you have feedback on features, have encountered any bugs, or have suggestions for enhancements, we're eager to hear from you. Your insights help us make the Forkalicious library more robust and user-friendly.
 
-Please feel free to contribute by [joining the discussions](https://github.com/Caryndcarter/Forktastic/discussions). Each contribution helps us grow and improve.
+Please feel free to contribute by [joining the discussions](https://github.com/Caryndcarter/Forkalicious/discussions). Each contribution helps us grow and improve.
 
 We appreciate your support and look forward to making our product even better with your help!
