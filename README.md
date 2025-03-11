@@ -94,7 +94,7 @@ This project is built using a state-of-the-art stack to ensure scalability, perf
 
 ## Installation
 
-please visit [our deployed site](https://forktastic.onrender.com/) to access the application. If you want to run the application from your local machine, follow these instructions:
+please visit [our deployed site](https://forkalicious.onrender.com) to access the application. If you want to run the application from your local machine, follow these instructions:
 
 Ensure you have the Node Package Manager and MongoDB installed on your machine. You will need a JWT Secret Key, a Spoonacular API key, and optionally an OpenAI API key.
 

@@ -39,22 +39,36 @@ class spoonacularService {
 
   async findRandomRecipes() {
     try {
-      const searchURL = `${this.baseURL}/recipes/random?number=10&apiKey=${this.apiKey}`;
-      const response = await fetch(searchURL);
+      // First API call for 10 recipes (spoonacular service only allows a max of 10 recipes in one call)
+      const firstBatchURL = `${this.baseURL}/recipes/random?number=10&apiKey=${this.apiKey}`;
+      const firstResponse = await fetch(firstBatchURL);
 
-      // error occured
-      if (response.status !== 200) {
-        return { error: response.statusText };
+      // Second API call for 2 recipes (so that there are a total of 12 recipes displayed)
+      const secondBatchURL = `${this.baseURL}/recipes/random?number=2&apiKey=${this.apiKey}`;
+      const secondResponse = await fetch(secondBatchURL);
+
+      // Check if either request fails
+      if (firstResponse.status !== 200 || secondResponse.status !== 200) {
+        return { error: "Failed to fetch recipes" };
       }
 
-      const randomRecipes = await response.json();
-      const recipes = this.parseRandomRecipes(randomRecipes);
+      // Parse both responses
+      const firstBatch = await firstResponse.json();
+      const secondBatch = await secondResponse.json();
+
+      // Combine the recipes into one array
+      const combinedRecipes = {
+        recipes: [...firstBatch.recipes, ...secondBatch.recipes]
+      };
+
+      const recipes = this.parseRandomRecipes(combinedRecipes);
       return recipes;
     } catch (error) {
       console.log(error);
       return error;
     }
   }
+
 
   parseRandomRecipes(randomRecipes: any) {
     const recipes = randomRecipes.recipes;
