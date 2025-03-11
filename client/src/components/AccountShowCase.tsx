@@ -33,6 +33,7 @@ export default function AccountShowCase({ setLoginCheck }: accountShowCaseProps)
     const loadPreferences = async () => {
       if (loading) return
 
+
       // Force refetch to get latest data
       const { data: refreshedData } = await refetch()
 
@@ -59,6 +60,7 @@ export default function AccountShowCase({ setLoginCheck }: accountShowCaseProps)
   }
 
   const handleChange = (e: any) => {
+    //console.log(e);
     setFormValues((prev) => ({
       ...prev,
       diet: e.target.value,
@@ -66,9 +68,11 @@ export default function AccountShowCase({ setLoginCheck }: accountShowCaseProps)
     //console.log(formValues);
   }
 
+
   const handleAccountUpdate = async (e: any) => {
     e.preventDefault()
     console.log("Updating diet with value:", formValues.diet)
+
 
     try {
       await updateAccount({
