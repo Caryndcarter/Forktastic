@@ -95,15 +95,15 @@ const HomePage = () => {
     <div className="min-h-screen bg-[#fef3d0]">
       {/* Main Content */}
       {!loginCheck ? (
-        <div className="login-notice">
-          <br />
-          <br />
-          <br />
-          <br />
-          <h2 className="text-3xl font-bold text-[#a84e24] mb-4 text-center ">
-            Login to Save, Edit and Create Recipes!
-          </h2>
+        <div className="pt-20 px-4">
+          {/* Card Components */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <SearchCard />
+            <RecipeBookCard />
+            <RecipeMakerCard />
+          </div>
 
+          {/* Sample Recipes Section */}
           <div className="pt-20 px-4">
             <div className="flex flex-col items-center mb-8">
               <h1 className="text-4xl font-bold text-[#a84e24] mb-4 text-center">Sample Recipes</h1>

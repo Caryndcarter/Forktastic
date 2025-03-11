@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useContext, useLayoutEffect } from "react";
 import { currentRecipeContext } from "../App";
 import { editingContext } from "../App";
@@ -40,6 +40,7 @@ const RecipeShowcase = () => {
   const [skipQuery, setSkipQuery] = useState<boolean>(true);
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [isAuthor, setIsAuthor] = useState<boolean>(false);
+  const [reviewCount, setReviewCount] = useState(0);
 
   //mutations and queries
   const [addRecipe] = useMutation(ADD_RECIPE);
@@ -229,7 +230,10 @@ const RecipeShowcase = () => {
             )}
 
           {/* Average Rating Component */}
-          <AverageRating recipeId={currentRecipeDetails._id} />
+          <AverageRating 
+            recipeId={currentRecipeDetails._id} 
+            triggerRefetch={reviewCount}
+          />
 
           {loginCheck ? (
             isAuthor ? (
@@ -260,7 +264,7 @@ const RecipeShowcase = () => {
               id="save-button-placeholder"
               className="text-gray-500 italic mb-6"
             >
-              Log in to save recipes.
+              <Link to="/user-info" className="hover:underline">Log in</Link> to save recipes.
             </div>
           )}
         </div>
@@ -271,14 +275,15 @@ const RecipeShowcase = () => {
         {/* Review */}
         {loginCheck ? (
           isSaved ? (
-            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-10 border border-gray-200">
+            <div className="max-w-2xl mx-auto p-6 bg-[#fadaae] shadow-lg rounded-lg mt-8 mb-8 border border-gray-200">
               <h3 className="text-2xl font-semibold text-[#a84e24] mb-4">
                 Save a Review
               </h3>
               <Review
                 recipeId={currentRecipeDetails._id}
                 existingReview={null} // Replace with actual review data if available
-                onReviewSubmit={() => refetch()} // Refetch the recipe data after submitting the review
+                onReviewSubmit={() => refetch()}
+                onReviewAdded={() => setReviewCount(prev => prev + 1)}
               />
             </div>
           ) : (
@@ -291,13 +296,13 @@ const RecipeShowcase = () => {
             id="review-button-placeholder"
             className="text-gray-500 italic mb-6"
           >
-            Log in to write a review.
+            <Link to="/user-info" className="hover:underline">Log in</Link> to write a review.
           </div>
         )}
 
         {/* Recipe Summary */}
         <div className="mb-8">
-          <h3 className="text-2xl font-semibold text-[#a84e24] mb-8">
+          <h3 className="text-2xl font-semibold text-[#a84e24] mb-8 ">
             Summary
           </h3>
           {/* Render the instructions as HTML */}

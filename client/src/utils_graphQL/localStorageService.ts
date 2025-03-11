@@ -34,6 +34,19 @@ class LocalStorageService {
     const recipe: RecipeDetails = JSON.parse(stringyRecipe);
     return recipe;
   }
+
+  setQuery(query: string) {
+    localStorage.setItem("query", query);
+  }
+
+  getQuery() {
+    const query = localStorage.getItem("query");
+    // current recipe not set...
+    if (!query) {
+      return "";
+    }
+    return query;
+  }
 }
 
 export default new LocalStorageService();
