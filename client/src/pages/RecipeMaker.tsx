@@ -1,4 +1,4 @@
-import { useState, useContext, useLayoutEffect } from "react";
+import { useState, useContext, useLayoutEffect, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import RecipeDetails from "../interfaces/recipeDetails";
 import askService from "../api/askService";
@@ -14,6 +14,8 @@ import { CREATE_RECIPE } from "@/utils_graphQL/mutations";
 import { SAVE_RECIPE } from "@/utils_graphQL/mutations";
 import localData from "@/utils_graphQL/localStorageService";
 
+const LOCAL_STORAGE_KEY = "recipeFormProgress";
+
 const RecipeMaker = () => {
   const currentRecipeDetails = localData.getCurrentRecipe();
   const { isEditing, setIsEditing } = useContext(editingContext);
@@ -23,8 +25,10 @@ const RecipeMaker = () => {
   const [AILoading, setAILoading] = useState<boolean>(false);
   const [createRecipe] = useMutation(CREATE_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
-  const isLoggedIn = Auth.loggedIn()
-  const [recipe, setRecipe] = useState<RecipeDetails>({
+  const isLoggedIn = Auth.loggedIn();
+  
+  // Initialize recipe state with empty values
+  const emptyRecipe: RecipeDetails = {
     _id: null,
     title: "",
     author: null,
@@ -36,7 +40,39 @@ const RecipeMaker = () => {
     steps: [],
     diets: [],
     image: "",
-  });
+  };
+  
+  const [recipe, setRecipe] = useState<RecipeDetails>(emptyRecipe);
+
+  // Load saved form data from localStorage on component mount
+  useEffect(() => {
+    const savedFormData = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedFormData) {
+      try {
+        const parsedData = JSON.parse(savedFormData);
+        setRecipe(parsedData);
+        
+        // Also set the prompt if it was saved
+        if (parsedData.savedPrompt) {
+          setPrompt(parsedData.savedPrompt);
+        }
+      } catch (error) {
+        console.error("Error parsing saved form data:", error);
+      }
+    }
+  }, []);
+
+  // Save form data to localStorage whenever recipe state changes
+  useEffect(() => {
+    // Only save if the form has some content (avoid overwriting with empty form)
+    if (recipe.title || recipe.summary || recipe.ingredients[0] || prompt) {
+      const dataToSave = {
+        ...recipe,
+        savedPrompt: prompt, // Save the prompt as well
+      };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
+    }
+  }, [recipe, prompt]);
 
   // If the user is editing an existing recipe, import that recipe's information
   useLayoutEffect(() => {
@@ -134,6 +170,9 @@ const RecipeMaker = () => {
           recipeId: data.createRecipe._id,
         },
       });
+      
+      // Clear the saved form data after successful creation
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
     }
 
     navigate("/recipe-book");
@@ -158,10 +197,30 @@ const RecipeMaker = () => {
     setAILoading(false);
   };
 
+  // Function to clear saved form data
+  const clearSavedFormData = () => {
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    setRecipe(emptyRecipe);
+    setPrompt("");
+    setErrorMessage("");
+  };
 
   return (
     <div className="bg-[#fef3d0] min-h-screen pt-24 px-6">
       <h1 className="text-3xl font-bold text-center mb-8">Create a Recipe</h1>
+
+      {/* Show a notification if there was saved data loaded */}
+      {(recipe.title || recipe.summary || recipe.ingredients[0] !== "") && (
+        <div className="w-full max-w-3xl mx-auto mb-4 p-4 bg-[#ffe8b3] border border-[#e7890c] rounded-lg flex justify-between items-center">
+          <p className="text-[#a84e24] font-medium">Your previously saved recipe form has been loaded.</p>
+          <button
+            onClick={clearSavedFormData}
+            className="text-sm bg-[#ff9e40] text-white px-3 py-1 rounded hover:bg-[#e7890c] transition-colors"
+          >
+            Start Fresh
+          </button>
+        </div>
+      )}
 
       <form
         onSubmit={handleAiCall}
@@ -289,10 +348,8 @@ const RecipeMaker = () => {
                 onChange={(e) =>
                   handleListChange("diets", index, e.target.value)
                 }
+                value={diet}
               >
-                <option disabled selected>
-                  {diet}
-                </option>
                 <option value="">None</option>
                 <option value="Gluten Free">Gluten Free</option>
                 <option value="Ketogenic">Ketogenic</option>

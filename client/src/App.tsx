@@ -7,7 +7,7 @@ import {
   createHttpLink,
 } from "@apollo/client";
 
-import Navbar from "./components/Navbar.js";
+import Navbar from "@/components/navbar/";
 
 //import Navbar from './components/Navbar';
 import { createContext, useState } from "react";
