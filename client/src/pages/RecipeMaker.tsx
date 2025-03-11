@@ -282,6 +282,7 @@ const RecipeMaker = () => {
           <label className="block font-bold mb-1">Ready In Minutes</label>
           <input
             type="number"
+            min="0"
             value={recipe.readyInMinutes}
             onChange={(e) => handleChange("readyInMinutes", +e.target.value)}
             className="w-full p-2 border rounded"
@@ -292,6 +293,7 @@ const RecipeMaker = () => {
           <label className="block font-bold mb-1">Servings</label>
           <input
             type="number"
+            min="0"
             value={recipe.servings}
             onChange={(e) => handleChange("servings", +e.target.value)}
             className="w-full p-2 border rounded"
