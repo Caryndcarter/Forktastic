@@ -59,9 +59,10 @@ export default function AccountShowCase({ setLoginCheck }: accountShowCaseProps)
   }
 
   const handleChange = (e: any) => {
+    //console.log(e);
     setFormValues((prev) => ({
       ...prev,
-      [e.target.id]: e.target.value,
+      diet: e.target.value,
     }));
     //console.log(formValues);
   }
