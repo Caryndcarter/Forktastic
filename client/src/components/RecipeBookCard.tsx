@@ -20,7 +20,7 @@ const RecipeBookCard = () => {
       <CardContent className="grid grid-cols-2 gap-4">
         <div className="flex flex-col justify-between">
           <h3 className="text-xl font-semibold text-[#a84e24]">Description</h3>
-          <p className="text-gray-700">Your personal collection of recipes</p>
+          <p className="text-gray-700">Recipes you make yourself or ones you search for and save, collected together in your Recipe Book.</p>
         </div>
         <div className="flex flex-col justify-between pt-4 ">
           <Button
