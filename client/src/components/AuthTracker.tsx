@@ -1,5 +1,5 @@
 import { userContext } from "@/App";
-import { useContext, useEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
 import auth from "@/utils_graphQL/auth";
 
@@ -13,7 +13,7 @@ export default function AuthTracker() {
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const loginCheck = auth.loggedIn();
     loginCheck ? updateStatus("subscriber") : updateStatus("visiter");
   }, [location.pathname]);

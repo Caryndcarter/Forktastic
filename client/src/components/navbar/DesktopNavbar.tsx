@@ -18,12 +18,16 @@ import { page } from ".";
 
 interface DesktopNavbarProps {
   pages: page[];
-  loggedIn: boolean;
+  userStatus: string;
 }
 
-export default function DesktopNavbar({ pages }: DesktopNavbarProps) {
+export default function DesktopNavbar({
+  pages,
+  userStatus,
+}: DesktopNavbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const loggedIn = userStatus !== "visiter";
 
   const handleBack = () => {
     navigate(-1);
@@ -131,6 +135,23 @@ export default function DesktopNavbar({ pages }: DesktopNavbarProps) {
               <span className="text-xs mt-1">{page.name}</span>
             </Link>
           ))}
+
+          <Link
+            key="/user-info"
+            to="/user-info"
+            id="nav-user-info-link"
+            className={`text-white p-2 rounded-md hover:bg-white/20 flex flex-col items-center mx-4 ${
+              location.pathname === "/user-info" ? "bg-white/20" : ""
+            }`}
+            title="Account Settings"
+          >
+            {loggedIn ? (
+              <BookPlus className="w-5 h-5" />
+            ) : (
+              <Home className="w-5 h-5" />
+            )}
+            <span className="text-xs mt-1">"Account Settings"</span>
+          </Link>
         </div>
       </nav>
       <div id="desktop-spacer" className="h-20"></div>

@@ -15,6 +15,7 @@ import { setContext } from "@apollo/client/link/context";
 import AuthService from "./utils_graphQL/auth.js";
 import RecipeDetails from "./interfaces/recipeDetails";
 import ScrollToTop from "./components/ScrollToTop";
+import AuthTracker from "./components/AuthTracker.js";
 
 // Apollo Client setup
 const httpLink = createHttpLink({
@@ -91,6 +92,7 @@ function App() {
         <editingContext.Provider value={{ isEditing, setIsEditing }}>
           <ApolloProvider client={client}>
             <ScrollToTop />
+            <AuthTracker />
             <Navbar />
             <Outlet />
           </ApolloProvider>
