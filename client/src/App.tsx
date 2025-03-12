@@ -69,23 +69,34 @@ export const editingContext = createContext({
   },
 });
 
+export const userContext = createContext({
+  userStatus: "visiter",
+  setUserStatus: (status: string) => {
+    console.log(`status: ${status}`);
+  },
+});
+
 function App() {
   const [currentRecipeDetails, setCurrentRecipeDetails] =
     useState<RecipeDetails>(defaultRecipe);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
+  const [userStatus, setUserStatus] = useState<string>("visiter");
+
   return (
-    <currentRecipeContext.Provider
-      value={{ currentRecipeDetails, setCurrentRecipeDetails }}
-    >
-      <editingContext.Provider value={{ isEditing, setIsEditing }}>
-        <ApolloProvider client={client}>
-          <ScrollToTop />
-          <Navbar />
-          <Outlet />
-        </ApolloProvider>
-      </editingContext.Provider>
-    </currentRecipeContext.Provider>
+    <userContext.Provider value={{ userStatus, setUserStatus }}>
+      <currentRecipeContext.Provider
+        value={{ currentRecipeDetails, setCurrentRecipeDetails }}
+      >
+        <editingContext.Provider value={{ isEditing, setIsEditing }}>
+          <ApolloProvider client={client}>
+            <ScrollToTop />
+            <Navbar />
+            <Outlet />
+          </ApolloProvider>
+        </editingContext.Provider>
+      </currentRecipeContext.Provider>
+    </userContext.Provider>
   );
 }
 
