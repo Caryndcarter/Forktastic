@@ -9,6 +9,11 @@ interface UserToken {
 
 // create a new class to instantiate for a user
 class AuthService {
+  // Retrieves the user token from localStorage
+  getToken() {
+    return localStorage.getItem("id_token");
+  }
+
   // get user data
   getProfile() {
     const payLoad: any = jwtDecode(this.getToken() || "");
@@ -20,7 +25,16 @@ class AuthService {
     try {
       // Checks if there is a saved token and it's still valid
       const token = this.getToken();
-      return !!token && !this.isTokenExpired(token); // handwaiving here
+      if (!token) {
+        return false;
+      }
+
+      if (this.isTokenExpired(token)) {
+        localStorage.removeItem("id_token");
+        return false;
+      }
+
+      return true;
     } catch (err) {
       return false;
     }
@@ -40,11 +54,6 @@ class AuthService {
     }
   }
 
-  getToken() {
-    // Retrieves the user token from localStorage
-    return localStorage.getItem("id_token");
-  }
-
   login(idToken: string) {
     // Saves user token to localStorage
     localStorage.setItem("id_token", idToken);
@@ -54,6 +63,7 @@ class AuthService {
   logout() {
     // Clear user token and profile data from localStorage
     localStorage.removeItem("id_token");
+
     // this will reload the page and reset the state of the application
     window.location.assign("/");
   }
