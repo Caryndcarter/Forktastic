@@ -4,6 +4,9 @@ on:
   push:
     branches: [cdk-*]
     tags: cdk-*
+concurrency: 
+  group: deploy-cdk
+  cancel-in-progress: false
 env:
   AWS_REGION: us-east-1
   AWS_ROLE_ARN: ${{ vars.ACCOUNT_AWS_ROLE_ARN }}
