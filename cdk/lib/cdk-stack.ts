@@ -3,6 +3,8 @@ import { aws_cloudfront_origins as origins, aws_cloudfront as cloudfront, aws_ce
 import { Construct } from 'constructs';
 import * as s3 from "aws-cdk-lib/aws-s3";
 import { HostedZone } from 'aws-cdk-lib/aws-route53';
+import * as route53 from "aws-cdk-lib/aws-route53";
+import * as route53_targets from "aws-cdk-lib/aws-route53-targets";
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class CdkStack extends cdk.Stack {
@@ -52,11 +54,19 @@ export class CdkStack extends cdk.Stack {
       certificate,
     });
 
-     
+    // Assuming `hostedZone` and `distribution` are already defined
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'CdkQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+      new route53.ARecord(this, "CloudFrontAliasRecord", {
+        zone: hostedZone,
+        recordName: "", // This means it's for the apex/root domain (@)
+        target: route53.RecordTarget.fromAlias(new route53_targets.CloudFrontTarget(distribution)),
+      });
+  
   }
 }
+
+
+
+
+
+
