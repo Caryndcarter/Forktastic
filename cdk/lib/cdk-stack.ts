@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as s3 from "aws-cdk-lib/aws-s3";
+import { HostedZone } from 'aws-cdk-lib/aws-route53';
 // import * as sqs from 'aws-cdk-lib/aws-sqs';
 
 export class CdkStack extends cdk.Stack {
@@ -19,6 +20,10 @@ export class CdkStack extends cdk.Stack {
       websiteErrorDocument: "index.html",
       websiteIndexDocument: "index.html",
     });
+
+    const hostedZone = new HostedZone (this, "isAwesomeHostedZone",  {
+      zoneName: 'forkalicious.isawesome.xyz'
+    })
 
     // example resource
     // const queue = new sqs.Queue(this, 'CdkQueue', {
