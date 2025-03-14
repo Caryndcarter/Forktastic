@@ -28,7 +28,7 @@ export class CdkStack extends cdk.Stack {
 
     const certificate = new acm.Certificate(this, "Certificate", {
       domainName: "forkalicious.isawesome.xyz",
-      validation: acm.CertificateValidation.fromDns(),
+      validation: acm.CertificateValidation.fromDns(hostedZone),
     });
 
     // example resource
