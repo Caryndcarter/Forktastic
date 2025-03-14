@@ -2,6 +2,7 @@ name: Deploy To AWS using CDK
 
 on:
   push:
+    branches: [cdk-*]
     tags: cdk-*
 env:
   AWS_REGION: us-east-1
