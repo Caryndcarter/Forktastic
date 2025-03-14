@@ -1,5 +1,5 @@
 import * as cdk from 'aws-cdk-lib';
-import { aws_certificatemanager as acm } from 'aws-cdk-lib';
+import { aws_cloudfront as cloudfront, aws_certificatemanager as acm } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as s3 from "aws-cdk-lib/aws-s3";
 import { HostedZone } from 'aws-cdk-lib/aws-route53';
@@ -26,9 +26,20 @@ export class CdkStack extends cdk.Stack {
       zoneName: 'forkalicious.isawesome.xyz'
     })
 
+     // 2. ACM Certificate (must be in us-east-1 for CloudFront)
     const certificate = new acm.Certificate(this, "Certificate", {
       domainName: "forkalicious.isawesome.xyz",
       validation: acm.CertificateValidation.fromDns(hostedZone),
+    });
+
+    // 3. CloudFront Origin Access Control (OAC)
+    const oac = new cloudfront.CfnOriginAccessControl(this, "OAC", {
+      originAccessControlConfig: {
+        name: "S3OAC",
+        originAccessControlOriginType: "s3",
+        signingBehavior: "always",
+        signingProtocol: "sigv4",
+      },
     });
 
     // example resource
