@@ -61,6 +61,11 @@ export class CdkStack extends cdk.Stack {
         recordName: "", // This means it's for the apex/root domain (@)
         target: route53.RecordTarget.fromAlias(new route53_targets.CloudFrontTarget(distribution)),
       });
+
+      // 6. Attach OAC to the CloudFront Origin
+      const cfnDistribution = distribution.node.defaultChild as cloudfront.CfnDistribution;
+      cfnDistribution.addPropertyOverride("DistributionConfig.Origins.0.OriginAccessControlId", oac.ref);
+      cfnDistribution.addPropertyOverride("DistributionConfig.Origins.0.S3OriginConfig.OriginAccessIdentity", "");
   
   }
 }
