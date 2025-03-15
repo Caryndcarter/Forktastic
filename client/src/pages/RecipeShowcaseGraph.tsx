@@ -70,7 +70,22 @@ const RecipeShowcase = () => {
   }, []);
 
   // This effect determines if the recipe is saved by checking the database.
-  // This is updated whenever the query refetches.
+  // This is updated whenever the query refetches or when currentRecipeDetails changes
+  useEffect(() => {
+    const checkSavedStatus = async () => {
+      if (loginCheck && currentRecipeDetails._id) {
+        setSkipQuery(false);
+        try {
+          await refetch();
+        } catch (error) {
+          console.error("Error checking saved status:", error);
+        }
+      }
+    };
+    
+    checkSavedStatus();
+  }, [loginCheck, currentRecipeDetails._id, refetch]);
+
   useEffect(() => {
     if (data?.getSpecificRecipeId) {
       setIsSaved(true);
@@ -113,11 +128,12 @@ const RecipeShowcase = () => {
       // Save the recipe ID to the user's savedRecipes array
       if (data?.addRecipe._id) {
         // Update the ID with the one from the backend
-        setCurrentRecipeDetails({
+        const updatedRecipe = {
           ...currentRecipeDetails,
-          _id: data.addRecipe._id, // Ensure _id is always valid
-        });
-        localData.setCurrentRecipe(currentRecipeDetails);
+          _id: data.addRecipe._id,
+        };
+        setCurrentRecipeDetails(updatedRecipe);
+        localData.setCurrentRecipe(updatedRecipe);
 
         //console.log(`Current Recipe author: ${currentRecipeDetails.author}`);
 
@@ -128,7 +144,7 @@ const RecipeShowcase = () => {
           },
         });
 
-        // refetch the query:
+        setIsSaved(true);
         await refetch();
       }
 
