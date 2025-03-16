@@ -89,7 +89,7 @@ export default function MobileNavbar({ pages, userStatus }: MobileNavbarProps) {
 
       {/* Account button */}
       <Link
-        to="/user-info"
+        to="/account"
         id="account-nav-button"
         className="text-white flex items-center focus:outline-none"
       >

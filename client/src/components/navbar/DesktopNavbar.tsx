@@ -138,11 +138,11 @@ export default function DesktopNavbar({
           ))}
 
           <Link
-            key="/user-info"
-            to="/user-info"
-            id="nav-user-info-link"
+            key="/account"
+            to="/account"
+            id="nav-account-link"
             className={`text-white p-2 rounded-md hover:bg-white/20 flex flex-col items-center mx-4 ${
-              location.pathname === "/user-info" ? "bg-white/20" : ""
+              location.pathname === "/account" ? "bg-white/20" : ""
             }`}
             title="Account Settings"
           >

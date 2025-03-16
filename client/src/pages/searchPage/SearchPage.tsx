@@ -15,7 +15,7 @@ export interface filterInfo {
   includeIngredients: string[];
 }
 
-const SearchPage: React.FC = () => {
+export default function AccountPage() {
   const queryReference = useRef<HTMLInputElement | null>(null);
   const [results, setResults] = useState<Recipe[]>([]); // Store the search results
   const [loading, setLoading] = useState<boolean>(true); // Track loading state
@@ -163,6 +163,4 @@ const SearchPage: React.FC = () => {
       </main>
     </div>
   );
-};
-
-export default SearchPage;
+}

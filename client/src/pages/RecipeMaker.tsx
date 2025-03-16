@@ -26,7 +26,7 @@ const RecipeMaker = () => {
   const [createRecipe] = useMutation(CREATE_RECIPE);
   const [saveRecipe] = useMutation(SAVE_RECIPE);
   const isLoggedIn = Auth.loggedIn();
-  
+
   // Initialize recipe state with empty values
   const emptyRecipe: RecipeDetails = {
     _id: null,
@@ -41,7 +41,7 @@ const RecipeMaker = () => {
     diets: [],
     image: "",
   };
-  
+
   const [recipe, setRecipe] = useState<RecipeDetails>(emptyRecipe);
 
   // Load saved form data from localStorage on component mount
@@ -51,7 +51,7 @@ const RecipeMaker = () => {
       try {
         const parsedData = JSON.parse(savedFormData);
         setRecipe(parsedData);
-        
+
         // Also set the prompt if it was saved
         if (parsedData.savedPrompt) {
           setPrompt(parsedData.savedPrompt);
@@ -170,7 +170,7 @@ const RecipeMaker = () => {
           recipeId: data.createRecipe._id,
         },
       });
-      
+
       // Clear the saved form data after successful creation
       localStorage.removeItem(LOCAL_STORAGE_KEY);
     }
@@ -212,7 +212,9 @@ const RecipeMaker = () => {
       {/* Show a notification if there was saved data loaded */}
       {(recipe.title || recipe.summary || recipe.ingredients[0] !== "") && (
         <div className="w-full max-w-3xl mx-auto mb-4 p-4 bg-[#ffe8b3] border border-[#e7890c] rounded-lg flex justify-between items-center">
-          <p className="text-[#a84e24] font-medium">Your progress has been saved.</p>
+          <p className="text-[#a84e24] font-medium">
+            Your progress has been saved.
+          </p>
           <button
             onClick={clearSavedFormData}
             className="text-sm bg-[#ff9e40] text-white px-3 py-1 rounded hover:bg-[#e7890c] transition-colors"
@@ -445,10 +447,12 @@ const RecipeMaker = () => {
           </button>
         ) : (
           <div className="space-y-2">
-            <p className="text-center text-gray-700 font-medium">Log in to create this recipe</p>
+            <p className="text-center text-gray-700 font-medium">
+              Log in to create this recipe
+            </p>
             <button
               type="button"
-              onClick={() => navigate("/user-info")} 
+              onClick={() => navigate("/account")}
               className="w-full bg-[#ff9e40] text-white font-bold p-2 rounded hover:bg-[#e7890c] transition-colors"
             >
               Log In
