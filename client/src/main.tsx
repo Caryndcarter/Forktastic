@@ -6,9 +6,8 @@ import HomePage from "./pages/HomePage";
 import RecipeBook from "./pages/RecipeBook";
 import RecipeShowcaseGraph from "./pages/RecipeShowcaseGraph";
 import RecipeMaker from "./pages/RecipeMaker";
-import UserInfo from "./pages/UserInfo";
 
-import { SearchPage, ErrorPage } from "./pages";
+import { AccountPage, SearchPage, ErrorPage } from "./pages";
 
 const router = createBrowserRouter([
   {
@@ -33,8 +32,8 @@ const router = createBrowserRouter([
         element: <RecipeMaker />,
       },
       {
-        path: "user-info",
-        element: <UserInfo />,
+        path: "account",
+        element: <AccountPage />,
       },
       {
         path: "recipe-showcase",

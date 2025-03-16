@@ -1,24 +1,24 @@
-import { useState, useLayoutEffect } from "react"
+import { useState, useLayoutEffect } from "react";
 //import { authService } from '../api/authentication';
-import SignUpFormGraph from "../components/SignUpFormGraph"
-import LoginFormGraph from "../components/LoginFormGraph"
-import AccountShowCase from "../components/AccountShowCase"
-import Auth from "../utils_graphQL/auth"
-import { Toaster } from "sonner"
+import SignUpFormGraph from "@/components/SignUpFormGraph";
+import LoginFormGraph from "@/components/LoginFormGraph";
+import AccountShowCase from "@/components/AccountShowCase";
+import Auth from "@/utils_graphQL/auth";
+import { Toaster } from "sonner";
 
 const UserInfo = () => {
-  const [loginCheck, setLoginCheck] = useState(false)
-  const [signIn, setSignIn] = useState(true)
+  const [loginCheck, setLoginCheck] = useState(false);
+  const [signIn, setSignIn] = useState(true);
 
   useLayoutEffect(() => {
     const checkLogin = () => {
       if (Auth.loggedIn()) {
-        setLoginCheck(true)
+        setLoginCheck(true);
       }
-    }
+    };
 
-    checkLogin()
-  }, [])
+    checkLogin();
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#fef3d0]">
@@ -59,7 +59,7 @@ const UserInfo = () => {
         }}
       />
     </div>
-  )
-}
+  );
+};
 
-export default UserInfo
+export default UserInfo;
