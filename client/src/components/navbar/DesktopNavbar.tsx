@@ -12,6 +12,7 @@ import {
   BookPlus,
   CircleOff,
   UserCog,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { page } from ".";
@@ -146,11 +147,11 @@ export default function DesktopNavbar({
             title="Account Settings"
           >
             {loggedIn ? (
-              <BookPlus className="w-5 h-5" />
-            ) : (
               <Home className="w-5 h-5" />
+            ) : (
+              <User className="w-5 h-5" />
             )}
-            <span className="text-xs mt-1">"Account Settings"</span>
+            <span className="text-xs mt-1">Account Settings</span>
           </Link>
         </div>
       </nav>

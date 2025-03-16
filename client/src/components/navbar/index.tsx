@@ -29,11 +29,6 @@ const pages: page[] = [
     href: "/recipe-maker",
     icon: "bookPlus",
   },
-  {
-    name: "Account Settings",
-    href: "/user-info",
-    icon: "userCog",
-  },
 ];
 
 export default function Navbar() {
