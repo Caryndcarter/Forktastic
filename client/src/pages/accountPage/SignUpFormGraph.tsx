@@ -5,8 +5,8 @@ import { useState } from "react";
 //new imports
 import type { ChangeEvent, FormEvent } from "react";
 import { useMutation } from "@apollo/client";
-import { SIGN_UP } from "../utils_graphQL/mutations";
-import Auth from "../utils_graphQL/auth";
+import { SIGN_UP } from "@/utils_graphQL/mutations";
+import Auth from "@/utils_graphQL/auth";
 
 interface loginFormProps {
   setSignIn: React.Dispatch<React.SetStateAction<boolean>>;

@@ -1,8 +1,8 @@
 import { useState, useLayoutEffect } from "react";
 //import { authService } from '../api/authentication';
-import SignUpFormGraph from "@/components/SignUpFormGraph";
-import LoginFormGraph from "@/components/LoginFormGraph";
-import AccountShowCase from "@/components/AccountShowCase";
+import SignUpFormGraph from "./SignUpFormGraph";
+import LoginFormGraph from "./LoginFormGraph";
+import AccountShowCase from "./AccountShowCase";
 import Auth from "@/utils_graphQL/auth";
 import { Toaster } from "sonner";
 
