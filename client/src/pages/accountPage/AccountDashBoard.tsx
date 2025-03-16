@@ -17,7 +17,7 @@ interface accountInfo {
   intolerances: string[];
 }
 
-export default function AccountShowCase({
+export default function AccountDashBoard({
   setLoginCheck,
 }: accountShowCaseProps) {
   // const navigate = useNavigate()

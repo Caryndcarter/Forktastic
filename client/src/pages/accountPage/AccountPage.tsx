@@ -2,7 +2,7 @@ import { useState, useLayoutEffect } from "react";
 //import { authService } from '../api/authentication';
 import SignUpFormGraph from "./SignUpForm";
 import LoginFormGraph from "./LoginForm";
-import AccountShowCase from "./AccountShowCase";
+import AccountDashBoard from "./AccountDashBoard";
 import Auth from "@/utils_graphQL/auth";
 import { Toaster } from "sonner";
 
@@ -24,7 +24,7 @@ const UserInfo = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#fef3d0]">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         {loginCheck ? (
-          <AccountShowCase setLoginCheck={setLoginCheck}></AccountShowCase>
+          <AccountDashBoard setLoginCheck={setLoginCheck}></AccountDashBoard>
         ) : signIn ? (
           <LoginFormGraph setSignIn={setSignIn}></LoginFormGraph>
         ) : (
