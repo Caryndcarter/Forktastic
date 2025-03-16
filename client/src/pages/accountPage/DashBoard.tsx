@@ -17,9 +17,7 @@ interface accountInfo {
   intolerances: string[];
 }
 
-export default function AccountDashBoard({
-  setLoginCheck,
-}: accountShowCaseProps) {
+export default function DashBoard({ setLoginCheck }: accountShowCaseProps) {
   // const navigate = useNavigate()
 
   const [formValues, setFormValues] = useState<accountInfo>({
