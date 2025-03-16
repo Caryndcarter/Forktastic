@@ -24,20 +24,6 @@ const UserInfo = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#fef3d0]">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         {loginCheck ? (
-          <>
-            <h2 className="text-2xl font-bold mb-6 text-center text-[#a84e24]">
-              {signIn ? "Dietary Preferences" : "Sign Up"}
-            </h2>
-            {signIn && (
-              <p className="text-sm text-[#6B2A29] text-center mb-4">
-                Register your preferences for use in recipe search filters.
-              </p>
-            )}
-          </>
-        ) : (
-          <></>
-        )}
-        {loginCheck ? (
           <AccountShowCase setLoginCheck={setLoginCheck}></AccountShowCase>
         ) : signIn ? (
           <LoginFormGraph setSignIn={setSignIn}></LoginFormGraph>
