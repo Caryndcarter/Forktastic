@@ -2,9 +2,9 @@ import { useState } from "react";
 //import { authService } from "../api/authentication";
 //import UserLogin from "../interfaces/UserLogin";
 import { useMutation } from "@apollo/client";
-import { LOGIN_USER } from "../utils_graphQL/mutations";
+import { LOGIN_USER } from "@/utils_graphQL/mutations";
 import type { ChangeEvent, FormEvent } from "react";
-import AuthService from "../utils_graphQL/auth";
+import AuthService from "@/utils_graphQL/auth";
 
 interface loginFormProps {
   setSignIn: React.Dispatch<React.SetStateAction<boolean>>;
@@ -130,7 +130,7 @@ export default function LoginForm({ setSignIn }: loginFormProps) {
           type="submit"
           id="sign-in-submit"
           className="w-full bg-[#ff9e40] text-white py-2 rounded hover:bg-[#e7890c]"
-        > 
+        >
           Sign In
         </button>
 
