@@ -17,17 +17,12 @@ const defaultRecipe: RecipeDetails = {
   spoonacularId: 0,
 };
 
-const currentRecipeID = "currentRecipe";
+const currentRecipeID = "Current Recipe";
 const accountDietID = "Dietary Needs";
 const queryID = "Query";
 
 // holds logic for managing variables in local storage
 class LocalStorageService {
-  setCurrentRecipe(recipe: RecipeDetails) {
-    const stringyRecipe = JSON.stringify(recipe);
-    localStorage.setItem(currentRecipeID, stringyRecipe);
-  }
-
   getCurrentRecipe(): RecipeDetails {
     const stringyRecipe = localStorage.getItem(currentRecipeID);
 
@@ -38,9 +33,13 @@ class LocalStorageService {
     return JSON.parse(stringyRecipe);
   }
 
-  setAccountDiet(dietaryNeeds: DietaryNeeds): void {
-    const stringyDiet = JSON.stringify(dietaryNeeds);
-    localStorage.setItem(accountDietID, stringyDiet);
+  setCurrentRecipe(recipe: RecipeDetails) {
+    const stringyRecipe = JSON.stringify(recipe);
+    localStorage.setItem(currentRecipeID, stringyRecipe);
+  }
+
+  removeCurrentRecipe() {
+    localStorage.removeItem(currentRecipeID);
   }
 
   getAccountDiet(): DietaryNeeds {
@@ -53,11 +52,16 @@ class LocalStorageService {
     return JSON.parse(stringyDiet);
   }
 
-  setQuery(query: string) {
-    localStorage.setItem(queryID, query);
+  setAccountDiet(dietaryNeeds: DietaryNeeds): void {
+    const stringyDiet = JSON.stringify(dietaryNeeds);
+    localStorage.setItem(accountDietID, stringyDiet);
   }
 
-  getQuery() {
+  removeAccountDiet() {
+    localStorage.removeItem(accountDietID);
+  }
+
+  getQuery(): string {
     const query = localStorage.getItem(queryID);
 
     if (!query) {
@@ -65,6 +69,14 @@ class LocalStorageService {
     }
 
     return query;
+  }
+
+  setQuery(query: string) {
+    localStorage.setItem(queryID, query);
+  }
+
+  removeQuery() {
+    localStorage.removeItem(queryID);
   }
 }
 
