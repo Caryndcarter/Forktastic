@@ -10,28 +10,25 @@ interface UserToken {
 
 // create a new class to instantiate for a user
 class AuthService {
-  // Retrieves the user token from localStorage
   getToken() {
-    return localStorage.getItem("id_token");
+    return localStorageService.getIDToken();
   }
 
-  // get user data
   getProfile() {
     const payLoad: any = jwtDecode(this.getToken() || "");
     return payLoad?.data as profile;
   }
 
-  // check if user's logged in
   loggedIn() {
     try {
-      // Checks if there is a saved token and it's still valid
       const token = this.getToken();
+
       if (!token) {
         return false;
       }
 
       if (this.isTokenExpired(token)) {
-        localStorage.removeItem("id_token");
+        this.logout();
         return false;
       }
 
@@ -41,28 +38,23 @@ class AuthService {
     }
   }
 
-  // check if token is expired
   isTokenExpired(token: string) {
-    try {
-      const decoded = jwtDecode<UserToken>(token);
-      if (decoded.exp < Date.now() / 1000) {
-        return true;
-      }
-
-      return false;
-    } catch (err) {
-      return false;
+    const decoded = jwtDecode<UserToken>(token);
+    if (decoded.exp < Date.now() / 1000) {
+      return true;
     }
+
+    return false;
   }
 
   signUp(idToken: string) {
-    localStorage.setItem("id_token", idToken);
+    localStorageService.setIDToken(idToken);
 
     window.location.assign("/");
   }
 
   login(idToken: string, diet: DietaryNeeds) {
-    localStorage.setItem("id_token", idToken);
+    localStorageService.setIDToken(idToken);
 
     localStorageService.setAccountDiet(diet);
 
@@ -70,11 +62,11 @@ class AuthService {
   }
 
   logout() {
-    // Clear user token and profile data from localStorage
-    localStorage.removeItem("id_token");
+    localStorageService.removeIDToken();
 
-    // this will reload the page and reset the state of the application
-    window.location.assign("/");
+    localStorageService.removeAccountDiet();
+
+    window.location.reload();
   }
 }
 
