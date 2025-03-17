@@ -1,30 +1,20 @@
-import { useState, useLayoutEffect } from "react";
-//import { authService } from '../api/authentication';
+import { useState, useContext } from "react";
+import { userContext } from "@/App";
 import SignUpFormGraph from "./SignUpForm";
 import LoginFormGraph from "./LoginForm";
 import DashBoard from "./DashBoard";
-import Auth from "@/utils_graphQL/auth";
 import { Toaster } from "sonner";
 
 const UserInfo = () => {
-  const [loginCheck, setLoginCheck] = useState(false);
+  const { userStatus } = useContext(userContext);
+  const loggedIn = userStatus !== "visiter";
   const [signIn, setSignIn] = useState(true);
-
-  useLayoutEffect(() => {
-    const checkLogin = () => {
-      if (Auth.loggedIn()) {
-        setLoginCheck(true);
-      }
-    };
-
-    checkLogin();
-  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#fef3d0]">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        {loginCheck ? (
-          <DashBoard setLoginCheck={setLoginCheck}></DashBoard>
+        {loggedIn ? (
+          <DashBoard></DashBoard>
         ) : signIn ? (
           <LoginFormGraph setSignIn={setSignIn}></LoginFormGraph>
         ) : (
