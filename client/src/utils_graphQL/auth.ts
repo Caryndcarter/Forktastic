@@ -1,6 +1,7 @@
 // use this to decode a token and get the user's information out of it
 import { jwtDecode } from "jwt-decode";
-import { profile } from "../interfaces/index.js";
+import { DietaryNeeds, profile } from "../interfaces/index.js";
+import localStorageService from "./localStorageService.js";
 
 interface UserToken {
   name: string;
@@ -54,9 +55,17 @@ class AuthService {
     }
   }
 
-  login(idToken: string) {
-    // Saves user token to localStorage
+  signUp(idToken: string) {
     localStorage.setItem("id_token", idToken);
+
+    window.location.assign("/");
+  }
+
+  login(idToken: string, diet: DietaryNeeds) {
+    localStorage.setItem("id_token", idToken);
+
+    localStorageService.setAccountDiet(diet);
+
     window.location.assign("/");
   }
 

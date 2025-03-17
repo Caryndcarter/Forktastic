@@ -1,4 +1,4 @@
-import { RecipeDetails } from "@/interfaces";
+import { RecipeDetails, DietaryNeeds } from "@/interfaces";
 
 const defaultRecipe: RecipeDetails = {
   _id: null,
@@ -19,20 +19,34 @@ const defaultRecipe: RecipeDetails = {
 
 // holds logic for managing variables in local storage
 class LocalStorageService {
-  // first variable: the current recipe details
   setCurrentRecipe(recipe: RecipeDetails) {
     const stringyRecipe = JSON.stringify(recipe);
     localStorage.setItem("currentRecipe", stringyRecipe);
   }
 
-  getCurrentRecipe() {
+  getCurrentRecipe(): RecipeDetails {
     const stringyRecipe = localStorage.getItem("currentRecipe");
-    // current recipe not set...
+
     if (!stringyRecipe) {
       return defaultRecipe;
     }
-    const recipe: RecipeDetails = JSON.parse(stringyRecipe);
-    return recipe;
+
+    return JSON.parse(stringyRecipe);
+  }
+
+  setAccountDiet(dietaryNeeds: DietaryNeeds): void {
+    const stringyDiet = JSON.stringify(dietaryNeeds);
+    localStorage.setItem("Dietary Needs", stringyDiet);
+  }
+
+  getAccountDiet(): DietaryNeeds {
+    const stringyDiet = localStorage.getItem("Dietary Needs");
+
+    if (!stringyDiet) {
+      return { diet: "", intolerances: [] };
+    }
+
+    return JSON.parse(stringyDiet);
   }
 
   setQuery(query: string) {
@@ -41,10 +55,11 @@ class LocalStorageService {
 
   getQuery() {
     const query = localStorage.getItem("query");
-    // current recipe not set...
+
     if (!query) {
       return "";
     }
+
     return query;
   }
 }
