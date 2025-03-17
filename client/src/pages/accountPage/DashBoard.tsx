@@ -1,24 +1,19 @@
 import auth from "@/utils_graphQL/auth";
 // import { useNavigate } from "react-router-dom"
 import { useEffect, useLayoutEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
-import { useMutation } from "@apollo/client";
 import { UPDATE_ACCOUNT_PREFERENCES } from "@/utils_graphQL/mutations";
 import { DELETE_USER } from "@/utils_graphQL/mutations";
 import { toast } from "sonner";
 import DietForm from "./DietForm";
-
-interface accountShowCaseProps {
-  setLoginCheck: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 interface accountInfo {
   diet: string;
   intolerances: string[];
 }
 
-export default function DashBoard({ setLoginCheck }: accountShowCaseProps) {
+export default function DashBoard() {
   // const navigate = useNavigate()
 
   const [formValues, setFormValues] = useState<accountInfo>({
@@ -56,7 +51,6 @@ export default function DashBoard({ setLoginCheck }: accountShowCaseProps) {
 
   const handleLogOut = () => {
     auth.logout();
-    setLoginCheck(false);
   };
 
   const handleAccountUpdate = async (e: any) => {
