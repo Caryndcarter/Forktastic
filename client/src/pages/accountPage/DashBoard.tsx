@@ -1,52 +1,26 @@
 import auth from "@/utils_graphQL/auth";
 // import { useNavigate } from "react-router-dom"
-import { useEffect, useLayoutEffect, useState } from "react";
-import { useQuery, useMutation } from "@apollo/client";
-import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
+import { useLayoutEffect, useState } from "react";
+import { useMutation } from "@apollo/client";
 import { UPDATE_ACCOUNT_PREFERENCES } from "@/utils_graphQL/mutations";
 import { DELETE_USER } from "@/utils_graphQL/mutations";
+import localStorageService from "@/utils_graphQL/localStorageService";
 import { toast } from "sonner";
 import DietForm from "./DietForm";
-
-interface accountInfo {
-  diet: string;
-  intolerances: string[];
-}
+import { DietaryNeeds } from "@/interfaces";
 
 export default function DashBoard() {
-  // const navigate = useNavigate()
-
-  const [formValues, setFormValues] = useState<accountInfo>({
+  const [dietNeeds, setDietNeeds] = useState<DietaryNeeds>({
     diet: "",
     intolerances: [],
   });
 
-  const { loading, refetch } = useQuery(GET_ACCOUNT_PREFERENCES);
   const [updateAccount] = useMutation(UPDATE_ACCOUNT_PREFERENCES);
   const [deleteUser] = useMutation(DELETE_USER);
 
-  useEffect(() => {
-    const loadPreferences = async () => {
-      if (loading) return;
-
-      // Force refetch to get latest data
-      const { data: refreshedData } = await refetch();
-
-      if (refreshedData?.getUser) {
-        setFormValues((prev) => ({
-          ...prev,
-          diet: refreshedData.getUser.diet || "",
-          intolerances: refreshedData.getUser.intolerances || [],
-        }));
-      }
-    };
-
-    loadPreferences();
-  }, [loading, refetch]);
-
-  // Refetch when component mounts
   useLayoutEffect(() => {
-    refetch();
+    const diet = localStorageService.getAccountDiet();
+    setDietNeeds(diet);
   }, []);
 
   const handleLogOut = () => {
@@ -55,15 +29,16 @@ export default function DashBoard() {
 
   const handleAccountUpdate = async (e: any) => {
     e.preventDefault();
-    console.log("Updating diet with value:", formValues.diet);
 
     try {
       await updateAccount({
         variables: {
-          diet: formValues.diet,
-          intolerances: formValues.intolerances,
+          diet: dietNeeds.diet,
+          intolerances: dietNeeds.intolerances,
         },
       });
+
+      localStorageService.setAccountDiet(dietNeeds);
 
       // Show success toast with custom styling
       toast.success("Preferences updated", {
@@ -118,10 +93,6 @@ export default function DashBoard() {
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>; // Or your loading component
-  }
-
   return (
     <>
       <h2 className="text-2xl font-bold mb-6 text-center text-[#a84e24]">
@@ -134,7 +105,7 @@ export default function DashBoard() {
 
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6">
         <DietForm
-          formValues={formValues}
+          formValues={dietNeeds}
           handleSubmit={handleAccountUpdate}
         ></DietForm>
 
