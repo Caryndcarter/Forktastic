@@ -18,6 +18,7 @@ const defaultRecipe: RecipeDetails = {
 };
 
 const currentRecipeID = "Current Recipe";
+const tokenID = "Authentication Token";
 const accountDietID = "Dietary Needs";
 const queryID = "Query";
 
@@ -40,6 +41,24 @@ class LocalStorageService {
 
   removeCurrentRecipe() {
     localStorage.removeItem(currentRecipeID);
+  }
+
+  getIDToken(): string {
+    const token = localStorage.getItem(tokenID);
+
+    if (!token) {
+      return "";
+    }
+
+    return token;
+  }
+
+  setIDToken(token: string) {
+    localStorage.setItem(tokenID, token);
+  }
+
+  removeIDToken() {
+    localStorage.removeItem(tokenID);
   }
 
   getAccountDiet(): DietaryNeeds {
