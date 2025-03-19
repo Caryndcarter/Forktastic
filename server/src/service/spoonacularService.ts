@@ -17,7 +17,9 @@ class spoonacularService {
       let searchURL = `${this.baseURL}/recipes/complexSearch?apiKey=${this.apiKey}`;
 
       Object.entries(input).forEach(([key, value]) => {
-        searchURL += `&${key}=${value}`;
+        if (value) {
+          searchURL += `&${key}=${encodeURIComponent(value)}`;
+        }
       });
 
       const response = await fetch(searchURL);
