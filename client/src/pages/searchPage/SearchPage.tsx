@@ -24,7 +24,7 @@ const SearchPage: React.FC = () => {
     intolerances: [],
     includeIngredients: [],
   });
-  const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
+  const { data, refetch } = useQuery(GET_ACCOUNT_PREFERENCES);
 
   // retrieve query
   useLayoutEffect(() => {
@@ -33,6 +33,10 @@ const SearchPage: React.FC = () => {
     if (queryReference.current) {
       queryReference.current.value = query;
     }
+  }, []);
+
+  useLayoutEffect(() => {
+    refetch();
   }, []);
 
   // fetch account profile details

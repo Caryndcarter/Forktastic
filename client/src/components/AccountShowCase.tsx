@@ -49,7 +49,7 @@ export default function AccountShowCase({ setLoginCheck }: accountShowCaseProps)
     loadPreferences()
   }, [loading, refetch])
 
-  // Refetch when component mounts
+
   useLayoutEffect(() => {
     refetch()
   }, [])
@@ -73,13 +73,13 @@ export default function AccountShowCase({ setLoginCheck }: accountShowCaseProps)
     e.preventDefault()
     console.log("Updating diet with value:", formValues.diet)
 
-
     try {
       await updateAccount({
         variables: {
           diet: formValues.diet,
           intolerances: formValues.intolerances,
         },
+        refetchQueries: [{ query: GET_ACCOUNT_PREFERENCES }]
       })
 
       // Show success toast with custom styling
@@ -297,4 +297,3 @@ export default function AccountShowCase({ setLoginCheck }: accountShowCaseProps)
     </div>
   )
 }
-
