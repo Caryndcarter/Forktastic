@@ -2,8 +2,6 @@ import { useState, useCallback, useRef, useLayoutEffect } from "react";
 import type Recipe from "@/interfaces/recipe";
 import FilterForm from "./FilterForm";
 import apiService from "@/api/apiService";
-import { useQuery } from "@apollo/client";
-import { GET_ACCOUNT_PREFERENCES } from "@/utils_graphQL/queries";
 import Results from "./Results";
 import localStorageService from "@/utils_graphQL/localStorageService";
 import { ActiveFilters } from "./ActiveFilters";
@@ -24,36 +22,24 @@ export default function AccountPage() {
     intolerances: [],
     includeIngredients: [],
   });
-  const { data } = useQuery(GET_ACCOUNT_PREFERENCES);
 
-  // retrieve query
   useLayoutEffect(() => {
+    // load the query:
     const query = localStorageService.getQuery();
-    console.log(query);
     if (queryReference.current) {
       queryReference.current.value = query;
     }
+
+    // load diet preferences saved to account:
+    const dietNeeds = localStorageService.getAccountDiet();
+    setFilterValue((previousFilter) => ({
+      ...previousFilter,
+      diet: dietNeeds.diet,
+      intolerances: dietNeeds.intolerances,
+    }));
   }, []);
 
-  // fetch account profile details
-  useLayoutEffect(() => {
-    // fetch diets information
-    if (data?.getUser.diet) {
-      setFilterValue((prev) => ({
-        ...prev,
-        diet: data.getUser.diet,
-      }));
-    }
-    // fetch intolerance information
-    if (data?.getUser.intolerances) {
-      setFilterValue((prev) => ({
-        ...prev,
-        intolerances: data.getUser.intolerances,
-      }));
-    }
-  }, [data]);
-
-  // manually trigger the search
+  // trigger the search on filter update
   useLayoutEffect(() => {
     if (queryReference.current) {
       handleChange({

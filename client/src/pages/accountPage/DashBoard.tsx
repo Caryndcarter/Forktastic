@@ -1,6 +1,6 @@
 import auth from "@/utils_graphQL/auth";
 // import { useNavigate } from "react-router-dom"
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { UPDATE_ACCOUNT_PREFERENCES } from "@/utils_graphQL/mutations";
 import { DELETE_USER } from "@/utils_graphQL/mutations";
@@ -10,35 +10,33 @@ import DietForm from "./DietForm";
 import { DietaryNeeds } from "@/interfaces";
 
 export default function DashBoard() {
-  const [dietNeeds, setDietNeeds] = useState<DietaryNeeds>({
-    diet: "",
-    intolerances: [],
-  });
+  const [dietNeeds, setDietNeeds] = useState<DietaryNeeds>(
+    localStorageService.getAccountDiet()
+  );
 
   const [updateAccount] = useMutation(UPDATE_ACCOUNT_PREFERENCES);
   const [deleteUser] = useMutation(DELETE_USER);
-
-  useLayoutEffect(() => {
-    const diet = localStorageService.getAccountDiet();
-    setDietNeeds(diet);
-  }, []);
 
   const handleLogOut = () => {
     auth.logout();
   };
 
-  const handleAccountUpdate = async (e: any) => {
-    e.preventDefault();
-
+  const handleAccountUpdate = async (updatedDiet: DietaryNeeds) => {
     try {
-      await updateAccount({
+      const { data, errors } = await updateAccount({
         variables: {
-          diet: dietNeeds.diet,
-          intolerances: dietNeeds.intolerances,
+          diet: updatedDiet.diet,
+          intolerances: updatedDiet.intolerances,
         },
       });
 
-      localStorageService.setAccountDiet(dietNeeds);
+      if (!data || errors) {
+        console.error("soething went wrong");
+        return;
+      }
+
+      localStorageService.setAccountDiet(updatedDiet);
+      setDietNeeds(updatedDiet);
 
       // Show success toast with custom styling
       toast.success("Preferences updated", {
@@ -106,7 +104,7 @@ export default function DashBoard() {
       <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-6">
         <DietForm
           formValues={dietNeeds}
-          handleSubmit={handleAccountUpdate}
+          handleAccountUpdate={handleAccountUpdate}
         ></DietForm>
 
         <div className="mt-6">

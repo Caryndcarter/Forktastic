@@ -31,10 +31,13 @@ const intoleranceOptions = [
 
 interface DietFormProps {
   formValues: any;
-  handleSubmit: any;
+  handleAccountUpdate: any;
 }
 
-export default function DietForm({ formValues, handleSubmit }: DietFormProps) {
+export default function DietForm({
+  formValues,
+  handleAccountUpdate,
+}: DietFormProps) {
   // const submitFilterUpdate = (event: any) => {
   //   event.preventDefault();
   //   const formData = new FormData(event.target);
@@ -58,6 +61,27 @@ export default function DietForm({ formValues, handleSubmit }: DietFormProps) {
   //   }
   //   console.log(updatedFilter);
   // };
+
+  const handleSubmit = (event: any) => {
+    console.log(event);
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const updatedDiet: any = Object.fromEntries(formData.entries());
+
+    updatedDiet.intolerances = [];
+
+    for (const [key, value] of formData) {
+      const stringValue = value as string;
+
+      if (key.includes("intolerance")) {
+        stringValue ? updatedDiet.intolerances.push(stringValue) : null;
+        delete updatedDiet[key];
+      }
+    }
+
+    handleAccountUpdate(updatedDiet);
+  };
 
   return (
     <>
