@@ -78,11 +78,12 @@ export default function DesktopNavbar({
         id="desktop-navbar"
         className="fixed top-0 left-0 right-0 bg-[#ff9e40] p-4 shadow-md z-10 mx-auto flex flex-col"
       >
-        <div id="title-row" className="text-center mb-4 flex justify-center">
-          <Utensils className="h-8 w-8 text-white mr-4" />
-          <h1 className="text-white text-3xl font-bold">Forkalicious</h1>
-        </div>
-
+        <Link to="/" className="no-underline">
+            <div id="title-row" className="text-center mb-4 flex justify-center cursor-pointer">
+              <Utensils className="h-8 w-8 text-white mr-4" />
+              <h1 className="text-white text-3xl font-bold">Forkalicious</h1>
+            </div>
+          </Link>
         <div
           id="icon-row"
           className="flex justify-center items-center w-full mb-2"
