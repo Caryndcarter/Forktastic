@@ -66,7 +66,7 @@ export default function SignUpForm({ setSignIn }: loginFormProps) {
       }
 
       const { token } = data.signUp;
-      Auth.login(token);
+      Auth.signUp(token);
     } catch (error) {
       setErrorMessage("Failed to create an account. Please try again.");
     }

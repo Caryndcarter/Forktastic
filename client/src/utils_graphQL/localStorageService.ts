@@ -1,4 +1,4 @@
-import { RecipeDetails } from "@/interfaces";
+import { RecipeDetails, DietaryNeeds } from "@/interfaces";
 
 const defaultRecipe: RecipeDetails = {
   _id: null,
@@ -17,35 +17,85 @@ const defaultRecipe: RecipeDetails = {
   spoonacularId: 0,
 };
 
+const currentRecipeID = "Current Recipe";
+const tokenID = "Authentication Token";
+const accountDietID = "Dietary Needs";
+const queryID = "Query";
+
 // holds logic for managing variables in local storage
 class LocalStorageService {
-  // first variable: the current recipe details
-  setCurrentRecipe(recipe: RecipeDetails) {
-    const stringyRecipe = JSON.stringify(recipe);
-    localStorage.setItem("currentRecipe", stringyRecipe);
-  }
+  getCurrentRecipe(): RecipeDetails {
+    const stringyRecipe = localStorage.getItem(currentRecipeID);
 
-  getCurrentRecipe() {
-    const stringyRecipe = localStorage.getItem("currentRecipe");
-    // current recipe not set...
     if (!stringyRecipe) {
       return defaultRecipe;
     }
-    const recipe: RecipeDetails = JSON.parse(stringyRecipe);
-    return recipe;
+
+    return JSON.parse(stringyRecipe);
   }
 
-  setQuery(query: string) {
-    localStorage.setItem("query", query);
+  setCurrentRecipe(recipe: RecipeDetails) {
+    const stringyRecipe = JSON.stringify(recipe);
+    localStorage.setItem(currentRecipeID, stringyRecipe);
   }
 
-  getQuery() {
-    const query = localStorage.getItem("query");
-    // current recipe not set...
+  removeCurrentRecipe() {
+    localStorage.removeItem(currentRecipeID);
+  }
+
+  getIDToken(): string {
+    const token = localStorage.getItem(tokenID);
+
+    if (!token) {
+      return "";
+    }
+
+    return token;
+  }
+
+  setIDToken(token: string) {
+    localStorage.setItem(tokenID, token);
+  }
+
+  removeIDToken() {
+    localStorage.removeItem(tokenID);
+  }
+
+  getAccountDiet(): DietaryNeeds {
+    const stringyDiet = localStorage.getItem(accountDietID);
+
+    if (!stringyDiet) {
+      return { diet: "", intolerances: [] };
+    }
+
+    return JSON.parse(stringyDiet);
+  }
+
+  setAccountDiet(dietaryNeeds: DietaryNeeds): void {
+    const stringyDiet = JSON.stringify(dietaryNeeds);
+    localStorage.setItem(accountDietID, stringyDiet);
+  }
+
+  removeAccountDiet() {
+    localStorage.removeItem(accountDietID);
+  }
+
+  getQuery(): string {
+    const query = localStorage.getItem(queryID);
+
     if (!query) {
       return "";
     }
+
     return query;
+  }
+
+  setQuery(query: string) {
+    localStorage.setItem(queryID, query);
+  }
+
+  removeQuery() {
+    localStorage.removeItem(queryID);
   }
 }
 

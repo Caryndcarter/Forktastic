@@ -52,8 +52,8 @@ export default function LoginForm({ setSignIn }: loginFormProps) {
         throw new Error("Login failed: Token is missing!");
       }
 
-      const { token } = data.login;
-      AuthService.login(token);
+      const { token, user } = data.login;
+      AuthService.login(token, user);
     } catch (err) {
       if (err instanceof Error) {
         if (err.message.includes("Wrong password")) {
