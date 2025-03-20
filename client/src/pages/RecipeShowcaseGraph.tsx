@@ -82,7 +82,7 @@ const RecipeShowcase = () => {
         }
       }
     };
-    
+
     checkSavedStatus();
   }, [loginCheck, currentRecipeDetails._id, refetch]);
 
@@ -246,8 +246,8 @@ const RecipeShowcase = () => {
             )}
 
           {/* Average Rating Component */}
-          <AverageRating 
-            recipeId={currentRecipeDetails._id} 
+          <AverageRating
+            recipeId={currentRecipeDetails._id}
             triggerRefetch={reviewCount}
           />
 
@@ -280,7 +280,10 @@ const RecipeShowcase = () => {
               id="save-button-placeholder"
               className="text-gray-500 italic mb-6"
             >
-              <Link to="/user-info" className="hover:underline">Log in</Link> to save recipes.
+              <Link to="/account" className="hover:underline">
+                Log in
+              </Link>{" "}
+              to save recipes.
             </div>
           )}
         </div>
@@ -299,7 +302,7 @@ const RecipeShowcase = () => {
                 recipeId={currentRecipeDetails._id}
                 existingReview={null} // Replace with actual review data if available
                 onReviewSubmit={() => refetch()}
-                onReviewAdded={() => setReviewCount(prev => prev + 1)}
+                onReviewAdded={() => setReviewCount((prev) => prev + 1)}
               />
             </div>
           ) : (
@@ -312,7 +315,10 @@ const RecipeShowcase = () => {
             id="review-button-placeholder"
             className="text-gray-500 italic mb-6"
           >
-            <Link to="/user-info" className="hover:underline">Log in</Link> to write a review.
+            <Link to="/account" className="hover:underline">
+              Log in
+            </Link>{" "}
+            to write a review.
           </div>
         )}
 

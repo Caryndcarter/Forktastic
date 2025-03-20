@@ -12,18 +12,23 @@ import {
   BookPlus,
   CircleOff,
   UserCog,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { page } from ".";
 
 interface DesktopNavbarProps {
   pages: page[];
-  loggedIn: boolean;
+  userStatus: string;
 }
 
-export default function DesktopNavbar({ pages }: DesktopNavbarProps) {
+export default function DesktopNavbar({
+  pages,
+  userStatus,
+}: DesktopNavbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const loggedIn = userStatus !== "visiter";
 
   const handleBack = () => {
     navigate(-1);
@@ -131,6 +136,22 @@ export default function DesktopNavbar({ pages }: DesktopNavbarProps) {
               <span className="text-xs mt-1">{page.name}</span>
             </Link>
           ))}
+
+          <Link
+            key="/account"
+            to="/account"
+            id="nav-account-link"
+            className={`text-white p-2 rounded-md hover:bg-white/20 flex flex-col items-center mx-4 ${
+              location.pathname === "/account" ? "bg-white/20" : ""
+            }`}
+            title="Account Settings"
+          >
+            <User className="w-5 h-5" />
+
+            <span className="text-xs mt-1">
+              {loggedIn ? "Account Settings" : "Log in"}
+            </span>
+          </Link>
         </div>
       </nav>
       <div id="desktop-spacer" className="h-20"></div>

@@ -26,38 +26,30 @@ const SearchPage: React.FC = () => {
   });
   const { data, refetch } = useQuery(GET_ACCOUNT_PREFERENCES);
 
-  // retrieve query
+  // retrieve query and load preferences
   useLayoutEffect(() => {
+    // Load the query
     const query = localStorageService.getQuery();
-    console.log(query);
     if (queryReference.current) {
       queryReference.current.value = query;
     }
-  }, []);
 
-  useLayoutEffect(() => {
+    // Ensure we have latest preferences
     refetch();
   }, []);
 
   // fetch account profile details
   useLayoutEffect(() => {
-    // fetch diets information
-    if (data?.getUser.diet) {
+    if (data?.getUser) {
       setFilterValue((prev) => ({
         ...prev,
-        diet: data.getUser.diet,
-      }));
-    }
-    // fetch intolerance information
-    if (data?.getUser.intolerances) {
-      setFilterValue((prev) => ({
-        ...prev,
-        intolerances: data.getUser.intolerances,
+        diet: data.getUser.diet || "",
+        intolerances: data.getUser.intolerances || [],
       }));
     }
   }, [data]);
 
-  // manually trigger the search
+  // trigger the search on filter update
   useLayoutEffect(() => {
     if (queryReference.current) {
       handleChange({
@@ -93,8 +85,7 @@ const SearchPage: React.FC = () => {
     }
 
     if (filterValue.includeIngredients.length > 0) {
-      searchParams.includeIngredients =
-        filterValue.includeIngredients.join(",");
+      searchParams.includeIngredients = filterValue.includeIngredients.join(",");
     }
 
     const recipes = await apiService.forignRecipeSearch(searchParams);
@@ -102,26 +93,14 @@ const SearchPage: React.FC = () => {
     setLoading(false);
   };
 
-  // uses a debounced search
-  const handleChange = async (e: any) => {
-    const queryText = e.target.value;
-    debouncedHandleSearch(queryText);
-  };
-
-  // debouncing logic
-  const debounce = (mainFunction: any, delay: number) => {
-    let timer: any;
-    return (...args: any) => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        mainFunction(...args);
-      }, delay);
-    };
-  };
-
-  const debouncedHandleSearch = useCallback(debounce(handleSearch, 360), [
-    filterValue,
-  ]);
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const query = event.target.value;
+      localStorageService.setQuery(query);
+      handleSearch(query);
+    },
+    [filterValue]
+  );
 
   return (
     <div
